@@ -8,7 +8,7 @@ class ZChannel::UNIXSocket
   #
   # @return [ZChannel::UNIXSocket]
   #
-  def initialize(serializer = Marshal)
+  def initialize(serializer)
     @serializer = serializer
     @last_msg = nil
     @reader, @writer = ::UNIXSocket.pair :STREAM

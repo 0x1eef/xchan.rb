@@ -3,13 +3,13 @@ module ZChannel
   require_relative "zchannel/unix_socket"
 
   #
-  # @param 
+  # @param
   #   (see UNIXSocket#initialize).
   #
   # @return
   #   (see UNIXSocket#initialize)
   #
-  def self.unix(serializer = Marshal)
+  def self.unix(serializer)
     UNIXSocket.new(serializer)
   end
 end
