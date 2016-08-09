@@ -46,18 +46,18 @@ class ZChannel::UNIXSocket
 
   #
   # @raise [IOError]
-  #   (see #put!)
+  #   (see #send!)
   #
   # @param [Object] object
   #   An object to add to a channel
   #
-  def put(object)
-    put!(object, nil)
+  def send(object)
+    send!(object, nil)
   end
 
   #
   # @param
-  #   (see ZChannel::UNIXSocket#put)
+  #   (see ZChannel::UNIXSocket#send)
   #
   # @param [Fixnum] timeout
   #   Number of seconds to wait before raising an exception
@@ -68,7 +68,7 @@ class ZChannel::UNIXSocket
   # @raise [ZChannel::TimeoutError]
   #   When a write doesn't finish within the timeout
   #
-  def put!(object, timeout = 0.1)
+  def send!(object, timeout = 0.1)
     if @writer.closed?
       raise IOError, 'closed channel'
     end
@@ -85,12 +85,12 @@ class ZChannel::UNIXSocket
   # Perform a blocking read 
   #
   # @raise
-  #   (see ZChannel::UNIXSocket#get) 
+  #   (see ZChannel::UNIXSocket#recv) 
   #
   # @return [Object]
   #
-  def get
-    get!(nil)
+  def recv
+    recv!(nil)
   end
 
   #
@@ -107,7 +107,7 @@ class ZChannel::UNIXSocket
   #
   # @return [Object]
   #
-  def get!(timeout = 0.1)
+  def recv!(timeout = 0.1)
     if @reader.closed?
       raise IOError, 'closed channel'
     end
@@ -125,7 +125,7 @@ class ZChannel::UNIXSocket
   #
   def last_msg
     while readable?
-      @last_msg = get
+      @last_msg = recv
     end
     @last_msg
   end
