@@ -1,9 +1,6 @@
 require 'socket'
 class ZChannel::UNIXSocket
-  SEP = '_$_'
-  if respond_to? :private_constant
-    private_constant :SEP
-  end
+  SEP = '_$_'  if respond_to? :private_constant
 
   #
   # @param [#dump,#load] serializer
@@ -82,10 +79,10 @@ class ZChannel::UNIXSocket
   end
 
   #
-  # Perform a blocking read 
+  # Perform a blocking read
   #
   # @raise
-  #   (see ZChannel::UNIXSocket#recv) 
+  #   (see ZChannel::UNIXSocket#recv)
   #
   # @return [Object]
   #
@@ -124,9 +121,7 @@ class ZChannel::UNIXSocket
   # @return [Object]
   #
   def last_msg
-    while readable?
-      @last_msg = recv
-    end
+    @last_msg = recv while readable?
     @last_msg
   end
 
