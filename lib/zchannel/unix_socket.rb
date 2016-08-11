@@ -51,6 +51,7 @@ class ZChannel::UNIXSocket
   def send(object)
     send!(object, nil)
   end
+  alias_method :write, :send
 
   #
   # @param
@@ -77,6 +78,7 @@ class ZChannel::UNIXSocket
       raise ZChannel::TimeoutError, "timeout, waited #{timeout} seconds"
     end
   end
+  alias_method :write!, :send!
 
   #
   # Perform a blocking read
@@ -89,6 +91,7 @@ class ZChannel::UNIXSocket
   def recv
     recv!(nil)
   end
+  alias_method :read, :recv
 
   #
   # Perform a read with a timeout
@@ -116,9 +119,12 @@ class ZChannel::UNIXSocket
       raise ZChannel::TimeoutError, "timeout, waited #{timeout} seconds"
     end
   end
+  alias_method :read!, :recv!
 
   #
   # @return [Object]
+  #   Reads from a channel until there are no messages left, and
+  #   then returns the last read message.
   #
   def last_msg
     @last_msg = recv while readable?
@@ -127,6 +133,7 @@ class ZChannel::UNIXSocket
 
   #
   # @return [Boolean]
+  #   Returns true when a channel has messages waiting to be read.
   #
   def readable?
     if closed?
