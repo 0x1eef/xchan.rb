@@ -23,8 +23,6 @@ class ZChannel::UNIXSocket
   end
 
   #
-  # Close a channel.
-  #
   # @raise [IOError]
   #   Raises IOError when a channel is already closed.
   #
@@ -42,6 +40,8 @@ class ZChannel::UNIXSocket
   end
 
   #
+  # Perform a blocking write.
+  #
   # @raise [IOError]
   #   (see #send!)
   #
@@ -54,10 +54,12 @@ class ZChannel::UNIXSocket
   alias_method :write, :send
 
   #
+  # Perform a write with a timeout.
+  #
   # @param
   #   (see ZChannel::UNIXSocket#send)
   #
-  # @param [Fixnum] timeout
+  # @param [Float, Fixnum] timeout
   #   The number of seconds to wait before raising an exception.
   #
   # @raise [IOError]
@@ -84,7 +86,7 @@ class ZChannel::UNIXSocket
   # Perform a blocking read.
   #
   # @raise
-  #   (see ZChannel::UNIXSocket#recv)
+  #   (see ZChannel::UNIXSocket#recv!)
   #
   # @return [Object]
   #
@@ -96,7 +98,7 @@ class ZChannel::UNIXSocket
   #
   # Perform a read with a timeout.
   #
-  # @param [Fixnum] timeout
+  # @param [Float, Fixnum] timeout
   #   The number of seconds to wait before raising an exception.
   #
   # @raise [IOError]
