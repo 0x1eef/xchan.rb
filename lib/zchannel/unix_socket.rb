@@ -4,7 +4,7 @@ class ZChannel::UNIXSocket
 
   #
   # @param [#dump,#load] serializer
-  #   An object who implements `.dump` and `.load` methods
+  #   Any object that implements "dump" and "load" methods.
   #
   # @return [ZChannel::UNIXSocket]
   #
@@ -16,20 +16,20 @@ class ZChannel::UNIXSocket
 
   #
   # @return [Boolean]
-  #   Returns true when a channel is closed
+  #   Returns true when a channel is closed.
   #
   def closed?
     @reader.closed? and @writer.closed?
   end
 
   #
-  # Close the channel
+  # Close a channel.
   #
   # @raise [IOError]
-  #   When a channel is already closed
+  #   Raises IOError when a channel is already closed.
   #
   # @return [Boolean]
-  #   Returns true on success
+  #   Returns true when a channel is closed successfully.
   #
   def close
     if closed?
@@ -46,7 +46,7 @@ class ZChannel::UNIXSocket
   #   (see #send!)
   #
   # @param [Object] object
-  #   An object to add to a channel
+  #   An object to write to a channel.
   #
   def send(object)
     send!(object, nil)
@@ -58,13 +58,13 @@ class ZChannel::UNIXSocket
   #   (see ZChannel::UNIXSocket#send)
   #
   # @param [Fixnum] timeout
-  #   Number of seconds to wait before raising an exception
+  #   The number of seconds to wait before raising an exception.
   #
   # @raise [IOError]
-  #   When channel is closed
+  #   Raises an IOError when a channel is closed.
   #
   # @raise [ZChannel::TimeoutError]
-  #   When a write doesn't finish within the timeout
+  #   Raises a ZChannel::TimeoutError when a write doesn't finish within the specified timeout.
   #
   def send!(object, timeout = 0.1)
     if @writer.closed?
@@ -81,7 +81,7 @@ class ZChannel::UNIXSocket
   alias_method :write!, :send!
 
   #
-  # Perform a blocking read
+  # Perform a blocking read.
   #
   # @raise
   #   (see ZChannel::UNIXSocket#recv)
@@ -94,16 +94,16 @@ class ZChannel::UNIXSocket
   alias_method :read, :recv
 
   #
-  # Perform a read with a timeout
+  # Perform a read with a timeout.
   #
   # @param [Fixnum] timeout
-  #   Number of seconds to wait before raising an exception
+  #   The number of seconds to wait before raising an exception.
   #
   # @raise [IOError]
-  #   When channel is closed
+  #   Raises an IOError when a channel is closed.
   #
   # @raise [ZChannel::TimeoutError]
-  #   When a read doesn't finish within the timeout
+  #   Raises ZChannel::TimeoutError when a read doesn't finish within the specified timeout.
   #
   # @return [Object]
   #
