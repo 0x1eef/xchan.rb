@@ -1,6 +1,6 @@
 require 'socket'
 class ZChannel::UNIXSocket
-  SEP = '_$_'  if respond_to? :private_constant
+  SEP = "\x00"  if respond_to? :private_constant
 
   #
   # @param [#dump,#load] serializer
@@ -56,8 +56,8 @@ class ZChannel::UNIXSocket
   #
   # Perform a write with a timeout.
   #
-  # @param
-  #   (see ZChannel::UNIXSocket#send)
+  # @param [Object] object
+  #   An object to write to a channel.
   #
   # @param [Float, Fixnum] timeout
   #   The number of seconds to wait before raising an exception.
