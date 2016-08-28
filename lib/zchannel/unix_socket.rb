@@ -77,7 +77,7 @@ class ZChannel::UNIXSocket
       msg = @serializer.dump(object)
       writable[0].syswrite "#{msg}#{SEP}"
     else
-      raise ZChannel::TimeoutError, "timeout, waited #{timeout} seconds"
+      raise ZChannel::TimeoutError, "write timed out after waiting #{timeout} seconds"
     end
   end
   alias_method :write!, :send!
@@ -118,7 +118,7 @@ class ZChannel::UNIXSocket
       msg = readable[0].readline(SEP).chomp SEP
       @last_msg = @serializer.load msg
     else
-      raise ZChannel::TimeoutError, "timeout, waited #{timeout} seconds"
+      raise ZChannel::TimeoutError, "read timed out after waiting #{timeout} seconds"
     end
   end
   alias_method :read!, :recv!
