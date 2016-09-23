@@ -1,6 +1,6 @@
 require 'socket'
 class ZChannel::UNIXSocket
-  SEP = "\x00"  if respond_to? :private_constant
+  SEP = "\x00"
 
   #
   # @param [#dump,#load] serializer
