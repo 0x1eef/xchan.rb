@@ -1,5 +1,5 @@
 require 'bundler/setup'
-require 'test/unit'
+require 'minitest/autorun'
 require 'json'
 require 'yaml'
 Bundler.require :default, :test

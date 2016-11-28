@@ -1,5 +1,5 @@
 require_relative 'setup'
-class ZChannelTest < Test::Unit::TestCase
+class ZChannelTest < Minitest::Test
   def setup
     @chan = ZChannel.unix Object.const_get(ENV["SERIALIZER"] || "Marshal")
   end

@@ -1,6 +1,8 @@
 source 'http://rubygems.org'
 gemspec
-gem "test-unit"
+group :test do
+  gem "minitest"
+end
 group :docs do
   gem "yard"
   gem "redcarpet"
