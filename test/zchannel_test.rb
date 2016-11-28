@@ -98,6 +98,6 @@ class ZChannelTest < Test::Unit::TestCase
   end
 
   private def sep
-    ZChannel::UnixSocket::SEP
+    ZChannel::UNIXSocket::SEP
   end
 end
