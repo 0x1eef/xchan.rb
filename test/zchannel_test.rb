@@ -8,6 +8,11 @@ class ZChannelTest < Test::Unit::TestCase
     @chan.close unless @chan.closed?
   end
 
+  def test_send_and_recv_with_SEP_in_message
+    @chan.send ["hello#{sep}"]
+    assert_equal ["hello#{sep}"], @chan.recv
+  end
+
   def test_blocking_recv
     assert_raises Timeout::Error do
       Timeout.timeout(1) { @chan.recv }
@@ -90,5 +95,9 @@ class ZChannelTest < Test::Unit::TestCase
   def test_readable_on_closed_channel
     @chan.close
     refute @chan.readable?
+  end
+
+  private def sep
+    ZChannel::UnixSocket::SEP
   end
 end

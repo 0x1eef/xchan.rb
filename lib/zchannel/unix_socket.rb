@@ -1,4 +1,4 @@
-require 'socket'
+require 'base64'
 class ZChannel::UNIXSocket
   SEP = "\x00"
 
@@ -75,7 +75,7 @@ class ZChannel::UNIXSocket
     _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
       msg = @serializer.dump(object)
-      writable[0].syswrite "#{msg}#{SEP}"
+      writable[0].syswrite "#{Base64.strict_encode64(msg)}#{SEP}"
     else
       raise ZChannel::TimeoutError, "write timed out after waiting #{timeout} seconds"
     end
@@ -115,8 +115,8 @@ class ZChannel::UNIXSocket
     end
     readable, _ = IO.select [@reader], nil, nil, timeout
     if readable
-      msg = readable[0].readline(SEP).chomp SEP
-      @last_msg = @serializer.load msg
+      base64 = readable[0].readline(SEP).chomp(SEP)
+      @last_msg = @serializer.load Base64.strict_decode64(base64)
     else
       raise ZChannel::TimeoutError, "read timed out after waiting #{timeout} seconds"
     end
