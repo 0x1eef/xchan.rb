@@ -3,8 +3,8 @@ class ZChannel::UNIXSocket
   SEP = "\x00"
 
   #
-  # @param [#dump,#load] serializer
-  #   Any object that implements "dump" and "load" methods.
+  # @param [#dump, #load] serializer
+  #   A serializer such as Marshal, or JSON.
   #
   # @return [ZChannel::UNIXSocket]
   #
@@ -16,7 +16,7 @@ class ZChannel::UNIXSocket
 
   #
   # @return [Boolean]
-  #   Returns true when a channel is closed.
+  #   Returns true when the channel is closed.
   #
   def closed?
     @reader.closed? and @writer.closed?
@@ -24,10 +24,10 @@ class ZChannel::UNIXSocket
 
   #
   # @raise [IOError]
-  #   Raises IOError when a channel is already closed.
+  #   An IOError is raised if the channel is already closed.
   #
   # @return [Boolean]
-  #   Returns true when a channel is closed successfully.
+  #   Returns true when the channel is closed.
   #
   def close
     if closed?
@@ -40,13 +40,13 @@ class ZChannel::UNIXSocket
   end
 
   #
-  # Perform a blocking write.
+  # Performs a blocking write.
   #
   # @raise [IOError]
   #   (see #send!)
   #
   # @param [Object] object
-  #   An object to write to a channel.
+  #   Object to write to channel.
   #
   def send(object)
     send!(object, nil)
@@ -54,19 +54,19 @@ class ZChannel::UNIXSocket
   alias_method :write, :send
 
   #
-  # Perform a write with a timeout.
+  # Performs a write with a timeout.
   #
   # @param [Object] object
-  #   An object to write to a channel.
+  #   Object to write to channel.
   #
   # @param [Float, Fixnum] timeout
-  #   The number of seconds to wait before raising an exception.
+  #   Number of seconds to wait.
   #
   # @raise [IOError]
-  #   Raises an IOError when a channel is closed.
+  #   An IOError is raised when the channel is closed.
   #
   # @raise [ZChannel::TimeoutError]
-  #   Raises a ZChannel::TimeoutError when a write doesn't finish within the specified timeout.
+  #   ZChannel::TimeoutError is raised when the write doesn't complete within the timeout.
   #
   def send!(object, timeout = 0.1)
     if @writer.closed?
@@ -83,7 +83,7 @@ class ZChannel::UNIXSocket
   alias_method :write!, :send!
 
   #
-  # Perform a blocking read.
+  # Performs a blocking read.
   #
   # @raise
   #   (see ZChannel::UNIXSocket#recv!)
@@ -96,16 +96,16 @@ class ZChannel::UNIXSocket
   alias_method :read, :recv
 
   #
-  # Perform a read with a timeout.
+  # Performs a read with a timeout.
   #
   # @param [Float, Fixnum] timeout
-  #   The number of seconds to wait before raising an exception.
+  #   Number of seconds to wait before raising an exception.
   #
   # @raise [IOError]
-  #   Raises an IOError when a channel is closed.
+  #   An IOError is raised when the channel is closed.
   #
   # @raise [ZChannel::TimeoutError]
-  #   Raises ZChannel::TimeoutError when a read doesn't finish within the specified timeout.
+  #   ZChannel::TimeoutError is raised when the read doesn't complete within the specified timeout.
   #
   # @return [Object]
   #
@@ -124,9 +124,10 @@ class ZChannel::UNIXSocket
   alias_method :read!, :recv!
 
   #
+  # Reads from a channel until there are no messages left, and
+  # then returns the last read message.
+  #
   # @return [Object]
-  #   Reads from a channel until there are no messages left, and
-  #   then returns the last read message.
   #
   def last_msg
     @last_msg = recv while readable?
@@ -135,7 +136,7 @@ class ZChannel::UNIXSocket
 
   #
   # @return [Boolean]
-  #   Returns true when a channel has messages waiting to be read.
+  #   Returns true when the channel can be read from.
   #
   def readable?
     if closed?
