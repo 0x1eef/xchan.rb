@@ -1,3 +1,4 @@
+require 'socket'
 require 'base64'
 class ZChannel::UNIXSocket
   SEP = "\x00"
