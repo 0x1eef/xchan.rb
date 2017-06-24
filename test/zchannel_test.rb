@@ -8,9 +8,9 @@ class ZChannelTest < Minitest::Test
     @chan.close unless @chan.closed?
   end
 
-  def test_send_and_recv_with_SEP_in_message
-    @chan.send ["hello#{sep}"]
-    assert_equal ["hello#{sep}"], @chan.recv
+  def test_send_and_recv_with_NULL_BYTE_in_message
+    @chan.send ["hello#{null_byte}"]
+    assert_equal ["hello#{null_byte}"], @chan.recv
   end
 
   def test_blocking_recv
@@ -97,7 +97,7 @@ class ZChannelTest < Minitest::Test
     refute @chan.readable?
   end
 
-  private def sep
-    ZChannel::UNIXSocket::SEP
+  private def null_byte
+    ZChannel::UNIXSocket::NULL_BYTE
   end
 end
