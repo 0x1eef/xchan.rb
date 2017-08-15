@@ -57,3 +57,7 @@ Build gem from source:
     cd zchannel
     gem build zchannel.gemspec
     gem install zchannel*.gem
+
+### License
+
+[MIT](./LICENSE.txt)
