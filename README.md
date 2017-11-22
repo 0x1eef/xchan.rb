@@ -46,14 +46,18 @@ ch.recv # => [1,2,3]
 
 __Install__
 
+Rubygems:
+
+	$ gem install zchannel.rb
+
 Bundler:
 
-    gem "zchannel", git: "https://gitlab.com/0xAB/zchannel", tag: "v0.4.0"
+    gem "zchannel.rb", git: "https://github.com/0x1eef/zchannel.rb"
 
 
 Build gem from source:
 
-    git clone https://gitlab.com/0xAB/zchannel
+    git clone https://github.com/0x1eef/zchannel.rb
     cd zchannel
     gem build zchannel.gemspec
     gem install zchannel*.gem
