@@ -1,6 +1,6 @@
 Kernel.require './lib/zchannel/version'
 Gem::Specification.new do |gem|
-  gem.name          = "zchannel"
+  gem.name          = "zchannel.rb"
   gem.version       = ZChannel::VERSION
   gem.authors       = ["1xAB Software"]
   gem.email         = ["1xAB@protonmail.com"]
