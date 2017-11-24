@@ -1,3 +1,8 @@
+Mirrors:
+
+* [Github](https://github.rom/0x1eef/zchannel.rb)
+* [Gitlab](https://gitlab.com/0x1eef/zchannel.rb)
+
 ### zchannel
 
 Provides an easy to use abstraction for sharing Ruby objects between Ruby
