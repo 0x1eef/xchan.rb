@@ -49,6 +49,10 @@ Process.wait fork { ch.send [1,2,3] }
 ch.recv # => [1,2,3]
 ```
 
+__Requirements__
+
+Ruby 2.1 or later.
+
 __Install__
 
 Rubygems:
@@ -59,13 +63,6 @@ Bundler:
 
     gem "zchannel.rb", git: "https://github.com/0x1eef/zchannel.rb"
 
-
-Build gem from source:
-
-    git clone https://github.com/0x1eef/zchannel.rb
-    cd zchannel
-    gem build zchannel.gemspec
-    gem install zchannel*.gem
 
 ### License
 

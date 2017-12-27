@@ -10,6 +10,7 @@ Gem::Specification.new do |gem|
   gem.licenses      = ["MIT"]
   gem.files         = `git ls-files`.split($/)
   gem.require_paths = ["lib"]
+  gem.required_ruby_version = ">= 2.1"
   gem.add_development_dependency "rubygems-tasks"
   gem.add_development_dependency "rake"
 end
