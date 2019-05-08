@@ -12,7 +12,7 @@ zchannel.rb provides an easy to use abstraction for sharing Ruby objects
 between Ruby processes who share a parent-child relationship.
 
 Under the hood, zchannel.rb uses a method of transport (eg, a UNIXSocket)
-and a serializer (eg: Marshal) to pass objects back and forth.
+and a serializer (eg: Marshal) to send and receive objects.
 
 ## <a id="examples">Examples</a>
 
