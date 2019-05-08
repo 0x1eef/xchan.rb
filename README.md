@@ -1,69 +1,83 @@
-Mirrors:
+# zchannel.rb
 
-* [Github](https://github.rom/r-obert/zchannel.rb)
-* [Gitlab](https://gitlab.com/r-obert/zchannel.rb)
+1. <a href="#introduction">Introduction</a>
+2. <a href="#examples">Examples</a>
+3. <a href="#requirements">Requirements</a>
+4. <a href="#install">Install</a>
+5. <a href="#license">License</a>
 
-### zchannel
+## <a id="introduction">Introduction</a>
 
-Provides an easy to use abstraction for sharing Ruby objects between Ruby
-processes who share a parent-child relationship. The implementation uses
-an unbound UNIXSocket, and a serializer of your choice, for sending Ruby
-objects between processes.
+zchannel.rb provides an easy to use abstraction for sharing Ruby objects 
+between Ruby processes who share a parent-child relationship.
 
-### Examples
+Under the hood, zchannel.rb uses a method of transport (eg, a UNIXSocket)
+and a serializer (eg: Marshal) to pass objects back and forth.
+
+## <a id="examples">Examples</a>
 
 __1.__
 
-Marshal is the serializer that can serialize the most Ruby objects, although
-Proc and other objects cannot be serialized. It is apart of Ruby's core library,
-so no require is needed:
+Marshal is the serializer who can serialize the most Ruby objects, although
+it cannot serialize Proc and a few other objects. 
+
+Marshal is apart of Ruby's core library, so you will be glad to know there is 
+nothing extra to require. :) Marshal does not have to be provided as an explicit
+argument (it is the default) but for the sake of the example it is.
 
 ```ruby
 ch = ZChannel.unix Marshal
 Process.wait fork { ch.send "Hello, world!" }
 ch.recv # => "Hello, world!"
+Process.wait fork { ch.send "Bye, world!" }
+ch.recv # => "Bye, world!"
+ch.close
 ```
 
 __2.__
 
-JSON can be used as a serializer but what it can serialize is less than what
-Marshal can serialize. Which could be a good or bad thing, depending on what
-you want to do:
+JSON can act as a serializer as well, because any object that implements the dump and load 
+methods can act as a serializer. What it can serialize is limited when compared with the 
+Marshal module, though.
 
 ```ruby
 require 'json'
 ch = ZChannel.unix JSON
 Process.wait fork { ch.send [1,2,3] }
 ch.recv # => [1,2,3]
+ch.close
 ```
 
 __3.__
 
-Any serializer that implements "dump", & "load" is supported though, so YAML also works
-out of the box:
+You might want to use YAML as a serializer, that works too. 
 
 ```ruby
 require 'yaml'
 ch = ZChannel.unix YAML
 Process.wait fork { ch.send [1,2,3] }
 ch.recv # => [1,2,3]
+ch.close
 ```
 
-__Requirements__
+## <a id="requirements"> Requirements </a>
 
-Ruby 2.1 or later.
+* Ruby 2.1+
 
-__Install__
+## <a id="install">Install</a>
 
-Rubygems:
+As a RubyGem:
 
-	$ gem install zchannel.rb
+    git clone https://github.com/r-obert/zchannel.rb.git
+    cd zchannel.rb/
+    git checkout origin/v0.7.0
+	  gem build *.gemspec
+    gem install *.gem
 
-Bundler:
+As a bundled gem:
 
-    gem "zchannel.rb", git: "https://github.com/r-obert/zchannel.rb"
+    gem "zchannel.rb", github: "r-obert/zchannel.rb", tag: "v0.7.0" 
 
+## <a id="license"> License </a>
 
-### License
-
-[MIT](./LICENSE.txt)
+This project uses the MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
