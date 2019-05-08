@@ -23,7 +23,7 @@ it cannot serialize Proc and a few other objects.
 
 Marshal is apart of Ruby's core library, so you will be glad to know there is 
 nothing extra to require. :) Marshal does not have to be provided as an explicit
-argument (it is the default) but for the sake of the example it is.
+argument (it is the default argument) but for the sake of the example it is.
 
 ```ruby
 ch = ZChannel.unix Marshal
