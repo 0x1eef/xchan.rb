@@ -70,13 +70,13 @@ As a RubyGem:
 
     git clone https://github.com/r-obert/zchannel.rb.git
     cd zchannel.rb/
-    git checkout origin/v0.7.0
+    git checkout origin/v1.0.0
     gem build *.gemspec
     gem install *.gem
 
 As a bundled gem:
 
-    gem "zchannel.rb", github: "r-obert/zchannel.rb", tag: "v0.7.0" 
+    gem "zchannel.rb", github: "r-obert/zchannel.rb", tag: "v1.0.0" 
 
 ## <a id="license"> License </a>
 
