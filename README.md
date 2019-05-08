@@ -71,7 +71,7 @@ As a RubyGem:
     git clone https://github.com/0x1eef/zchannel.rb.git
     cd zchannel.rb/
     git checkout origin/v0.7.0
-	  gem build *.gemspec
+    gem build *.gemspec
     gem install *.gem
 
 As a bundled gem:
