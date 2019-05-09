@@ -69,15 +69,11 @@ ch.close
 
 As a RubyGem:
 
-    git clone https://github.com/0x1eef/xchannel.rb.git
-    cd xchannel.rb/
-    git checkout origin/v1.0.0
-    gem build *.gemspec
-    gem install *.gem
+    gem install xchannel.rb
 
 As a bundled gem:
 
-    gem "xchannel.rb", github: "0x1eef/xchannel.rb", tag: "v1.0.0" 
+    gem "xchannel.rb"
 
 ## <a id="license"> License </a>
 
