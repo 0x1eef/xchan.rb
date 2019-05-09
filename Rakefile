@@ -1,8 +1,5 @@
-require 'bundler/gem_tasks'
-require 'rake/testtask'
-require "rubygems/tasks"
-Gem::Tasks.new
-task :test do
-  sh "ruby test/zchannel_test.rb"
+desc "Run the specs"
+task :spec do
+  sh "bundle exec rspec"
 end
-task default: :test
+task default: :spec
