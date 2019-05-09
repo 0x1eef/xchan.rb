@@ -1,8 +1,5 @@
 # zchannel.rb
 
-[![Code Climate](https://codeclimate.com/github/0x1eef/zchannel.rb/badges/gpa.svg)](https://codeclimate.com/github/0x1eef/zchannel.rb)
-[![Build Status](https://travis-ci.org/0x1eef/zchannel.rb.svg?branch=master)](https://travis-ci.org/0x1eef/zchannel.rb)
-
 1. <a href="#introduction">Introduction</a>
 2. <a href="#examples">Examples</a>
 3. <a href="#requirements">Requirements</a>
