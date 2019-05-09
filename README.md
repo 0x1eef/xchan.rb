@@ -1,4 +1,4 @@
-# zchannel.rb
+# xchannel.rb
 
 1. <a href="#introduction">Introduction</a>
 2. <a href="#examples">Examples</a>
@@ -9,10 +9,10 @@
 
 ## <a id="introduction">Introduction</a>
 
-zchannel.rb provides an easy to use abstraction for sharing Ruby objects 
+xchannel.rb provides an easy to use abstraction for sharing Ruby objects 
 between Ruby processes who share a parent-child relationship.
 
-Under the hood, zchannel.rb uses a method of transport (eg, a UNIXSocket)
+Under the hood, xchannel.rb uses a method of transport (eg, a UNIXSocket)
 and a serializer (eg: Marshal) to send and receive objects.
 
 ## <a id="examples">Examples</a>
@@ -27,7 +27,7 @@ nothing extra to require. :) Marshal does not have to be provided as an explicit
 argument (it is the default argument) but for the sake of the example it is.
 
 ```ruby
-ch = ZChannel.unix Marshal
+ch = XChannel.unix Marshal
 Process.wait fork { ch.send "Hello, world!" }
 ch.recv # => "Hello, world!"
 Process.wait fork { ch.send "Bye, world!" }
@@ -43,7 +43,7 @@ Marshal module, though.
 
 ```ruby
 require 'json'
-ch = ZChannel.unix JSON
+ch = XChannel.unix JSON
 Process.wait fork { ch.send [1,2,3] }
 ch.recv # => [1,2,3]
 ch.close
@@ -55,7 +55,7 @@ You might want to use YAML as a serializer, that works too.
 
 ```ruby
 require 'yaml'
-ch = ZChannel.unix YAML
+ch = XChannel.unix YAML
 Process.wait fork { ch.send [1,2,3] }
 ch.recv # => [1,2,3]
 ch.close
@@ -69,15 +69,15 @@ ch.close
 
 As a RubyGem:
 
-    git clone https://github.com/0x1eef/zchannel.rb.git
-    cd zchannel.rb/
+    git clone https://github.com/0x1eef/xchannel.rb.git
+    cd xchannel.rb/
     git checkout origin/v1.0.0
     gem build *.gemspec
     gem install *.gem
 
 As a bundled gem:
 
-    gem "zchannel.rb", github: "0x1eef/zchannel.rb", tag: "v1.0.0" 
+    gem "xchannel.rb", github: "0x1eef/xchannel.rb", tag: "v1.0.0" 
 
 ## <a id="license"> License </a>
 

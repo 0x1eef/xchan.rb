@@ -1,12 +1,12 @@
-Kernel.require './lib/zchannel/version'
+Kernel.require './lib/XChannel/version'
 Gem::Specification.new do |gem|
-  gem.name          = "zchannel.rb"
-  gem.version       = ZChannel::VERSION
+  gem.name          = "xchannel.rb"
+  gem.version       = XChannel::VERSION
   gem.authors       = ["0x1eef"]
   gem.email         = ["trebor8@protonmail.com"]
-  gem.description   = %q{zchannel.rb provides an easy to use abstraction for sharing Ruby objects between Ruby processes who share a parent-child relationship.}
+  gem.description   = %q{xchannel.rb provides an easy to use abstraction for sharing Ruby objects between Ruby processes who share a parent-child relationship.}
   gem.summary       = gem.description
-  gem.homepage      = "https://github.com/0x1eef/zchannel.rb"
+  gem.homepage      = "https://github.com/0x1eef/xchannel.rb"
   gem.licenses      = ["MIT"]
   gem.files         = `git ls-files`.split($/)
   gem.require_paths = ["lib"]

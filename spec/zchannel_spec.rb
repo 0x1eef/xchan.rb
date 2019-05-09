@@ -1,7 +1,7 @@
 require_relative 'setup'
-RSpec.describe ZChannel do 
+RSpec.describe XChannel do 
   let(:ch) do 
-    ZChannel.unix Object.const_get(ENV["SERIALIZER"] || "Marshal")
+    XChannel.unix Object.const_get(ENV["SERIALIZER"] || "Marshal")
   end 
 
   describe '#recv' do
@@ -20,10 +20,10 @@ RSpec.describe ZChannel do
   end 
   
   describe '#recv!' do
-    it 'raises ZChannel::TimeoutError after waiting 1 second  for content to become available' do 
+    it 'raises XChannel::TimeoutError after waiting 1 second  for content to become available' do 
       expect {
         ch.recv!(1)
-      }.to raise_error(ZChannel::TimeoutError)
+      }.to raise_error(XChannel::TimeoutError)
       ch.close
     end
   end
