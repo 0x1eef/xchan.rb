@@ -3,7 +3,7 @@ Gem::Specification.new do |gem|
   gem.name          = "xchannel.rb"
   gem.version       = XChannel::VERSION
   gem.authors       = ["Robert Gleeson"]
-  gem.email         = ["trebor8@protonmail.com"]
+  gem.email         = ["trebor8-rubygems@protonmail.com"]
   gem.description   = %q{xchannel.rb provides an easy to use abstraction for sharing Ruby objects between Ruby processes who share a parent-child relationship.}
   gem.summary       = gem.description
   gem.homepage      = "https://github.com/r-obert/xchannel.rb"
