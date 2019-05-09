@@ -1,4 +1,4 @@
-Kernel.require './lib/XChannel/version'
+Kernel.require './lib/xchannel/version'
 Gem::Specification.new do |gem|
   gem.name          = "xchannel.rb"
   gem.version       = XChannel::VERSION
