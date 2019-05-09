@@ -71,9 +71,11 @@ As a RubyGem:
 
     gem install xchannel.rb
 
-As a bundled gem:
+As a bundled gem, in your Gemfile:
 
-    gem "xchannel.rb"
+```ruby
+gem "xchannel.rb", "~> 1.0"
+```
 
 ## <a id="license"> License </a>
 
