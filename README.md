@@ -6,6 +6,8 @@
 4. <a href="#install">Install</a>
 5. <a href="#license">License</a>
 
+[![Build Status](https://travis-ci.org/0x1eef/zchannel.rb.svg?branch=master)](https://travis-ci.org/0x1eef/zchannel.rb)
+
 ## <a id="introduction">Introduction</a>
 
 zchannel.rb provides an easy to use abstraction for sharing Ruby objects 
