@@ -1,9 +1,8 @@
 source 'http://rubygems.org'
 gemspec
 group :test do
-  gem "minitest"
+  gem "rspec"
 end
 group :docs do
   gem "yard"
-  gem "redcarpet"
 end
