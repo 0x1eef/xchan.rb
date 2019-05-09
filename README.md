@@ -7,7 +7,6 @@
 5. <a href="#license">License</a>
 
 [![Build Status](https://travis-ci.org/0x1eef/zchannel.rb.svg?branch=master)](https://travis-ci.org/0x1eef/zchannel.rb)
-
 [![Code Climate](https://codeclimate.com/github/0x1eef/zchannel.rb/badges/gpa.svg)](https://codeclimate.com/github/0x1eef/zchannel.rb)
 
 ## <a id="introduction">Introduction</a>
