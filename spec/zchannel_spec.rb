@@ -15,6 +15,7 @@ RSpec.describe ZChannel do
       expect {
         Timeout.timeout(1) { ch.recv }
       }.to raise_error(Timeout::Error)
+      ch.close
     end
   end 
   
@@ -23,6 +24,7 @@ RSpec.describe ZChannel do
       expect {
         ch.recv!(1)
       }.to raise_error(ZChannel::TimeoutError)
+      ch.close
     end
   end
 
@@ -31,6 +33,7 @@ RSpec.describe ZChannel do
       ch.send [42]
       ch.send [43]
       expect(ch.last_msg).to eq([43])
+      ch.close
     end
   end
 end
