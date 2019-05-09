@@ -5,7 +5,7 @@ class ZChannel::UNIXSocket
 
   #
   # @param [#dump, #load] serializer
-  #   A serializer such as Marshal, or JSON.
+  #   A serializer (eg Marshal, JSON, YAML)
   #
   # @return [ZChannel::UNIXSocket]
   #
