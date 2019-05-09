@@ -19,7 +19,7 @@ RSpec.describe ZChannel do
   end 
   
   describe '#recv!' do
-    it 'raises Timeout::Error after waiting 1 second' do 
+    it 'raises Timeout::Error after waiting 1 second  for content to become available' do 
       expect {
         ch.recv!(1)
       }.to raise_error(ZChannel::TimeoutError)
