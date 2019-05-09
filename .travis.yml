@@ -4,10 +4,11 @@ rvm:
   - 2.3
   - 2.4
   - 2.5
+  - 2.6
   - ruby-head
 
 script:
-  - bundle exec ruby -S rake
+  - bundle exec rspec
 
 sudo: false
 
@@ -16,7 +17,8 @@ matrix:
     - rvm: ruby-head
 
 notifications:
-  irc: "irc.freenode.org#roberts-pry-plugins"
+  email: 
+    - 'trebor8@protonmail.com'
 
 branches:
   only:
