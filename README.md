@@ -8,6 +8,8 @@
 
 [![Build Status](https://travis-ci.org/r-obert/zchannel.rb.svg?branch=master)](https://travis-ci.org/r-obert/zchannel.rb)
 
+[![Code Climate](https://codeclimate.com/github/r-obert/zchannel.rb/badges/gpa.svg)](https://codeclimate.com/github/r-obert/zchannel.rb)
+
 ## <a id="introduction">Introduction</a>
 
 zchannel.rb provides an easy to use abstraction for sharing Ruby objects 
