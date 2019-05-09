@@ -1,10 +1,14 @@
 # zchannel.rb
 
+__Table Of Contents__
+
 1. <a href="#introduction">Introduction</a>
 2. <a href="#examples">Examples</a>
 3. <a href="#requirements">Requirements</a>
 4. <a href="#install">Install</a>
 5. <a href="#license">License</a>
+
+__Badges__
 
 [![Build Status](https://travis-ci.org/r-obert/zchannel.rb.svg?branch=master)](https://travis-ci.org/r-obert/zchannel.rb)
 [![Code Climate](https://codeclimate.com/github/r-obert/zchannel.rb/badges/gpa.svg)](https://codeclimate.com/github/r-obert/zchannel.rb)
