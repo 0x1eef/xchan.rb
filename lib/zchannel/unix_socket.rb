@@ -1,13 +1,13 @@
 require 'socket'
 require 'base64'
-class ZChannel::UNIXSocket
+class XChannel::UNIXSocket
   NULL_BYTE = "\x00"
 
   #
   # @param [#dump, #load] serializer
   #   A serializer (eg Marshal, JSON, YAML)
   #
-  # @return [ZChannel::UNIXSocket]
+  # @return [XChannel::UNIXSocket]
   #
   def initialize(serializer = Marshal)
     @serializer = serializer
@@ -66,8 +66,8 @@ class ZChannel::UNIXSocket
   # @raise [IOError]
   #   An IOError is raised when the channel is closed.
   #
-  # @raise [ZChannel::TimeoutError]
-  #   ZChannel::TimeoutError is raised when the write doesn't complete within the timeout.
+  # @raise [XChannel::TimeoutError]
+  #   XChannel::TimeoutError is raised when the write doesn't complete within the timeout.
   #
   def send!(object, timeout = 0.1)
     if @writer.closed?
@@ -78,7 +78,7 @@ class ZChannel::UNIXSocket
       msg = @serializer.dump(object)
       writable[0].syswrite "#{Base64.strict_encode64(msg)}#{NULL_BYTE}"
     else
-      raise ZChannel::TimeoutError, "write timed out after waiting #{timeout} seconds"
+      raise XChannel::TimeoutError, "write timed out after waiting #{timeout} seconds"
     end
   end
   alias_method :write!, :send!
@@ -87,7 +87,7 @@ class ZChannel::UNIXSocket
   # Performs a blocking read.
   #
   # @raise
-  #   (see ZChannel::UNIXSocket#recv!)
+  #   (see XChannel::UNIXSocket#recv!)
   #
   # @return [Object]
   #
@@ -105,8 +105,8 @@ class ZChannel::UNIXSocket
   # @raise [IOError]
   #   An IOError is raised when the channel is closed.
   #
-  # @raise [ZChannel::TimeoutError]
-  #   ZChannel::TimeoutError is raised when the read doesn't complete within the specified timeout.
+  # @raise [XChannel::TimeoutError]
+  #   XChannel::TimeoutError is raised when the read doesn't complete within the specified timeout.
   #
   # @return [Object]
   #
@@ -119,7 +119,7 @@ class ZChannel::UNIXSocket
       base64 = readable[0].readline(NULL_BYTE).chomp(NULL_BYTE)
       @last_msg = @serializer.load Base64.strict_decode64(base64)
     else
-      raise ZChannel::TimeoutError, "read timed out after waiting #{timeout} seconds"
+      raise XChannel::TimeoutError, "read timed out after waiting #{timeout} seconds"
     end
   end
   alias_method :read!, :recv!

@@ -1,6 +1,6 @@
-module ZChannel
+module XChannel
   TimeoutError = Class.new(StandardError)
-  require_relative "zchannel/unix_socket"
+  require_relative "XChannel/unix_socket"
 
   #
   # @param
