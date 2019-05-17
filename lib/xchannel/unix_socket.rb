@@ -60,7 +60,7 @@ class XChannel::UNIXSocket
   # @param [Object] object
   #   Object to write to channel.
   #
-  # @param [Float, Fixnum] timeout
+  # @param [Float, Integer] timeout
   #   Number of seconds to wait.
   #
   # @raise [IOError]
@@ -99,7 +99,7 @@ class XChannel::UNIXSocket
   #
   # Performs a read with a timeout.
   #
-  # @param [Float, Fixnum] timeout
+  # @param [Float, Integer] timeout
   #   Number of seconds to wait before raising an exception.
   #
   # @raise [IOError]
