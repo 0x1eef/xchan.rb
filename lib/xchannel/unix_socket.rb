@@ -17,7 +17,7 @@ class XChannel::UNIXSocket
 
   #
   # @return [Boolean]
-  #   Returns true when the channel is closed.
+  #   Returns true when channel is closed.
   #
   def closed?
     @reader.closed? and @writer.closed?
@@ -25,10 +25,10 @@ class XChannel::UNIXSocket
 
   #
   # @raise [IOError]
-  #   An IOError is raised if the channel is already closed.
+  #   Raises IOError when channel is already closed.
   #
   # @return [Boolean]
-  #   Returns true when the channel is closed.
+  #   Returns true when channel is closed.
   #
   def close
     if closed?
@@ -64,7 +64,7 @@ class XChannel::UNIXSocket
   #   Number of seconds to wait.
   #
   # @raise [IOError]
-  #   An IOError is raised when the channel is closed.
+  #   An IOError is raised when channel is closed.
   #
   # @raise [XChannel::TimeoutError]
   #   XChannel::TimeoutError is raised when the write doesn't complete within the timeout.
@@ -100,13 +100,13 @@ class XChannel::UNIXSocket
   # Performs a read with a timeout.
   #
   # @param [Float, Integer] timeout
-  #   Number of seconds to wait before raising an exception.
+  #   Number of seconds to wait before exception is raised.
   #
   # @raise [IOError]
-  #   An IOError is raised when the channel is closed.
+  #   Raises IOError when channel is closed.
   #
   # @raise [XChannel::TimeoutError]
-  #   XChannel::TimeoutError is raised when the read doesn't complete within the specified timeout.
+  #   Raises XChannel::TimeoutError when read times out.
   #
   # @return [Object]
   #

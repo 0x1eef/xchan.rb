@@ -5,7 +5,7 @@
 3. <a href="#requirements">Requirements</a>
 4. <a href="#install">Install</a>
 5. <a href="#license">License</a>
-
+6. <a href="#changelog">Changelog</a>
 
 ## <a id="introduction">Introduction</a>
 
@@ -21,12 +21,12 @@ the serialized data is transformed back to a Ruby object.
 __1.__
 
 The examples mostly explain themselves because they are simple. The first argument given
-to `XChannel.unix` is a serializer, it is a required argument, and it can be any
+to `XChannel.from_unix_socket` is a serializer, it is a required argument, and it can be any
 object that implements the `dump` and `load` methods. If you are unsure about what
 serializer to use, use `Marshal`, because it can serialize the most Ruby objects.
 
 ```ruby
-ch = XChannel.unix Marshal
+ch = XChannel.from_unix_socket Marshal
 Process.wait fork { ch.send "Hi dad!" }
 puts ch.recv
 Process.wait fork { ch.send "Bye dad!" }
@@ -41,7 +41,7 @@ You could also use YAML or MessagePack as serializers.
 
 ```ruby
 require 'json'
-ch = XChannel.unix JSON
+ch = XChannel.from_unix_socket JSON
 Process.wait fork { ch.send "Hi mom!" }
 puts ch.recv
 ch.close
@@ -54,7 +54,7 @@ unlike the other examples that have sent a message from the child process to the
 parent process.
 
 ```ruby
-ch = XChannel.unix Marshal
+ch = XChannel.from_unix_socket Marshal
 pid = fork { puts ch.recv }
 ch.send "Hi son!"
 ch.close
@@ -66,7 +66,7 @@ __4.__
 The fourth example demos how messages are queued until read.
 
 ```ru
-ch = XChannel.unix Marshal
+ch = XChannel.from_unix_socket Marshal
 ch.send 'h'
 ch.send 'i'
 Process.wait fork {
@@ -98,3 +98,10 @@ gem "xchannel.rb", "~> 1.0"
 ## <a id="license"> License </a>
 
 This project uses the MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
+
+
+## <a id="changelog">Changelog</a>
+
+__v2.0.0__
+
+* Rename `XChannel.from_unix_socket()` to `XChannel.from_unix_socket()`.
