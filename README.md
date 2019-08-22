@@ -9,61 +9,79 @@
 
 ## <a id="introduction">Introduction</a>
 
-xchannel.rb provides an easy to use abstraction for sharing Ruby objects 
-between Ruby processes who share a parent-child relationship.
+xchannel.rb is an easy to use library for sharing Ruby objects between Ruby
+processes who have a parent-child relationship.
 
-Under the hood, xchannel.rb uses a method of transport (eg, a UNIXSocket)
-and a serializer (eg: Marshal) to send and receive objects.
+It is implemented by serializing a Ruby object and then writing the serialized
+data to a unix socket. On the other side of the unix socket, in another process,
+the serialized data is transformed back to a Ruby object.
 
 ## <a id="examples">Examples</a>
 
 __1.__
 
-Marshal is the serializer who can serialize the most Ruby objects, although
-it cannot serialize Proc and a few other objects. 
-
-Marshal is apart of Ruby's core library, so you will be glad to know there is 
-nothing extra to require. :) Marshal does not have to be provided as an explicit
-argument (it is the default argument) but for the sake of the example it is.
+The examples mostly explain themselves because they are simple. The first argument given
+to `XChannel.unix` is a serializer, it is a required argument, and it can be any
+object that implements the `dump` and `load` methods. If you are unsure about what
+serializer to use, use `Marshal`, because it can serialize the most Ruby objects.
 
 ```ruby
 ch = XChannel.unix Marshal
-Process.wait fork { ch.send "Hello, world!" }
-ch.recv # => "Hello, world!"
-Process.wait fork { ch.send "Bye, world!" }
-ch.recv # => "Bye, world!"
+Process.wait fork { ch.send "Hi dad!" }
+puts ch.recv
+Process.wait fork { ch.send "Bye dad!" }
+puts ch.recv
 ch.close
 ```
 
 __2.__
 
-JSON can act as a serializer as well, because any object that implements the dump and load 
-methods can act as a serializer. What it can serialize is limited when compared with the 
-Marshal module, though.
+The second example is similar to the first except it uses `JSON` to serialize objects.
+You could also use YAML or MessagePack as serializers.
 
 ```ruby
 require 'json'
 ch = XChannel.unix JSON
-Process.wait fork { ch.send [1,2,3] }
-ch.recv # => [1,2,3]
+Process.wait fork { ch.send "Hi mom!" }
+puts ch.recv
 ch.close
 ```
 
 __3.__
 
-You might want to use YAML as a serializer, that works too. 
+The third example sends a message from the parent process to the child process,
+unlike the other examples that have sent a message from the child process to the
+parent process.
 
 ```ruby
-require 'yaml'
-ch = XChannel.unix YAML
-Process.wait fork { ch.send [1,2,3] }
-ch.recv # => [1,2,3]
+ch = XChannel.unix Marshal
+pid = fork { puts ch.recv }
+ch.send "Hi son!"
+ch.close
+Process.wait(pid)
+```
+
+__4.__
+
+The fourth example demos how messages are queued until read.
+
+```ru
+ch = XChannel.unix Marshal
+ch.send 'h'
+ch.send 'i'
+Process.wait fork {
+  msg = ''
+  msg << ch.recv
+  msg << ch.recv
+  puts msg
+}
 ch.close
 ```
 
 ## <a id="requirements"> Requirements </a>
 
-* Ruby 2.1+
+xchannel doesn't depend on libraries outside Ruby's standard library.
+Ruby2 or later is recommended. Earlier versions _might_ work.
 
 ## <a id="install">Install</a>
 
