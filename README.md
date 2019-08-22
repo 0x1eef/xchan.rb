@@ -10,11 +10,10 @@
 ## <a id="introduction">Introduction</a>
 
 xchannel.rb is an easy to use library for sharing Ruby objects between Ruby
-processes who have a parent-child relationship.
-
-It is implemented by serializing a Ruby object and then writing the serialized
-data to a unix socket. On the other side of the unix socket, in another process,
-the serialized data is transformed back to a Ruby object.
+processes who have a parent-child relationship. It is implemented by serializing
+a Ruby object and then writing the serialized data to a unix socket. On the other
+side of the unix socket, in another process the serialized data is transformed
+back to a Ruby object.
 
 ## <a id="examples">Examples</a>
 
@@ -102,6 +101,11 @@ This project uses the MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
 
 ## <a id="changelog">Changelog</a>
 
-__v2.0.0__
+* __v2.0.0__
 
-* Rename `XChannel.from_unix_socket()` to `XChannel.from_unix_socket()`.
+  * Rename `XChannel.unix()` to `XChannel.from_unix_socket()`.
+  * Improve README and API documentation.
+
+* __v1.0.0__
+
+  * First stable release.

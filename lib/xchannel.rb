@@ -9,7 +9,7 @@ module XChannel
   # @return
   #   (see UNIXSocket#initialize)
   #
-  def self.unix(serializer)
+  def self.from_unix_socket(serializer)
     UNIXSocket.new(serializer)
   end
 end
