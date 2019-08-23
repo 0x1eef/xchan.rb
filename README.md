@@ -91,7 +91,7 @@ As a RubyGem:
 As a bundled gem, in your Gemfile:
 
 ```ruby
-gem "xchannel.rb", "~> 1.0"
+gem "xchannel.rb", "~> 2.0"
 ```
 
 ## <a id="license"> License </a>
