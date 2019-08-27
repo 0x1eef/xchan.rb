@@ -9,7 +9,7 @@
 
 ## <a id="introduction">Introduction</a>
 
-xchannel.rb is an easy to use library for sharing Ruby objects between Ruby
+xchannel.rb is a small and easy to use library for sharing Ruby objects between Ruby
 processes who have a parent-child relationship. It is implemented by serializing
 a Ruby object and then writing the serialized data to a unix socket. On the other
 side of the unix socket, in another process the serialized data is transformed
@@ -26,9 +26,9 @@ serializer to use, use `Marshal`, because it can serialize the most Ruby objects
 
 ```ruby
 ch = XChannel.from_unix_socket Marshal
-Process.wait fork { ch.send "Hi dad!" }
+Process.wait fork { ch.send "Hi parent" }
 puts ch.recv
-Process.wait fork { ch.send "Bye dad!" }
+Process.wait fork { ch.send "Bye parent" }
 puts ch.recv
 ch.close
 ```
@@ -41,7 +41,7 @@ You could also use YAML or MessagePack as serializers.
 ```ruby
 require 'json'
 ch = XChannel.from_unix_socket JSON
-Process.wait fork { ch.send "Hi mom!" }
+Process.wait fork { ch.send "Hi parent" }
 puts ch.recv
 ch.close
 ```
@@ -55,7 +55,7 @@ parent process.
 ```ruby
 ch = XChannel.from_unix_socket Marshal
 pid = fork { puts ch.recv }
-ch.send "Hi son!"
+ch.send "Hi child"
 ch.close
 Process.wait(pid)
 ```
@@ -64,7 +64,7 @@ __4.__
 
 The fourth example demos how messages are queued until read.
 
-```ru
+```ruby
 ch = XChannel.from_unix_socket Marshal
 ch.send 'h'
 ch.send 'i'
@@ -79,16 +79,18 @@ ch.close
 
 ## <a id="requirements"> Requirements </a>
 
-xchannel doesn't depend on libraries outside Ruby's standard library.
+xchannel.rb is light, with 0 external dependencies outside Ruby's core
+and standard libraries.
+
 Ruby2 or later is recommended. Earlier versions _might_ work.
 
 ## <a id="install">Install</a>
 
-As a RubyGem:
+Gem:
 
     gem install xchannel.rb
 
-As a bundled gem, in your Gemfile:
+Bundler:
 
 ```ruby
 gem "xchannel.rb", "~> 2.0"
@@ -96,10 +98,15 @@ gem "xchannel.rb", "~> 2.0"
 
 ## <a id="license"> License </a>
 
-This project uses the MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
+This project uses the MIT license, please see [LICENSE.txt](./LICENSE.txt) for details.
 
 
 ## <a id="changelog">Changelog</a>
+
+* __v2.0.1 (unreleased)__
+
+  * Minor improvements to the README.
+  * Update the project description in the gemspec.
 
 * __v2.0.0__
 
