@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split($/)
   gem.require_paths = ["lib"]
   gem.description   = <<-DESCRIPTION.each_line.map(&:strip).join(' ')
-  xchannel.rb is an easy to use library for sharing Ruby objects between Ruby
+  xchannel.rb is a small and easy to use library for sharing Ruby objects between Ruby
   processes who have a parent-child relationship.
   DESCRIPTION
   gem.summary = gem.description
