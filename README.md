@@ -13,7 +13,8 @@ xchan.rb is a small and easy to use library for sharing Ruby objects between Rub
 processes who have a parent-child relationship. It is implemented by serializing
 a Ruby object and then writing the serialized data to a unix socket. On the other
 side of the unix socket, in another process the serialized data is transformed
-back to a Ruby object.
+back to a Ruby object. The project name `xchan.rb` comes from an abbreviation of
+"UNIX Channel".
 
 ## <a id="examples">Examples</a>
 
