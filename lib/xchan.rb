@@ -1,6 +1,6 @@
-module XChannel
+module XChan
   TimeoutError = Class.new(StandardError)
-  require_relative "xchannel/unix_socket"
+  require_relative "xchan/unix_socket"
 
   #
   # @param

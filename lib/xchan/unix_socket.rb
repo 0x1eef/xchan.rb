@@ -1,13 +1,13 @@
 require 'socket'
 require 'base64'
-class XChannel::UNIXSocket
+class XChan::UNIXSocket
   NULL_BYTE = "\x00"
 
   #
   # @param [#dump, #load] serializer
   #   A serializer (eg Marshal, JSON, YAML)
   #
-  # @return [XChannel::UNIXSocket]
+  # @return [XChan::UNIXSocket]
   #
   def initialize(serializer = Marshal)
     @serializer = serializer
@@ -66,8 +66,8 @@ class XChannel::UNIXSocket
   # @raise [IOError]
   #   An IOError is raised when channel is closed.
   #
-  # @raise [XChannel::TimeoutError]
-  #   XChannel::TimeoutError is raised when the write doesn't complete within the timeout.
+  # @raise [XChan::TimeoutError]
+  #   XChan::TimeoutError is raised when the write doesn't complete within the timeout.
   #
   def send!(object, timeout = 0.1)
     if @writer.closed?
@@ -78,7 +78,7 @@ class XChannel::UNIXSocket
       msg = @serializer.dump(object)
       writable[0].syswrite "#{Base64.strict_encode64(msg)}#{NULL_BYTE}"
     else
-      raise XChannel::TimeoutError, "write timed out after waiting #{timeout} seconds"
+      raise XChan::TimeoutError, "write timed out after waiting #{timeout} seconds"
     end
   end
   alias_method :write!, :send!
@@ -87,7 +87,7 @@ class XChannel::UNIXSocket
   # Performs a blocking read.
   #
   # @raise
-  #   (see XChannel::UNIXSocket#recv!)
+  #   (see XChan::UNIXSocket#recv!)
   #
   # @return [Object]
   #
@@ -105,8 +105,8 @@ class XChannel::UNIXSocket
   # @raise [IOError]
   #   Raises IOError when channel is closed.
   #
-  # @raise [XChannel::TimeoutError]
-  #   Raises XChannel::TimeoutError when read times out.
+  # @raise [XChan::TimeoutError]
+  #   Raises XChan::TimeoutError when read times out.
   #
   # @return [Object]
   #
@@ -119,7 +119,7 @@ class XChannel::UNIXSocket
       base64 = readable[0].readline(NULL_BYTE).chomp(NULL_BYTE)
       @last_msg = @serializer.load Base64.strict_decode64(base64)
     else
-      raise XChannel::TimeoutError, "read timed out after waiting #{timeout} seconds"
+      raise XChan::TimeoutError, "read timed out after waiting #{timeout} seconds"
     end
   end
   alias_method :read!, :recv!

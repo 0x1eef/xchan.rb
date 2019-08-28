@@ -1,4 +1,4 @@
-# xchannel.rb
+# xchan.rb
 
 1. <a href="#introduction">Introduction</a>
 2. <a href="#examples">Examples</a>
@@ -9,7 +9,7 @@
 
 ## <a id="introduction">Introduction</a>
 
-xchannel.rb is a small and easy to use library for sharing Ruby objects between Ruby
+xchan.rb is a small and easy to use library for sharing Ruby objects between Ruby
 processes who have a parent-child relationship. It is implemented by serializing
 a Ruby object and then writing the serialized data to a unix socket. On the other
 side of the unix socket, in another process the serialized data is transformed
@@ -20,12 +20,12 @@ back to a Ruby object.
 __1.__
 
 The examples mostly explain themselves because they are simple. The first argument given
-to `XChannel.from_unix_socket` is a serializer, it is a required argument, and it can be any
+to `XChan.from_unix_socket` is a serializer, it is a required argument, and it can be any
 object that implements the `dump` and `load` methods. If you are unsure about what
 serializer to use, use `Marshal`, because it can serialize the most Ruby objects.
 
 ```ruby
-ch = XChannel.from_unix_socket Marshal
+ch = XChan.from_unix_socket Marshal
 Process.wait fork { ch.send "Hi parent" }
 puts ch.recv
 Process.wait fork { ch.send "Bye parent" }
@@ -40,7 +40,7 @@ You could also use YAML or MessagePack as serializers.
 
 ```ruby
 require 'json'
-ch = XChannel.from_unix_socket JSON
+ch = XChan.from_unix_socket JSON
 Process.wait fork { ch.send "Hi parent" }
 puts ch.recv
 ch.close
@@ -53,7 +53,7 @@ unlike the other examples that have sent a message from the child process to the
 parent process.
 
 ```ruby
-ch = XChannel.from_unix_socket Marshal
+ch = XChan.from_unix_socket Marshal
 pid = fork { puts ch.recv }
 ch.send "Hi child"
 ch.close
@@ -65,7 +65,7 @@ __4.__
 The fourth example demos how messages are queued until read.
 
 ```ruby
-ch = XChannel.from_unix_socket Marshal
+ch = XChan.from_unix_socket Marshal
 ch.send 'h'
 ch.send 'i'
 Process.wait fork {
@@ -79,7 +79,7 @@ ch.close
 
 ## <a id="requirements"> Requirements </a>
 
-xchannel.rb is light, with 0 external dependencies outside Ruby's core
+xchan.rb is light, with 0 external dependencies outside Ruby's core
 and standard libraries.
 
 Ruby2 or later is recommended. Earlier versions _might_ work.
@@ -88,12 +88,12 @@ Ruby2 or later is recommended. Earlier versions _might_ work.
 
 Gem:
 
-    gem install xchannel.rb
+    gem install xchan.rb
 
 Bundler:
 
 ```ruby
-gem "xchannel.rb", "~> 2.0"
+gem "xchan.rb", "~> 2.0"
 ```
 
 ## <a id="license"> License </a>
@@ -105,12 +105,13 @@ This project uses the MIT license, please see [LICENSE.txt](./LICENSE.txt) for d
 
 * __v2.0.1 (unreleased)__
 
+  * Rename the project to `xchan.rb`.
   * Minor improvements to the README.
   * Update the project description in the gemspec.
 
 * __v2.0.0__
 
-  * Rename `XChannel.unix()` to `XChannel.from_unix_socket()`.
+  * Rename `XChan.unix()` to `XChan.from_unix_socket()`.
   * Improve README and API documentation.
 
 * __v1.0.0__
