@@ -1,7 +1,7 @@
 require_relative 'setup'
 RSpec.describe XChan do
   let(:ch) do
-    XChan.from_unix_socket Object.const_get(ENV["SERIALIZER"] || "Marshal")
+    XChan.unix_socket Object.const_get(ENV["SERIALIZER"] || "Marshal")
   end
 
   describe '#recv' do
