@@ -9,24 +9,23 @@
 
 ## <a id="introduction">Introduction</a>
 
-xchan.rb is a small and easy to use library for sharing Ruby objects between Ruby
-processes who have a parent-child relationship. It is implemented by serializing
-a Ruby object and then writing the serialized data to a unix socket. On the other
-side of the unix socket, in another process the serialized data is transformed
-back to a Ruby object. The project name `xchan.rb` comes from an abbreviation of
-"UNIX Channel".
+xchan.rb is a small and easy to use library for sharing Ruby objects between
+Ruby processes who have a parent-child relationship.
 
 ## <a id="examples">Examples</a>
 
 __1.__
 
-The examples mostly explain themselves because they are simple. The first argument given
-to `XChan.from_unix_socket` is a serializer, it is a required argument, and it can be any
-object that implements the `dump` and `load` methods. If you are unsure about what
-serializer to use, use `Marshal`, because it can serialize the most Ruby objects.
+Walking through the first example, you can see the first argument given
+to `XChan.unix_socket` is a serializer, it is a required argument, and it
+can be any object that implements the `dump` and `load` methods. If you are
+unsure about what serializer to use, `Marshal` is usually a good choice and
+it's available without calling `require`.
+
 
 ```ruby
-ch = XChan.from_unix_socket Marshal
+require 'xchan'
+ch = XChan.unix_socket Marshal
 Process.wait fork { ch.send "Hi parent" }
 puts ch.recv
 Process.wait fork { ch.send "Bye parent" }
@@ -40,8 +39,9 @@ The second example is similar to the first except it uses `JSON` to serialize ob
 You could also use YAML or MessagePack as serializers.
 
 ```ruby
+require 'xchan'
 require 'json'
-ch = XChan.from_unix_socket JSON
+ch = XChan.unix_socket JSON
 Process.wait fork { ch.send "Hi parent" }
 puts ch.recv
 ch.close
@@ -54,7 +54,8 @@ unlike the other examples that have sent a message from the child process to the
 parent process.
 
 ```ruby
-ch = XChan.from_unix_socket Marshal
+require 'xchan'
+ch = XChan.unix_socket Marshal
 pid = fork { puts ch.recv }
 ch.send "Hi child"
 ch.close
@@ -66,7 +67,8 @@ __4.__
 The fourth example demos how messages are queued until read.
 
 ```ruby
-ch = XChan.from_unix_socket Marshal
+require 'xchan'
+ch = XChan.unix_socket Marshal
 ch.send 'h'
 ch.send 'i'
 Process.wait fork {
@@ -77,13 +79,6 @@ Process.wait fork {
 }
 ch.close
 ```
-
-## <a id="requirements"> Requirements </a>
-
-xchan.rb is light, with 0 external dependencies outside Ruby's core
-and standard libraries.
-
-Ruby2 or later is recommended. Earlier versions _might_ work.
 
 ## <a id="install">Install</a>
 
@@ -99,22 +94,14 @@ gem "xchan.rb", "~> 2.0"
 
 ## <a id="license"> License </a>
 
-This project uses the MIT license, please see [LICENSE.txt](./LICENSE.txt) for details.
-
+This project uses the MIT license, check out [LICENSE.txt](./LICENSE.txt) for
+details.
 
 ## <a id="changelog">Changelog</a>
 
-* __v2.0.1 (unreleased)__
+* __v0.1.0__
 
-  * Rename the project to `xchan.rb`.
-  * Minor improvements to the README.
-  * Update the project description in the gemspec.
-
-* __v2.0.0__
-
-  * Rename `XChan.unix()` to `XChan.from_unix_socket()`.
-  * Improve README and API documentation.
-
-* __v1.0.0__
-
-  * First stable release.
+  * Rename `XChan.from_unix_socket` to `XChan.unix_socket`.
+  * Rename the project to `xchan.rb` (formerly xchannel.rb), reset version to
+    `v0.1.0`.
+  * Improvements to the README.
