@@ -1,6 +1,6 @@
-require 'socket'
-require 'base64'
 class XChan::UNIXSocket
+  require 'socket'
+  require 'base64'
   NULL_BYTE = "\x00"
 
   #
@@ -9,7 +9,7 @@ class XChan::UNIXSocket
   #
   # @return [XChan::UNIXSocket]
   #
-  def initialize(serializer = Marshal)
+  def initialize(serializer)
     @serializer = serializer
     @last_msg = nil
     @reader, @writer = ::UNIXSocket.pair :STREAM
@@ -25,7 +25,7 @@ class XChan::UNIXSocket
 
   #
   # @raise [IOError]
-  #   Raises IOError when channel is already closed.
+  #   When channel is already closed.
   #
   # @return [Boolean]
   #   Returns true when channel is closed.
@@ -67,7 +67,7 @@ class XChan::UNIXSocket
   #   An IOError is raised when channel is closed.
   #
   # @raise [XChan::TimeoutError]
-  #   XChan::TimeoutError is raised when the write doesn't complete within the timeout.
+  #   When write times out.
   #
   def send!(object, timeout = 0.1)
     if @writer.closed?
@@ -103,10 +103,10 @@ class XChan::UNIXSocket
   #   Number of seconds to wait before exception is raised.
   #
   # @raise [IOError]
-  #   Raises IOError when channel is closed.
+  #   When channel is closed.
   #
   # @raise [XChan::TimeoutError]
-  #   Raises XChan::TimeoutError when read times out.
+  #   When read times out.
   #
   # @return [Object]
   #
@@ -137,7 +137,7 @@ class XChan::UNIXSocket
 
   #
   # @return [Boolean]
-  #   Returns true when the channel can be read from.
+  #   Returns true when there is one or more messages waiting to be read.
   #
   def readable?
     if closed?
