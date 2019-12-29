@@ -60,6 +60,7 @@ Process.wait fork {
   ch.send! 'Hi parent', 0.5
 }
 ch.recv! 0.5
+ch.close
 ```
 
 ## <a id="install">Install</a>
