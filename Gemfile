@@ -5,4 +5,5 @@ group :test do
 end
 group :docs do
   gem "yard"
+  gem "redcarpet"
 end

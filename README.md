@@ -1,11 +1,9 @@
 # xchan.rb
 
-1. <a href="#introduction">Introduction</a>
-2. <a href="#examples">Examples</a>
-3. <a href="#requirements">Requirements</a>
-4. <a href="#install">Install</a>
-5. <a href="#license">License</a>
-6. <a href="#changelog">Changelog</a>
+* <a href="#introduction">Introduction</a>
+* <a href="#examples">Examples</a>
+* <a href="#install">Install</a>
+* <a href="#license">License</a>
 
 ## <a id="introduction">Introduction</a>
 
@@ -16,92 +14,66 @@ Ruby processes who have a parent-child relationship.
 
 __1.__
 
-Walking through the first example, you can see the first argument given
-to `XChan.unix_socket` is a serializer, it is a required argument, and it
-can be any object that implements the `dump` and `load` methods. If you are
-unsure about what serializer to use, `Marshal` is usually a good choice and
-it's available without calling `require`.
-
+The first example introduces you to the `xchan` method, it is implemented as
+`Object#xchan` and returns an instance of `XChan::UNIXSocket`. The first argument
+to `xchan` is an object that can serialize Ruby objects, in this case `Marshal`,
+it could also be `YAML`, `JSON`, `MessagePack`, and any other object that
+serializes Ruby objects through the `dump` and `load` methods:
 
 ```ruby
 require 'xchan'
-ch = XChan.unix_socket Marshal
-Process.wait fork { ch.send "Hi parent" }
+ch = xchan Marshal
+Process.wait fork {
+  ch.send "Hi parent"
+  ch.send "Bye parent"
+}
 puts ch.recv
-Process.wait fork { ch.send "Bye parent" }
 puts ch.recv
 ch.close
 ```
 
 __2.__
 
-The second example is similar to the first except it uses `JSON` to serialize objects.
-You could also use YAML or MessagePack as serializers.
+The next example sends a message from the parent process to the child process,
+unlike the first example that sent messages from the child process to the
+parent process:
 
 ```ruby
 require 'xchan'
-require 'json'
-ch = XChan.unix_socket JSON
-Process.wait fork { ch.send "Hi parent" }
-puts ch.recv
+ch = xchan Marshal
+pid = fork { puts ch.recv }
+ch.send "Hi child"
+Process.wait(pid)
 ch.close
 ```
 
 __3.__
 
-The third example sends a message from the parent process to the child process,
-unlike the other examples that have sent a message from the child process to the
-parent process.
+The last example demonstrates how to send and receive messages within a
+0.5 second timeout, using the `#send!` and `#recv!` methods. If the timeout
+is exceeded then `XChan::TimeoutError` is raised:
 
 ```ruby
 require 'xchan'
-ch = XChan.unix_socket Marshal
-pid = fork { puts ch.recv }
-ch.send "Hi child"
-ch.close
-Process.wait(pid)
-```
-
-__4.__
-
-The fourth example demos how messages are queued until read.
-
-```ruby
-require 'xchan'
-ch = XChan.unix_socket Marshal
-ch.send 'h'
-ch.send 'i'
+ch = xchan Marshal
 Process.wait fork {
-  msg = ''
-  msg << ch.recv
-  msg << ch.recv
-  puts msg
+  ch.send! 'Hi parent', 0.5
 }
-ch.close
+ch.recv! 0.5
 ```
 
 ## <a id="install">Install</a>
 
-Gem:
+Rubygems:
 
     gem install xchan.rb
 
 Bundler:
 
 ```ruby
-gem "xchan.rb", "~> 2.0"
+gem "xchan.rb", "~> 0.1.0"
 ```
 
 ## <a id="license"> License </a>
 
-This project uses the MIT license, check out [LICENSE.txt](./LICENSE.txt) for
-details.
-
-## <a id="changelog">Changelog</a>
-
-* __v0.1.0__
-
-  * Rename `XChan.from_unix_socket` to `XChan.unix_socket`.
-  * Rename the project to `xchan.rb` (formerly xchannel.rb), reset version to
-    `v0.1.0`.
-  * Improvements to the README.
+The MIT license, check out [LICENSE.txt](./LICENSE.txt) for details.

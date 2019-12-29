@@ -4,3 +4,8 @@ task :spec do
   sh "bundle exec rspec"
 end
 task default: :spec
+
+desc "Generate the docs"
+task :docs do
+  sh "bundle exec yardoc"
+end
