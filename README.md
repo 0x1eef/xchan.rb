@@ -34,7 +34,7 @@ ch.close
 
 __2.__
 
-The next example sends a message from the parent process to the child process,
+The following example sends a message from the parent process to the child process,
 unlike the first example that sent messages from the child process to the
 parent process:
 
@@ -49,17 +49,27 @@ ch.close
 
 __3.__
 
-The last example demonstrates how to send and receive messages within a
-0.5 second timeout, using the `#send!` and `#recv!` methods. If the timeout
-is exceeded then `XChan::TimeoutError` is raised:
+The following example demonstrates how to send and receive messages within a
+0.5 second timeout, using the `#timed_send` and `#timed_recv` methods:
 
 ```ruby
 require 'xchan'
+
+def send_ch(ch, message, timeout)
+  ch.timed_send message, timeout
+rescue XChan::TimeoutError
+  # Handle timeout here
+end
+
+def recv_ch(ch, timeout)
+  ch.timed_recv timeout
+rescue XChan::TimeoutError
+  # Handle timeout here
+end
+
 ch = xchan Marshal
-Process.wait fork {
-  ch.send! 'Hi parent', 0.5
-}
-ch.recv! 0.5
+Process.wait fork { send_ch ch, 'Hi parent', 0.5 }
+puts recv_ch(ch, 0.5)
 ch.close
 ```
 
