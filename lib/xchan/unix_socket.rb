@@ -44,32 +44,31 @@ class XChan::UNIXSocket
   # Performs a blocking write.
   #
   # @raise [IOError]
-  #   (see #send!)
+  #   (see #timed_send)
   #
   # @param [Object] object
   #   Object to write to channel.
   #
   def send(object)
-    send!(object, nil)
+    timed_send(object, nil)
   end
   alias_method :write, :send
 
   #
-  # Performs a write with a timeout.
+  # Performs a write with a time out.
   #
   # @param [Object] object
   #   Object to write to channel.
   #
-  # @param [Float, Integer] timeout
-  #   Number of seconds to wait.
+  # @param [Float, Integer] timeout (see #trecv)
   #
   # @raise [IOError]
-  #   An IOError is raised when channel is closed.
+  #   An IOError is raised when channel is closed
   #
   # @raise [XChan::TimeoutError]
   #   When write times out.
   #
-  def send!(object, timeout = 0.1)
+  def timed_send(object, timeout = 0.1)
     if @writer.closed?
       raise IOError, 'closed channel'
     end
@@ -81,26 +80,26 @@ class XChan::UNIXSocket
       raise XChan::TimeoutError, "write timed out after waiting #{timeout} seconds"
     end
   end
-  alias_method :write!, :send!
+  alias_method :timed_write, :timed_send
 
   #
   # Performs a blocking read.
   #
   # @raise
-  #   (see XChan::UNIXSocket#recv!)
+  #   (see XChan::UNIXSocket#timed_recv)
   #
   # @return [Object]
   #
   def recv
-    recv!(nil)
+    timed_recv(nil)
   end
   alias_method :read, :recv
 
   #
-  # Performs a read with a timeout.
+  # Performs a read with a time out.
   #
   # @param [Float, Integer] timeout
-  #   Number of seconds to wait before exception is raised.
+  #   The amount of time to wait before raising {XChan::TimeoutError}.
   #
   # @raise [IOError]
   #   When channel is closed.
@@ -110,7 +109,7 @@ class XChan::UNIXSocket
   #
   # @return [Object]
   #
-  def recv!(timeout = 0.1)
+  def timed_recv(timeout = 0.1)
     if @reader.closed?
       raise IOError, 'closed channel'
     end
@@ -122,7 +121,7 @@ class XChan::UNIXSocket
       raise XChan::TimeoutError, "read timed out after waiting #{timeout} seconds"
     end
   end
-  alias_method :read!, :recv!
+  alias_method :timed_read, :timed_recv
 
   #
   # Reads from a channel until there are no messages left, and
