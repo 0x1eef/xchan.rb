@@ -55,7 +55,6 @@ The following example demonstrates how to send and receive messages within a
 
 ```ruby
 require 'xchan'
-
 ch = xchan Marshal
 if ! ch.timed_send("Hello parent", 0.5)
   # handle time out
