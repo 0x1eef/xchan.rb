@@ -50,26 +50,28 @@ ch.close
 __3.__
 
 The following example demonstrates how to send and receive messages within a
-0.5 second timeout, using the `#timed_send` and `#timed_recv` methods:
+0.5 second timeout, using the `#timed_send` and `#timed_recv` methods.
+`nil` is returned when either method times out:
 
 ```ruby
 require 'xchan'
-
-def send_ch(ch, message, timeout)
-  ch.timed_send message, timeout
-rescue XChan::TimeoutError
-  # Handle timeout here
-end
-
-def recv_ch(ch, timeout)
-  ch.timed_recv timeout
-rescue XChan::TimeoutError
-  # Handle timeout here
-end
-
 ch = xchan Marshal
-Process.wait fork { send_ch ch, 'Hi parent', 0.5 }
-puts recv_ch(ch, 0.5)
+
+Process.wait fork {
+  if ! ch.timed_send("Hello parent", 0.5)
+    # Handle time out
+    puts "[error] send timed out"
+  end
+}
+
+message = ch.timed_recv(0.5)
+if message
+  puts message
+else
+  # Handle time out
+  puts "[error] recv timed out"
+end
+
 ch.close
 ```
 

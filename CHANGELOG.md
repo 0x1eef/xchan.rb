@@ -5,12 +5,18 @@
 **Enhancements**
 
 * **Breaking change**
-Rename `send!` to `timed_send`, and rename `write` to `timed_write`.
+`write` and `timed_write` raise `XChan::NilError` when trying to write `nil` or `false` to a channel.
 
 * **Breaking change**
-Rename `recv!` to `timed_recv`, and rename `read` to `timed_read`.
+`timed_write` and `timed_read` return `nil` instead of raising an error.
 
-* Add `examples/` directory to store `README.md` examples.
+* **Breaking change**
+Rename `send!` to `timed_send`, and rename `write!` to `timed_write`.
+
+* **Breaking change**
+Rename `recv!` to `timed_recv`, and rename `read!` to `timed_read`.
+
+* Add an `examples/` directory that has copies of the `README` examples.
 
 **Bug fixes**
 
