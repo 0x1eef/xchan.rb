@@ -5,10 +5,12 @@
 **Enhancements**
 
 * **Breaking change**
-`write` and `timed_write` raise `XChan::NilError` when trying to write `nil` or `false` to a channel.
+`write` and `timed_write` raise `XChan::NilError` when trying to write
+`nil` or `false` to a channel.
 
 * **Breaking change**
-`timed_write` and `timed_read` return `nil` instead of raising an error.
+`timed_write` and `timed_read` return `nil` instead of raising an error when
+they time out.
 
 * **Breaking change**
 Rename `send!` to `timed_send`, and rename `write!` to `timed_write`.
