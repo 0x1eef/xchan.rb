@@ -56,7 +56,6 @@ The following example demonstrates how to send and receive messages within a
 ```ruby
 require 'xchan'
 ch = xchan Marshal
-
 Process.wait fork {
   if ! ch.timed_send("Hello parent", 0.5)
     # Handle time out
@@ -71,7 +70,6 @@ else
   # Handle time out
   puts "[error] recv timed out"
 end
-
 ch.close
 ```
 
