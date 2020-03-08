@@ -63,8 +63,7 @@ ch.close
 
 __`examples/` directory__
 
-The [examples/](examples/) directory contains the above examples, to run them
-you can use:
+The [examples/](examples/) directory contains the above examples, to run them:
 
     ruby -Ilib examples/example_X.rb
 
