@@ -4,6 +4,11 @@ class XChan::UNIXSocket
   NULL_BYTE = "\x00"
 
   #
+  # @example
+  #   ch = XChan::UNIXSocket.new(Marshal)
+  #   ch.send "Hello world"
+  #   ch.close
+  #
   # @param [#dump, #load] serializer
   #   A serializer (eg Marshal, JSON, YAML)
   #
@@ -17,7 +22,7 @@ class XChan::UNIXSocket
 
   #
   # @return [Boolean]
-  #   Returns true when channel is closed.
+  #   Returns true when a channel is closed.
   #
   def closed?
     @reader.closed? and @writer.closed?
@@ -25,10 +30,10 @@ class XChan::UNIXSocket
 
   #
   # @raise [IOError]
-  #   When channel is already closed.
+  #   When a channel is already closed.
   #
   # @return [Boolean]
-  #   Returns true when channel is closed.
+  #   Returns true when a channel is closed.
   #
   def close
     if closed?
@@ -43,11 +48,10 @@ class XChan::UNIXSocket
   #
   # Performs a blocking write.
   #
-  # @raise [IOError]
-  #   (see #timed_send)
+  # @raise [IOError] (see #timed_send)
   #
   # @param [Object] object
-  #   Object to write to channel.
+  #   The object to write to a channel.
   #
   def send(object)
     timed_send(object, nil)
@@ -58,15 +62,15 @@ class XChan::UNIXSocket
   # Performs a write with a time out.
   #
   # @param [Object] object
-  #   Object to write to channel.
+  #   The object to write to a channel.
   #
-  # @param [Float, Integer] timeout (see #trecv)
+  # @param [Float, Integer] timeout (see #timed_recv)
   #
   # @raise [IOError]
-  #   An IOError is raised when channel is closed
+  #   When a channel is closed.
   #
   # @raise [XChan::TimeoutError]
-  #   When write times out.
+  #   When a write times out.
   #
   def timed_send(object, timeout = 0.1)
     if @writer.closed?
@@ -85,10 +89,10 @@ class XChan::UNIXSocket
   #
   # Performs a blocking read.
   #
-  # @raise
-  #   (see XChan::UNIXSocket#timed_recv)
+  # @raise [IOError] (see #timed_recv)
   #
   # @return [Object]
+  #   Returns the object read from a channel.
   #
   def recv
     timed_recv(nil)
@@ -102,10 +106,10 @@ class XChan::UNIXSocket
   #   The amount of time to wait before raising {XChan::TimeoutError}.
   #
   # @raise [IOError]
-  #   When channel is closed.
+  #   When a channel is closed.
   #
   # @raise [XChan::TimeoutError]
-  #   When read times out.
+  #   When a read times out.
   #
   # @return [Object]
   #
@@ -128,6 +132,7 @@ class XChan::UNIXSocket
   # then returns the last read message.
   #
   # @return [Object]
+  #   The last message read from a channel.
   #
   def last_msg
     @last_msg = recv while readable?
