@@ -1,6 +1,5 @@
 #
 # Example that demonstrates sending and receiving messages with a time out.
-
 require 'xchan'
 
 ch = xchan Marshal
