@@ -76,7 +76,7 @@ Rubygems:
 Bundler:
 
 ```ruby
-gem "xchan.rb", "~> 0.1.0"
+gem "xchan.rb", "~> 0.2.0"
 ```
 
 ## <a id="license"> License </a>
