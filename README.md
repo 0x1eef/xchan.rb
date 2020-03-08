@@ -67,6 +67,13 @@ end
 ch.close
 ```
 
+__`examples/` directory__
+
+The [examples/](examples/) directory contains the above examples, to run them
+you can use:
+
+    ruby -Ilib examples/example_X.rb
+
 ## <a id="install">Install</a>
 
 Rubygems:
