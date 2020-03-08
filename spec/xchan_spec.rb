@@ -8,24 +8,31 @@ RSpec.describe XChan do
     ch.close unless ch.closed?
   end
 
+  describe '#send' do
+    it 'raises NilError when false or nil is written to a channel' do
+      expect { ch.send(nil) }.to raise_error(XChan::NilError)
+      expect { ch.send(false) }.to raise_error(XChan::NilError)
+    end
+
+    it 'returns an integer when successful' do
+      expect(ch.send [1]).to be_instance_of(Integer)
+    end
+  end
+
   describe '#recv' do
-    it 'receives a string with a null byte' do
+    it 'returns a string with a null byte' do
       ch.send ["hello\x00"]
       expect(ch.recv).to eq(["hello\x00"])
     end
 
-    it 'blocks until message is available' do
-      expect {
-        Timeout.timeout(1) { ch.recv }
-      }.to raise_error(Timeout::Error)
+    it 'performs a blocking read' do
+      expect { Timeout.timeout(1) { ch.recv } }.to raise_error(Timeout::Error)
     end
   end
 
-  describe '#recv!' do
-    it 'raises XChan::TimeoutError after waiting for message to become available' do
-      expect {
-        ch.recv!(1)
-      }.to raise_error(XChan::TimeoutError)
+  describe '#timed_recv' do
+    it 'returns nil when a read times out' do
+      expect(ch.timed_recv(0.1)).to eq(nil)
     end
   end
 
@@ -48,9 +55,8 @@ RSpec.describe XChan do
 
   describe '#last_msg' do
     it 'returns the last message written to a channel' do
-      ch.send [1]
-      ch.send [2]
-      expect(ch.last_msg).to eq([2])
+      [1,2,3,4,5].each {|number| ch.send [number]}
+      expect(ch.last_msg).to eq([5])
     end
   end
 end

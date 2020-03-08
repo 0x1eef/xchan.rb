@@ -3,19 +3,18 @@
 
 require 'xchan'
 
-def send_ch(ch, message, timeout)
-  ch.timed_send message, timeout
-rescue XChan::TimeoutError
-  # Handle timeout here
-end
-
-def recv_ch(ch, timeout)
-  ch.timed_recv timeout
-rescue XChan::TimeoutError
-  # Handle timeout here
-end
-
 ch = xchan Marshal
-Process.wait fork { send_ch ch, 'Hi parent', 0.5 }
-puts recv_ch(ch, 0.5)
-ch.close
+Process.wait fork {
+  # timed_send will return `nil` when it times out.
+  if ! ch.timed_send("Hello parent", 0.5)
+    # handle time out
+  end
+}
+
+# timed_recv will return `nil` when it times out.
+message = ch.timed_recv(0.5)
+if message
+  puts message
+else
+  # handle time out
+end

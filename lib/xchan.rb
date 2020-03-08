@@ -1,5 +1,6 @@
 module XChan
-  TimeoutError = Class.new(RuntimeError)
+  NilError = Class.new(RuntimeError)
+
   require_relative 'xchan/version'
   require_relative 'xchan/unix_socket'
 
