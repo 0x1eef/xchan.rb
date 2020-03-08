@@ -1,7 +1,6 @@
 #
 # Example that demonstrates sending and receiving messages with a time out.
 require 'xchan'
-
 ch = xchan Marshal
 if ! ch.timed_send("Hello parent", 0.5)
   # handle time out
