@@ -18,3 +18,5 @@ if message
 else
   # handle time out
 end
+
+ch.close
