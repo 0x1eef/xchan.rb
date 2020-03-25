@@ -34,8 +34,8 @@ ch.close
 
 __2.__
 
-The following example sends a message from the parent process to the child process,
-unlike the first example that sent messages from the child process to the
+The following example sends a object from the parent process to the child process,
+unlike the first example that sent objects from the child process to the
 parent process:
 
 ```ruby
@@ -49,7 +49,7 @@ ch.close
 
 __3.__
 
-The following example demonstrates how to send and receive messages within a
+The following example demonstrates how to send and receive objects within a
 0.5 second timeout, using the `#timed_send` and `#timed_recv` methods.
 `nil` is returned when either method times out:
 
@@ -59,6 +59,20 @@ ch = xchan Marshal
 ch.timed_send("Hello parent", 0.5) ? puts("message sent") : puts("send timed out")
 (message = ch.timed_recv 0.5) ? puts(message) : puts("read timed out")
 ch.close
+```
+
+__4.__
+
+The following example demonstrates how the last object written to a channel
+can be read while disregarding all objects written before it:
+
+```ruby
+require 'xchan'
+ch = xchan Marshal
+ch.send 1
+ch.send 2
+ch.send 3
+puts ch.recv_last # => 3
 ```
 
 __`examples/` directory__
