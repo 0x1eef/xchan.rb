@@ -18,7 +18,6 @@ class XChan::UNIXSocket
   #
   def initialize(serializer)
     @serializer = serializer
-    @last_msg = nil
     @reader, @writer = ::UNIXSocket.pair :STREAM
   end
 
@@ -145,7 +144,7 @@ class XChan::UNIXSocket
     last
   end
   alias_method :read_last, :recv_last
-  
+
   #
   # @return [Boolean]
   #   Returns true when there is one or more objects waiting to be read.
