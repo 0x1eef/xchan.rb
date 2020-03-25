@@ -64,8 +64,8 @@ ch.close
 __4.__
 
 The following example demonstrates the `#recv_last` method, it reads the last
-object written to a channel and discards older writes ("ab" and "abc" in this
-example):
+object written to a channel and discards older writes in the process ("ab" and
+"abc" in this example):
 
 ```ruby
 require 'xchan'
