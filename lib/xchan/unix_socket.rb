@@ -133,20 +133,22 @@ class XChan::UNIXSocket
   alias_method :timed_read, :timed_recv
 
   #
-  # Reads from a channel until there are no messages left, and
-  # then returns the last read message.
+  # Returns the last object written to a channel.
   #
-  # @return [Object]
-  #   The last message read from a channel.
+  # @return [Object, nil]
+  #   The last object written to a channel, or `nil` if there's nothing to
+  #   be read.
   #
-  def last_msg
-    @last_msg = recv while readable?
-    @last_msg
+  def recv_last
+    last = nil
+    last = recv while readable?
+    last
   end
-
+  alias_method :read_last, :recv_last
+  
   #
   # @return [Boolean]
-  #   Returns true when there is one or more messages waiting to be read.
+  #   Returns true when there is one or more objects waiting to be read.
   #
   def readable?
     if closed?

@@ -53,10 +53,10 @@ RSpec.describe XChan do
     end
   end
 
-  describe '#last_msg' do
+  describe '#recv_last' do
     it 'returns the last message written to a channel' do
       [1,2,3,4,5].each {|number| ch.send [number]}
-      expect(ch.last_msg).to eq([5])
+      expect(ch.recv_last).to eq([5])
     end
   end
 end
