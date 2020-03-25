@@ -63,16 +63,17 @@ ch.close
 
 __4.__
 
-The following example demonstrates how the last object written to a channel
-can be read while disregarding all objects written before it:
+The following example demonstrates the `#recv_last` method, it reads the last
+object written to a channel and discards older writes ("ab" and "abc" in this
+example):
 
 ```ruby
 require 'xchan'
 ch = xchan Marshal
-ch.send 1
-ch.send 2
-ch.send 3
-puts ch.recv_last # => 3
+ch.send "ab"
+ch.send "abc"
+ch.send "abcd"
+puts ch.recv_last # => "abcd"
 ```
 
 __`examples/` directory__
