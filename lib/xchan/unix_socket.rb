@@ -38,7 +38,7 @@ class XChan::UNIXSocket
   #
   def close
     if closed?
-      raise IOError, 'closed channel'
+      raise IOError, 'Channel is already closed'
     else
       @reader.close
       @writer.close

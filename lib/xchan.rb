@@ -10,7 +10,7 @@ module XChan
   module ObjectMixin
     #
     # @example
-    #   ch = xchan(Marshal)
+    #   ch = xchan Marshal
     #   ch.send "Hello world"
     #   ch.close
     #
