@@ -1,5 +1,7 @@
 # xchan.rb
 
+**Table of contents**
+
 * <a href="#introduction">Introduction</a>
 * <a href="#examples">Examples</a>
 * <a href="#install">Install</a>
@@ -16,9 +18,9 @@ __1.__
 
 The first example introduces you to the `xchan` method, it is implemented as
 `Object#xchan` and returns an instance of `XChan::UNIXSocket`. The first argument
-to `xchan` is an object that can serialize Ruby objects, in this case `Marshal`,
-it could also be `YAML`, `JSON`, `MessagePack`, and any other object that
-serializes Ruby objects through the `dump` and `load` methods:
+to `xchan` is an object that can serialize Ruby objects, in the example that's
+`Marshal`, but it could also be `YAML`, `JSON`, `MessagePack`, or any other object
+that serializes Ruby objects through the `dump` and `load` methods.
 
 ```ruby
 require 'xchan'
@@ -36,7 +38,7 @@ __2.__
 
 The following example sends a object from the parent process to the child process,
 unlike the first example that sent objects from the child process to the
-parent process:
+parent process.
 
 ```ruby
 require 'xchan'
@@ -51,7 +53,7 @@ __3.__
 
 The following example demonstrates how to send and receive objects within a
 0.5 second timeout, using the `#timed_send` and `#timed_recv` methods.
-`nil` is returned when either method times out:
+`nil` is returned when either method times out.
 
 ```ruby
 require 'xchan'
@@ -65,7 +67,7 @@ __4.__
 
 The following example demonstrates the `#recv_last` method, it reads the last
 object written to a channel and discards older writes in the process ("ab" and
-"abc" in this example):
+"abc" in this example).
 
 ```ruby
 require 'xchan'
@@ -78,22 +80,14 @@ puts ch.recv_last # => "abcd"
 
 __`examples/` directory__
 
-The [examples/](examples/) directory contains the above examples, to run them:
+The [examples/](examples/) directory contains the above examples, try them by running:
 
     ruby -Ilib examples/example_X.rb
 
 ## <a id="install">Install</a>
 
-Rubygems:
-
     gem install xchan.rb
-
-Bundler:
-
-```ruby
-gem "xchan.rb", "~> 0.2.0"
-```
 
 ## <a id="license"> License </a>
 
-The MIT license, check out [LICENSE.txt](./LICENSE.txt) for details.
+The MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
