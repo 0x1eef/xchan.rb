@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## v0.3.0 (unreleased)
+## HEAD
+
+  Nothing yet.
+
+## v0.3.0
 
 * Add `#recv_last` example to `README.md`.
 
@@ -9,8 +13,9 @@
 * **Breaking change**
   Rename `XChan::UNIXSocket#last_msg` to `XChan::UNIXSocket#recv_last`.
 
-* Update API documentation and `README.md` to refer to sending / receiving
-  "objects" rather than sending / receiving "messages".
+* Update API docs
+
+* Update `README.md`
 
 ## v0.2.0
 
