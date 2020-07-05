@@ -36,9 +36,9 @@ ch.close
 
 __2.__
 
-The following example sends a object from the parent process to the child process,
-unlike the first example that sent objects from the child process to the
-parent process.
+The following example demonstrates sending an object from a parent process to a
+child process, unlike the first example that sent objects from a child process
+to a parent process.
 
 ```ruby
 require 'xchan'
