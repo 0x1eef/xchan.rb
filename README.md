@@ -4,6 +4,7 @@
 
 * <a href="#introduction">Introduction</a>
 * <a href="#examples">Examples</a>
+* <a href="#documentation">Documentation</a>
 * <a href="#install">Install</a>
 * <a href="#license">License</a>
 
@@ -83,6 +84,14 @@ __`examples/` directory__
 The [examples/](examples/) directory contains the above examples, try them by running:
 
     ruby -Ilib examples/example_X.rb
+
+## <a id="documentation">Documentation</a>
+
+API documentation coverage for xchan.rb is at over 60%, and as of this writing all methods
+are documented. The documentation is written with [YARD](https://github.com/lsegal/yard).
+
+* [rubydoc.info/gems/xchan.rb](https://rubydoc.info/gems/xchan.rb)
+
 
 ## <a id="install">Install</a>
 
