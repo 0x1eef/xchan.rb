@@ -18,7 +18,7 @@ module XChan
     #
     # @return (see UNIXSocket#initialize)
     #
-    def xchan(serializer)
+    def xchan(serializer=Marshal)
       UNIXSocket.new(serializer)
     end
   end
