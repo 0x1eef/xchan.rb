@@ -2,7 +2,10 @@
 
 ## HEAD
 
-* Nothing yet.
+* Default to serializer `Marshal` from `XChan::UNIXSocket#initialize` and
+ `ObjectMixin#xchan`.
+
+* Update API documentation.
 
 ## v0.3.1
 
