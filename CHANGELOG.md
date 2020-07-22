@@ -2,7 +2,11 @@
 
 ## HEAD
 
-  Nothing yet.
+* Nothing yet.
+
+## v0.3.1
+
+* Update documentation files.
 
 ## v0.3.0
 
