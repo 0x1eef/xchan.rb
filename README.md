@@ -18,14 +18,17 @@ Ruby processes who have a parent-child relationship.
 **#1**
 
 The first example introduces you to the `xchan` method, it is implemented as
-`Object#xchan` and returns an instance of `XChan::UNIXSocket`. The first argument
-to `xchan` is an object that can serialize Ruby objects, in the example that's
-`Marshal`, but it could also be `YAML`, `JSON`, `MessagePack`, or any other object
-that serializes Ruby objects through the `dump` and `load` methods.
+`Object#xchan` and returns an instance of `XChan::UNIXSocket`. 
+
+The first (optional) argument to `xchan` is an object who can dump an object 
+to text and from that text create the same object once again in memory. xchan.rb 
+defaults to `Marshal` without an argument, but depending on your needs you could 
+choose from YAML, JSON, MessagePack, etc.
+ 
 
 ```ruby
 require 'xchan'
-ch = xchan Marshal
+ch = xchan
 Process.wait fork {
   ch.send "Hi parent"
   ch.send "Bye parent"
@@ -43,7 +46,7 @@ to a parent process.
 
 ```ruby
 require 'xchan'
-ch = xchan Marshal
+ch = xchan
 pid = fork { puts ch.recv }
 ch.send "Hi child"
 Process.wait(pid)
@@ -58,7 +61,7 @@ The following example demonstrates how to send and receive objects within a
 
 ```ruby
 require 'xchan'
-ch = xchan Marshal
+ch = xchan
 ch.timed_send("Hello parent", 0.5) ? puts("message sent") : puts("send timed out")
 (message = ch.timed_recv 0.5) ? puts(message) : puts("read timed out")
 ch.close
@@ -72,7 +75,7 @@ object written to a channel and discards older writes in the process ("ab" and
 
 ```ruby
 require 'xchan'
-ch = xchan Marshal
+ch = xchan
 ch.send "ab"
 ch.send "abc"
 ch.send "abcd"
