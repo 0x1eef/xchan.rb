@@ -2,8 +2,11 @@
 
 ## HEAD
 
-* Default to serializer `Marshal` from `XChan::UNIXSocket#initialize` and
- `ObjectMixin#xchan`.
+* Nothing yet.
+
+## v0.3.2
+
+* The `xchan` method can be called without an argument, defaulting to `Marshal`.
 
 * Update API documentation.
 
