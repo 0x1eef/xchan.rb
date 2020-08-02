@@ -15,7 +15,7 @@ Ruby processes who have a parent-child relationship.
 
 ## <a id="examples">Examples</a>
 
-__1.__
+**#1**
 
 The first example introduces you to the `xchan` method, it is implemented as
 `Object#xchan` and returns an instance of `XChan::UNIXSocket`. The first argument
@@ -35,7 +35,7 @@ puts ch.recv
 ch.close
 ```
 
-__2.__
+**#2**
 
 The following example demonstrates sending an object from a parent process to a
 child process, unlike the first example that sent objects from a child process
@@ -50,7 +50,7 @@ Process.wait(pid)
 ch.close
 ```
 
-__3.__
+**#3**
 
 The following example demonstrates how to send and receive objects within a
 0.5 second timeout, using the `#timed_send` and `#timed_recv` methods.
@@ -64,7 +64,7 @@ ch.timed_send("Hello parent", 0.5) ? puts("message sent") : puts("send timed out
 ch.close
 ```
 
-__4.__
+**#4**
 
 The following example demonstrates the `#recv_last` method, it reads the last
 object written to a channel and discards older writes in the process ("ab" and
