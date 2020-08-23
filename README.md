@@ -41,20 +41,6 @@ ch.close
 
 **#2**
 
-The following example demonstrates sending an object from a parent process to a
-child process.
-
-```ruby
-require 'xchan'
-ch = xchan
-pid = fork { puts ch.recv }
-ch.send "Hi child"
-Process.wait(pid)
-ch.close
-```
-
-**#3**
-
 The following example demonstrates how to send and receive objects within a
 0.5 second timeout, using the `#timed_send` and `#timed_recv` methods.
 `nil` is returned when either method times out.
@@ -67,7 +53,7 @@ ch.timed_send("Hello parent", 0.5) ? puts("message sent") : puts("send timed out
 ch.close
 ```
 
-**#4**
+**#3**
 
 The following example demonstrates the `#recv_last` method, it reads the last
 object written to a channel and discards older writes in the process ("ab" and
