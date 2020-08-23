@@ -11,7 +11,8 @@
 ## <a id="introduction">Introduction</a>
 
 xchan.rb is a small and easy to use library for sharing Ruby objects between
-Ruby processes who have a parent-child relationship.
+Ruby processes who have a parent-child relationship. Behind the scenes,
+xchan.rb is using a UNIX socket.
 
 ## <a id="examples">Examples</a>
 
@@ -41,8 +42,7 @@ ch.close
 **#2**
 
 The following example demonstrates sending an object from a parent process to a
-child process, unlike the first example that sent objects from a child process
-to a parent process.
+child process.
 
 ```ruby
 require 'xchan'
