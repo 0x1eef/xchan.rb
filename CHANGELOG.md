@@ -4,6 +4,10 @@
 
 * Nothing yet.
 
+## v0.3.3
+
+* Update gemspec email address.
+
 ## v0.3.2
 
 * The `xchan` method can be called without an argument, defaulting to `Marshal`.
