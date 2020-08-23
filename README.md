@@ -18,13 +18,13 @@ Ruby processes who have a parent-child relationship.
 **#1**
 
 The first example introduces you to the `xchan` method, it is implemented as
-`Object#xchan` and returns an instance of `XChan::UNIXSocket`. 
+`Object#xchan` and returns an instance of `XChan::UNIXSocket`.
 
-The first (optional) argument to `xchan` is an object who can dump an object 
-to text and from that text create the same object once again in memory. xchan.rb 
-defaults to `Marshal` without an argument, but depending on your needs you could 
-choose from YAML, JSON, MessagePack, etc.
- 
+The first (optional) argument to `xchan` is an object who can dump an object
+to text and from that text create the same object once again in memory. xchan.rb
+defaults to `Marshal` without an argument, depending on your needs you could
+choose from YAML, JSON, and MessagePack - to name a few.
+
 
 ```ruby
 require 'xchan'
