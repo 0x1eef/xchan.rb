@@ -16,7 +16,7 @@ matrix:
 
 notifications:
   email:
-    - '1xab@protonmail.com'
+    - '1aab@protonmail.com'
 
 branches:
   only:
