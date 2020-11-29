@@ -4,6 +4,10 @@
 
 * Nothing yet.
 
+## v0.3.4
+
+* Update gemspec.
+
 ## v0.3.3
 
 * Update gemspec email address.
