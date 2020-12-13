@@ -69,7 +69,7 @@ puts ch.recv_last # => "abcd"
 
 __`examples/` directory__
 
-The [examples/](examples/) directory contains the above examples, try them by running:
+The [examples/](examples/) directory contains the above examples:
 
     ruby -Ilib examples/example_X.rb
 
