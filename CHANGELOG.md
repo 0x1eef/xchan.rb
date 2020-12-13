@@ -4,6 +4,10 @@
 
 * Nothing yet.
 
+## v0.3.5
+
+* Update project description
+
 ## v0.3.4
 
 * Update gemspec.
