@@ -75,9 +75,6 @@ The [examples/](examples/) directory contains the above examples, try them by ru
 
 ## <a id="documentation">Documentation</a>
 
-Documentation coverage for xchan.rb is at over 60%, and as of this writing all methods
-are documented. The documentation is written with [YARD](https://github.com/lsegal/yard).
-
 * [rubydoc.info/gems/xchan.rb (gem)](https://rubydoc.info/gems/xchan.rb)
 * [rubydoc.info/github/0x1eef/xchan.rb/master](https://rubydoc.info/github/0x1eef/xchan.rb/master)
 
