@@ -3,7 +3,7 @@ Gem::Specification.new do |gem|
   gem.name          = "xchan.rb"
   gem.authors       = ["rg"]
   gem.email         = ["1aab@protonmail.com"]
-  gem.homepage      = "https://github.com/rg-3/xchan.rb"
+  gem.homepage      = "https://github.com/0x1eef/xchan.rb"
   gem.version       = XChan::VERSION
   gem.licenses      = ["MIT"]
   gem.files         = `git ls-files`.split($/)
