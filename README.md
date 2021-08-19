@@ -94,7 +94,7 @@ and a few other objects. JSON, on the other hand, can only serialize a few basic
 Array, String, Boolean, `nil` (null) and Integer. 
 
 It's not possible to write `nil` or `false` on its own to a channel, regardless of the 
-serializer being used. For example this line would raise an error:
+serializer being used. For example this example would raise an error (`XChan::NilError`):
 
 ```ruby
 require 'xchan'
