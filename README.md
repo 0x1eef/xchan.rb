@@ -90,7 +90,7 @@ The [examples/](examples/) directory contains the above examples:
 Not all objects can be written to a channel, but a lot can. It depends on the serializer
 you're using - the default, Marshal, can serialize most objects but not Procs, anonymous Modules, 
 and a few other objects. JSON, on the other hand, can only serialize a few basic objects - Hash, 
-Array, String, and Integer. 
+Array, String, Boolean, `nil` (null) and Integer. 
 
 It's not possible to write `nil` on its own to a channel, regardless of the serializer being used. 
 For example this line would raise an error:
