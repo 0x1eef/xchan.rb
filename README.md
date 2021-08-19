@@ -6,6 +6,7 @@
 * <a href="#examples">Examples</a>
 * <a href="#documentation">Documentation</a>
 * <a href='#kernelsend-xchan'>`Kernel#send` and xchan.rb</a>
+* <a href='#limitations'>Limitations</a>
 * <a href="#install">Install</a>
 * <a href="#license">License</a>
 
@@ -105,6 +106,25 @@ ch.send "foo"
 # Receive the message from channel
 ch.__send__(:recv)
 ```
+
+## <a id='limitations'> Limitations </a>
+
+Not all objects can be written to a channel, but a lot can. It depends on the serializer
+you're using - the default, Marshal, can serialize most objects but not Procs, anonymous Modules, 
+and a few other objects. JSON, on the other hand, can only serialize a few basic objects - Hash, 
+Array, String, and Integer. 
+
+It's not possible to write `nil` on its own to a channel, regardless of the serializer being used. 
+For example this line would raise an error:
+
+```ruby
+require 'xchan'
+ch = xchan
+xchan.send nil
+```
+
+That's because `nil` has special meaning to xchan.rb, it is returned by the `#timed_recv` 
+and `#timed_send` methods to indicate a timeout. 
 
 ## <a id="documentation">Documentation</a>
 
