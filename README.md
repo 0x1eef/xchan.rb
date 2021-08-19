@@ -77,6 +77,7 @@ ch.send "ab"
 ch.send "abc"
 ch.send "abcd"
 puts ch.recv_last # => "abcd"
+ch.close
 ```
 
 **`examples/` directory**
@@ -124,6 +125,8 @@ ch = xchan
 ch.send "foo"
 # Receive the message from channel
 ch.__send__(:recv)
+# Close the channel
+ch.__send__(:close)
 ``` 
 
 ## <a id="documentation">Documentation</a>
