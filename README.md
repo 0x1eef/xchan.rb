@@ -92,11 +92,17 @@ that can be used in cases where an object has implemented its own `#send`.
 
 In the case of xchan.rb, I found `#send` and `#recv` to be the best method names
 for a channel object and I recommend using `Kernel#__send__` if you happen to be 
-doing dynamic method dispatch using an xchan object.
-. 
+doing dynamic method dispatch using an xchan object. If `#send` and `#recv` is not 
+to your taste, then there's also the aliases `#write` and `#read`.
+
+This example shows how you would use `Kernel#__send__` with an xchan.rb channel object:
+
 ```ruby
 require 'xchan'
 ch = xchan
+# Send a message to channel
+ch.send "foo"
+# Receive the message from channel
 ch.__send__(:recv)
 ```
 
