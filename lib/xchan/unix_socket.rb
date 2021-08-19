@@ -31,7 +31,7 @@ class XChan::UNIXSocket
 
   #
   # @raise [IOError]
-  #   When the channel is already closed.
+  #   Raised when the channel is already closed.
   #
   # @return [Boolean]
   #   Returns true when the channel is closed.
@@ -68,13 +68,14 @@ class XChan::UNIXSocket
   #  The object to write to the channel.
   #
   # @param [Float, Integer] timeout
-  #  The amount of time to wait before timing out.
+  #  The amount of time to wait for the underlying IO to
+  #  be writable
   #
   # @raise [IOError]
-  #  When the channel is closed.
+  #  Raises when the channel is closed.
   #
   # @raise [XChan::NilError]
-  #  When trying to write `nil` or `false` to the channel.
+  #  Raises when trying to write `nil` or `false` to the channel.
   #
   # @return [Integer, nil]
   #  The number of bytes written to the channel, or `nil` if the write times out.
@@ -109,10 +110,11 @@ class XChan::UNIXSocket
   # Performs a read with a time out.
   #
   # @param [Float, Integer] timeout
-  #  The amount of time to wait before timing out.
+  #  The amount of time to wait for the underlying IO
+  #  to be readable.
   #
   # @raise [IOError]
-  #  When the channel is closed.
+  #  Raised when the channel is closed.
   #
   # @return [Object, nil]
   #  An object from the channel, or `nil` if the read times out.
@@ -143,8 +145,8 @@ class XChan::UNIXSocket
   #   ch.recv_last # => 3
   #
   # @return [Object, nil]
-  #  The last object written to the channel, or `nil` if there's nothing to be
-  #  read.
+  #  The last object written to the channel, or `nil` if there's nothing
+  #  to read.
   #
   def recv_last
     last = nil
