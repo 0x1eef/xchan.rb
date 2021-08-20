@@ -107,7 +107,7 @@ and `#timed_send` methods to indicate a timeout.
 
 ## <a id='kernelsend-xchan'>`Kernel#send` and xchan.rb</a>
 
-The `Kernel#send` method is normally used for dynamic method dispatch in Ruby, where
+The `Kernel#send` method is often used for dynamic method dispatch in Ruby, where
 a method can be called by name using a String or Symbol. It has an alias, `Kernel#__send__`,
 that can be used in cases where an object has implemented its own `#send`.
 
