@@ -37,8 +37,8 @@ Process.wait fork {
   ch.send "Hi parent"
   ch.send "Bye parent"
 }
-puts ch.recv
-puts ch.recv
+puts ch.recv # => Hi parent
+puts ch.recv # => Bye parent
 ch.close
 ```
 
