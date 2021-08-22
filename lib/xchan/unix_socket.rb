@@ -5,6 +5,14 @@ class XChan::UNIXSocket
   # @api private
   NULL_BYTE = "\x00"
 
+  # @return [Integer]
+  #  Returns the total number of bytes written to the channel
+  attr_reader :bytes_written
+
+  # @return [Integer]
+  #  Returns the total number of bytes read from the channel
+  attr_reader :bytes_read
+
   # @example
   #   ch = XChan::UNIXSocket.new(Marshal)
   #   ch.send [1,2,3]
@@ -18,6 +26,8 @@ class XChan::UNIXSocket
   def initialize(serializer)
     @serializer = serializer
     @reader, @writer = ::UNIXSocket.pair :STREAM
+    @bytes_written = 0
+    @bytes_read = 0
   end
 
   #
@@ -80,7 +90,9 @@ class XChan::UNIXSocket
     _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
       msg = @serializer.dump(object)
-      writable[0].syswrite "#{Base64.strict_encode64(msg)}#{NULL_BYTE}"
+      syswrite_count = writable[0].syswrite "#{Base64.strict_encode64(msg)}#{NULL_BYTE}"
+      @bytes_written += syswrite_count
+      syswrite_count
     end
   end
   alias_method :timed_write, :timed_send
@@ -110,10 +122,11 @@ class XChan::UNIXSocket
     if @reader.closed?
       raise IOError, "closed channel"
     end
-    readable, _ = IO.select [@reader], nil, nil, timeout
+    readable,  = IO.select [@reader], nil, nil, timeout
     if readable
-      base64 = readable[0].readline(NULL_BYTE).chomp(NULL_BYTE)
-      @last_msg = @serializer.load Base64.strict_decode64(base64)
+      base64 = readable[0].readline(NULL_BYTE)
+      @bytes_read += base64.bytesize
+      @last_msg = @serializer.load Base64.strict_decode64(base64.chomp(NULL_BYTE))
     end
   end
   alias_method :timed_read, :timed_recv

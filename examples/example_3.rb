@@ -1,7 +1,7 @@
 require "xchan"
 ch = xchan Marshal
-ch.send "ab"
-ch.send "abc"
-ch.send "abcd"
-puts ch.recv_last # => "abcd"
+ch.send "foo"
+ch.send "bar"
+ch.send "foobar"
+print "Last written message: ", ch.recv_last, "\n"
 ch.close

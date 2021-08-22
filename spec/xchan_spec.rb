@@ -8,14 +8,51 @@ RSpec.describe XChan do
     ch.close unless ch.closed?
   end
 
+  describe "#bytes_written" do
+    let(:payload) { %w(0x1eef) }
+    let(:payload_size) { 25 }
+
+    it 'records the bytes written by one message' do
+      ch.send payload
+      expect(ch.bytes_written).to eq(payload_size)
+    end
+
+    it 'records the bytes written by two messages' do
+      2.times { ch.send payload }
+      expect(ch.bytes_written).to eq(payload_size * 2)
+    end
+  end
+
+  describe '#bytes_read' do
+    let(:payload) { %w(0x1eef) }
+    let(:payload_size) { 25 }
+
+    it 'records the bytes read from one message' do
+      ch.send payload
+      ch.recv
+      expect(ch.bytes_read).to eq(payload_size)
+    end
+
+    it 'records the bytes read from two messages' do
+      2.times { ch.send payload }
+      2.times { ch.recv }
+      expect(ch.bytes_read).to eq(payload_size * 2)
+    end
+  end
+
   describe "#send" do
     it "raises NilError when false or nil is written to a channel" do
       expect { ch.send(nil) }.to raise_error(XChan::NilError)
       expect { ch.send(false) }.to raise_error(XChan::NilError)
     end
 
-    it "returns an integer when successful" do
-      expect(ch.send([1])).to be_instance_of(Integer)
+    it "returns the number of written bytes" do
+      expect(ch.send %w(0x1eef)).to eq(25)
+    end
+
+    it "consistently returns the number of written bytes by the last write" do
+      expect(ch.send %w(0x1eef)).to eq(25)
+      expect(ch.send %w(0x1eef)).to eq(25)
     end
   end
 

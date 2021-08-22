@@ -1,12 +1,9 @@
-# Example that demonstrates sending messages from a child process to a parent
-# process.
-require "xchan"
-
-ch = xchan Marshal
+require 'xchan'
+ch = xchan
 Process.wait fork {
-  ch.send "Hi parent"
-  ch.send "Bye parent"
+  ch.send({message: 1})
+  ch.send({message: 2})
 }
-puts ch.recv
-puts ch.recv
+print "Received message: ", ch.recv, "\n"
+print "Received message: ", ch.recv, "\n"
 ch.close

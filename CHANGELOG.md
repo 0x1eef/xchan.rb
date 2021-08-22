@@ -2,9 +2,11 @@
 
 ## HEAD
 
+* Add `XChan::UNIXSocket#bytes_written` and `XChan::UNIXSocket#bytes_read`.
+
 * Replace `Gemfile` with `gem.deps.rb`
 
-* Adopt [standardrb](https://github.com/testdouble/standard) as project linter.
+* Adopt [standardrb](https://github.com/testdouble/standard) as the project linter.
 
 * Update API documentation
 
