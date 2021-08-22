@@ -2,6 +2,10 @@
 
 ## HEAD
 
+* Remove dead ivar `@last_msg`.
+
+* Include `Base64` into `XChan::UNIXSocket`.
+
 * Add `XChan::UNIXSocket#bytes_written` and `XChan::UNIXSocket#bytes_read`.
 
 * Replace `Gemfile` with `gem.deps.rb`

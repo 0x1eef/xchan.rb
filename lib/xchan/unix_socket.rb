@@ -2,6 +2,8 @@ class XChan::UNIXSocket
   require "socket"
   require "base64"
 
+  include Base64
+
   # @api private
   NULL_BYTE = "\x00"
 
@@ -90,7 +92,7 @@ class XChan::UNIXSocket
     _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
       msg = @serializer.dump(object)
-      syswrite_count = writable[0].syswrite "#{Base64.strict_encode64(msg)}#{NULL_BYTE}"
+      syswrite_count = writable[0].syswrite "#{strict_encode64(msg)}#{NULL_BYTE}"
       @bytes_written += syswrite_count
       syswrite_count
     end
@@ -124,9 +126,9 @@ class XChan::UNIXSocket
     end
     readable,  = IO.select [@reader], nil, nil, timeout
     if readable
-      base64 = readable[0].readline(NULL_BYTE)
-      @bytes_read += base64.bytesize
-      @last_msg = @serializer.load Base64.strict_decode64(base64.chomp(NULL_BYTE))
+      base64_str = readable[0].readline(NULL_BYTE)
+      @bytes_read += base64_str.bytesize
+      @serializer.load strict_decode64(base64_str.chomp(NULL_BYTE))
     end
   end
   alias_method :timed_read, :timed_recv
