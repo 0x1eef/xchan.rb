@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## HEAD
+## CURRENT
+
+* Nothing so far.
+
+## v0.4.0
 
 * Remove dead ivar `@last_msg`.
 
