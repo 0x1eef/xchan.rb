@@ -1,4 +1,4 @@
-require 'xchan'
+require "xchan"
 ch = xchan
 Process.wait fork {
   ch.send({message: 1})

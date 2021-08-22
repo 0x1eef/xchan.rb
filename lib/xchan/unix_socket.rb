@@ -122,7 +122,7 @@ class XChan::UNIXSocket
     if @reader.closed?
       raise IOError, "closed channel"
     end
-    readable,  = IO.select [@reader], nil, nil, timeout
+    readable, = IO.select [@reader], nil, nil, timeout
     if readable
       base64_str = readable[0].readline(NULL_BYTE)
       @bytes_read += base64_str.bytesize
