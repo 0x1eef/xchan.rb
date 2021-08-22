@@ -71,7 +71,7 @@ discards older writes in the process - `foo` and `bar` in this example.
 
 ```ruby
 require "xchan"
-ch = xchan Marshal
+ch = xchan
 ch.send "foo"
 ch.send "bar"
 ch.send "foobar"

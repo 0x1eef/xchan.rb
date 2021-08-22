@@ -1,5 +1,5 @@
 require "xchan"
-ch = xchan Marshal
+ch = xchan
 ch.send "foo"
 ch.send "bar"
 ch.send "foobar"
