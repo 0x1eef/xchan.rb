@@ -32,10 +32,8 @@ class XChan::UNIXSocket
     @bytes_read = 0
   end
 
-  #
   # @return [Boolean]
   #  Returns true when the channel is closed.
-  #
   def closed?
     @reader.closed? and @writer.closed?
   end
