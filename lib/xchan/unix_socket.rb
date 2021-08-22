@@ -66,16 +66,17 @@ class XChan::UNIXSocket
   #  be writable
   #
   # @raise [IOError]
-  #  Raises when the channel is closed.
+  #  Raised when the channel is closed.
   #
   # @raise [XChan::NilError]
-  #  Raises when trying to write `nil` or `false` to the channel.
+  #  Raised when trying to write `nil` or `false` to the channel.
   #
   # @return [Integer, nil]
-  #  The number of bytes written to the channel, or `nil` if the write times out.
+  #  The number of bytes written to the channel, or `nil` if the write
+  #  times out.
   def timed_send(object, timeout = 0.1)
     raise IOError, "closed channel" if @writer.closed?
-    raise XChan::NilError, "false and nil values can't be written to a channel" if [nil, false].include?(object)
+    raise XChan::NilError, "false and nil can't be written directly to a channel" if [nil, false].include?(object)
     _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
       msg = @serializer.dump(object)
