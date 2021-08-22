@@ -2,7 +2,9 @@
 
 ## HEAD
 
-* Nothing yet.
+* Update gemspec description
+
+* Update README.md description
 
 ## v0.3.5
 
