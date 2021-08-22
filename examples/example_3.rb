@@ -1,4 +1,4 @@
-require 'xchan'
+require "xchan"
 ch = xchan Marshal
 ch.send "ab"
 ch.send "abc"

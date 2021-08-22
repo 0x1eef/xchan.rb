@@ -1,11 +1,13 @@
 require "bundler/gem_tasks"
+require "standard/rake"
+
 desc "Run the specs"
 task :spec do
-  sh "bundle exec rspec"
+  sh "rspec spec"
 end
 task default: :spec
 
 desc "Generate the docs"
 task :docs do
-  sh "bundle exec yardoc"
+  sh "yardoc"
 end
