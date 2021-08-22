@@ -19,13 +19,13 @@ sending Ruby objects between Ruby processes who have a parent-child relationship
 
 **1.**
 
-This example introduces you to the `xchan` method, it is implemented as
-`Object#xchan` and returns an instance of `XChan::UNIXSocket`.
+The `xchan` method is implemented as `Object#xchan` and returns an instance of 
+`XChan::UNIXSocket`.
 
 The first (optional) argument to `xchan` is an object who can dump an object
 to text and from that text create the same object once again in memory. xchan.rb
-defaults to `Marshal` without an argument. JSON, YAML, and pretty much any serializer
-that implements `#dump` and `#load` could also be used.
+defaults to Marshal without an argument. JSON, YAML, and any other serializer that 
+implements `#dump` and `#load` could also be used.
 
 Reads with the `#recv` method block until the underlying IO is readable and likewise 
 writes with the `#send` method block until the underlying IO is writable.
@@ -34,19 +34,18 @@ writes with the `#send` method block until the underlying IO is writable.
 require 'xchan'
 ch = xchan
 Process.wait fork {
-  ch.send "Hi parent"
-  ch.send "Bye parent"
+  ch.send({message: 1})
+  ch.send({message: 2})
 }
-puts ch.recv # => Hi parent
-puts ch.recv # => Bye parent
+print "Received message: ", ch.recv, "\n"
+print "Received message: ", ch.recv, "\n"
 ch.close
 ```
 
 **2.**
 
-This example demonstrates how to send and receive objects within a
-0.5 second timeout, using the `#timed_send` and `#timed_recv` methods.
-`nil` is returned when either method times out.
+The `#timed_send` and `#timed_recv` methods can be used to send and receive
+objects within a specified timeout. `nil` is returned when either method times out.
 
 ```ruby
 require 'xchan'
@@ -66,18 +65,31 @@ ch.close
 
 **3.**
 
-This example demonstrates the `#recv_last` method, it returns the last
-object written to a channel and discards older writes in the process ("ab" and
-"abc" in this example).
+The `#recv_last` method returns the last object written to the channel and 
+discards older writes in the process - `foo` and `bar` in this example.
 
 ```ruby
-require 'xchan'
-ch = xchan
-ch.send "ab"
-ch.send "abc"
-ch.send "abcd"
-puts ch.recv_last # => "abcd"
+require "xchan"
+ch = xchan Marshal
+ch.send "foo"
+ch.send "bar"
+ch.send "foobar"
+print "Last written message: ", ch.recv_last, "\n"
 ch.close
+```
+
+**4.**
+
+The total number of bytes written to and read from the channel is tracked by 
+the methods `#bytes_written` and `#bytes_read`.
+
+```ruby
+require "xchan"
+ch = xchan
+2.times { ch.send %w(0x1eef) }
+print "Bytes written: ", ch.bytes_written, "\n"
+2.times { ch.recv }
+print "Bytes read: ", ch.bytes_read, "\n"
 ```
 
 **`examples/` directory**
