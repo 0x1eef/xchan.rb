@@ -9,8 +9,9 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split($/)
   gem.require_paths = ["lib"]
   gem.description   = <<-DESCRIPTION.each_line.map(&:strip).join(' ')
-  xchan.rb is a small and easy to use library for sending and receiving 
-  Ruby objects between Ruby processes who have a parent-child relationship.
+  xchan.rb is a light and easy to use InterProcess Communication (IPC)
+  channel for sending Ruby objects between Ruby processes who have a
+  parent-child relationship.
   DESCRIPTION
   gem.summary = gem.description
 end

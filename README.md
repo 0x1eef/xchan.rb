@@ -12,8 +12,8 @@
 
 ## <a id="introduction">Introduction</a>
 
-xchan.rb is a small and easy to use library for sending and receiving Ruby
-objects between Ruby processes who have a parent-child relationship.
+xchan.rb is a light and easy to use InterProcess Communication (IPC) channel for 
+sending Ruby objects between Ruby processes who have a parent-child relationship.
 
 ## <a id="examples">Examples</a>
 
@@ -27,8 +27,8 @@ to text and from that text create the same object once again in memory. xchan.rb
 defaults to `Marshal` without an argument. JSON, YAML, and pretty much any serializer
 that implements `#dump` and `#load` could also be used.
 
-Reads with the `#recv` method block until there's an object to read from the
-channel, and likewise writes with the `#send` method block until the write completes.
+Reads with the `#recv` method block until the underlying IO is readable and likewise 
+writes with the `#send` method block until the underlying IO is writable.
 
 ```ruby
 require 'xchan'
