@@ -2,6 +2,8 @@
 
 ## HEAD
 
+* Update API documentation
+
 * Update gemspec description
 
 * Update README.md description
