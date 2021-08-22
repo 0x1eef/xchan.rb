@@ -4,20 +4,17 @@ module XChan
   require_relative 'xchan/version'
   require_relative 'xchan/unix_socket'
 
-  #
   # A module that is included into Ruby's {Object} class.
-  #
   module ObjectMixin
-    #
     # @example
-    #   ch = xchan Marshal
-    #   ch.send "Hello world"
+    #   ch = xchan
+    #   ch.send [1,2,3]
+    #   ch.recv.pop # => 3
     #   ch.close
     #
     # @param [#dump, #load] serializer (see UNIXSocket#initialize)
     #
     # @return (see UNIXSocket#initialize)
-    #
     def xchan(serializer=Marshal)
       UNIXSocket.new(serializer)
     end
