@@ -2,6 +2,10 @@
 
 ## HEAD
 
+* Replace `Gemfile` with `gem.deps.rb`
+
+* Adopt [standardrb](https://github.com/testdouble/standard) as project linter.
+
 * Update API documentation
 
 * Update gemspec description

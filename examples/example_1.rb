@@ -1,6 +1,6 @@
 # Example that demonstrates sending messages from a child process to a parent
 # process.
-require 'xchan'
+require "xchan"
 
 ch = xchan Marshal
 Process.wait fork {
