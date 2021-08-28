@@ -3,12 +3,13 @@
 **Table of contents**
 
 * <a href="#introduction">Introduction</a>
-* <a href="#examples">Examples</a>
-* *Documentation*
-  * <a href='#limitations'>Docs: Limitations</a>
-  * <a href='#kernelsend-xchan'>Docs: `Kernel#send` and xchan.rb</a>
-  * <a href="#documentation">Docs: API reference</a>
-* <a href="#install">Install</a>
+* <a href="#examples">Getting started</a>
+    * <a href='#install'>Install</a>
+    * <a href='#usage'>Usage</a>
+* Additional reading:
+    * <a href='#limitations'>xchan.rb limitations</a>
+    * <a href='#kernelsend-xchan'>xchan.rb and `Kernel#send`</a>
+    * <a href="#documentation">API reference</a>
 * <a href="#license">License</a>
 
 ## <a id="introduction">Introduction</a>
@@ -16,7 +17,13 @@
 xchan.rb is a light and easy to use InterProcess Communication (IPC) channel for 
 sending Ruby objects between Ruby processes who have a parent-child relationship.
 
-## <a id="examples">Examples</a>
+## <a id="examples">Getting started</a>
+
+### <a id='install'>Install</a>
+
+    gem install xchan.rb
+
+### <a id='usage'>Usage</a>
 
 **1.**
 
@@ -99,7 +106,7 @@ The [examples/](examples/) directory contains the above examples:
 
     ruby -Ilib examples/example_X.rb
 
-## <a id='limitations'>Docs: Limitations </a>
+## <a id='limitations'>xchan.rb limitations </a>
 
 Not all objects can be written to a channel, but a lot can. It depends on the serializer
 you're using - the default, Marshal, can serialize most objects but not Procs, anonymous Modules, 
@@ -118,7 +125,7 @@ xchan.send nil
 That's because `nil` has special meaning to xchan.rb, it is returned by the `#timed_recv` 
 and `#timed_send` methods to indicate a timeout.
 
-## <a id='kernelsend-xchan'>Docs: `Kernel#send` and xchan.rb</a>
+## <a id='kernelsend-xchan'>xchan.rb and `Kernel#send`</a>
 
 The `Kernel#send` method is often used for dynamic method dispatch in Ruby, where
 a method can be called by name using a String or Symbol. It has an alias, `Kernel#__send__`,
@@ -142,14 +149,10 @@ ch.__send__(:recv)
 ch.__send__(:close)
 ``` 
 
-## <a id="documentation">Docs: API reference</a>
+## <a id="documentation">API reference</a>
 
 * [rubydoc.info/gems/xchan.rb (gem)](https://rubydoc.info/gems/xchan.rb)
 * [rubydoc.info/github/0x1eef/xchan.rb/master](https://rubydoc.info/github/0x1eef/xchan.rb/master)
-
-## <a id="install">Install</a>
-
-    gem install xchan.rb
 
 ## <a id="license"> License </a>
 
