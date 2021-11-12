@@ -1,8 +1,8 @@
 require "./lib/xchan/version"
 Gem::Specification.new do |gem|
   gem.name = "xchan.rb"
-  gem.authors = ["rg"]
-  gem.email = ["1aab@protonmail.com"]
+  gem.authors = ["0x1eef"]
+  gem.email = ["0x1eef@protonmail.com"]
   gem.homepage = "https://github.com/0x1eef/xchan.rb"
   gem.version = XChan::VERSION
   gem.licenses = ["MIT"]
