@@ -38,33 +38,53 @@ Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
 ```
 
-**Queue messages for a parent process**
+**Send a message to a child process**
 
-This example forks a child process, sleeps for a short period, then 
-writes two messages to the channel. While the child process is sleeping,
-the parent process continues and calls "ch.recv". This method blocks until
-the child process wakes up and sends a message to the channel, at which time 
-the parent process is unblocked and receives two messages from the channel.
+This example demos sending a message from the parent process 
+to the child process. Note that in this example, "ch.recv" performs 
+a blocking read that blocks until there is a message to read.
 
 ```ruby
 require "xchan"
 
 ch = xchan
 pid = fork do
-  sleep 3
-  ch.send(1)
-  ch.send(2)
+  print "Received magic number (child process): ", ch.recv, "\n"
 end
-print "Received message: ", ch.recv, "\n"
-print "Received message: ", ch.recv, "\n"
-ch.close
+print "Sending a magic number (from parent process)\n"
+ch.send(rand(21))
 Process.wait(pid)
+ch.close
 ```
 
-**Tracking bytes in, bytes out**
+**Queue messages for a parent process**
 
-This example demonstrates how the number of bytes read and written to a channel
-can be tracked by using the "#bytes_written" and "#bytes_read" methods.
+This example demos how a channel can queue messages that 
+can later be read one by one. The order in which the messages 
+are read from the channel follows the 
+[First In, First out (FIFO)](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics))
+methodology. In other words this example will read messages in the 
+order they were sent: 1 first, then 2, and finally 3.  
+
+```ruby
+require "xchan"
+
+ch = xchan
+Process.wait fork {
+  print "Queueing messages (from child process)\n"
+  ch.send(1)
+  ch.send(2)
+  ch.send(3)
+}
+3.times { print "Received (parent process): ", ch.recv, "\n" }
+ch.close
+```
+
+
+**Track bytes in, bytes out**
+
+This example demos how the number of bytes read and written to a channel
+are tracked by the "#bytes_written" and "#bytes_read" methods.
 
 ```ruby
 require "xchan"
