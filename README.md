@@ -44,7 +44,7 @@ This example forks a child process, sleeps for a short period, then
 writes two messages to the channel. While the child process is sleeping,
 the parent process continues and calls "ch.recv". This method blocks until
 the child process wakes up and sends a message to the channel, at which time 
-the parent process receives two messages from the channel.
+the parent process is unblocked and receives two messages from the channel.
 
 ```ruby
 require "xchan"
