@@ -1,158 +1,92 @@
 # xchan.rb
 
-**Table of contents**
+xchan.rb is a small library that implements a channel on top of a UNIXSocket,
+where Ruby objects can be easily sent between parent and child Ruby processes.
+  
+## Demo
 
-* <a href="#introduction">Introduction</a>
-* <a href="#examples">Getting started</a>
-    * <a href='#install'>Install</a>
-    * <a href='#usage'>Usage</a>
-* Additional reading:
-    * <a href='#limitations'>xchan.rb limitations</a>
-    * <a href='#kernelsend-xchan'>xchan.rb and `Kernel#send`</a>
-    * <a href="#documentation">API reference</a>
-* <a href="#license">License</a>
+**Choose a serializer**
 
-## <a id="introduction">Introduction</a>
-
-xchan.rb is a light and easy to use InterProcess Communication (IPC) channel for 
-sending Ruby objects between Ruby processes who have a parent-child relationship.
-
-## <a id="examples">Getting started</a>
-
-### <a id='install'>Install</a>
-
-    gem install xchan.rb
-
-### <a id='usage'>Usage</a>
-
-**1.**
-
-The `xchan` method is implemented as `Object#xchan` and returns an instance of 
-`XChan::UNIXSocket`.
-
-The first (optional) argument to `xchan` is an object who can dump an object
-to text and from that text create the same object once again in memory. xchan.rb
-defaults to Marshal without an argument. JSON, YAML, and any other serializer that 
-implements `#dump` and `#load` could also be used.
-
-Reads with the `#recv` method block until the underlying IO is readable and likewise 
-writes with the `#send` method block until the underlying IO is writable.
-
-```ruby
-require 'xchan'
-ch = xchan
-Process.wait fork {
-  ch.send({message: 1})
-  ch.send({message: 2})
-}
-print "Received message: ", ch.recv, "\n"
-print "Received message: ", ch.recv, "\n"
-ch.close
-```
-
-**2.**
-
-The `#timed_send` and `#timed_recv` methods can be used to send and receive
-objects within a specified timeout. `nil` is returned when either method times out.
-
-```ruby
-require 'xchan'
-ch = xchan
-if ch.timed_send("Hello", 0.5)
-  puts "message sent"
-else
-  puts "send timeout"
-end
-if (message = ch.timed_recv(0.5))
-  puts "got message: #{message}"
-else
-  puts "read timeout"
-end
-ch.close
-```
-
-**3.**
-
-The `#recv_last` method returns the last object written to the channel and 
-discards older writes in the process - `foo` and `bar` in this example.
+xchan.rb relies on serialization when writing and reading from 
+a channel. By default the ["Marshal"](https://www.rubydoc.info/stdlib/core/Marshal)
+module is used for serialization - multiple other options exist:
 
 ```ruby
 require "xchan"
-ch = xchan
-ch.send "foo"
-ch.send "bar"
-ch.send "foobar"
-print "Last written message: ", ch.recv_last, "\n"
+
+##
+# This channel uses Marshal to serialize objects.
+ch = xchan 
+ch.send({msg: "Serialized by Marshal"})
+Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
+ch.close
+
+##
+# This channel uses JSON to serialize objects.
+require "json"
+ch = xchan(JSON)
+ch.send({msg: "Serialized by JSON"})
+Process.wait fork { print "Received message: ", ch.recv["msg"], "\n" }
+ch.close
+
+##
+# This channel uses YAML to serialize objects.
+require "yaml"
+ch = xchan(YAML)
+ch.send({msg: "Serialized by YAML"})
+Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
 ```
 
-**4.**
+**Queue messages for a parent process**
 
-The total number of bytes written to and read from the channel is tracked by 
-the methods `#bytes_written` and `#bytes_read`.
+This example forks a child process, sleeps for a short period, then 
+writes two messages to the channel. While the child process is sleeping,
+the parent process continues and calls "ch.recv". This method blocks until
+the child process wakes up and sends a message to the channel, at which time 
+the parent process receives two messages from the channel.
 
 ```ruby
 require "xchan"
+
 ch = xchan
-2.times { ch.send %w(0x1eef) }
+pid = fork do
+  sleep 3
+  ch.send(1)
+  ch.send(2)
+end
+print "Received message: ", ch.recv, "\n"
+print "Received message: ", ch.recv, "\n"
+ch.close
+Process.wait(pid)
+```
+
+**Tracking bytes in, bytes out**
+
+This example demonstrates how the number of bytes read and written to a channel
+can be tracked by using the "#bytes_written" and "#bytes_read" methods.
+
+```ruby
+require "xchan"
+
+ch = xchan
+ch.send %w(0x1eef)
 print "Bytes written: ", ch.bytes_written, "\n"
-2.times { ch.recv }
+ch.recv
 print "Bytes read: ", ch.bytes_read, "\n"
 ```
 
-**`examples/` directory**
+## Further reading
 
-The [examples/](examples/) directory contains the above examples:
+* [API docs: rubydoc.info/gems/xchan.rb (gem)](https://rubydoc.info/gems/xchan.rb)
+* [API docs: rubydoc.info/github/0x1eef/xchan.rb/master (git)](https://rubydoc.info/github/0x1eef/xchan.rb/master)
 
-    ruby -Ilib examples/example_X.rb
 
-## <a id='limitations'>xchan.rb limitations </a>
+## Install
 
-Not all objects can be written to a channel, but a lot can. It depends on the serializer
-you're using - the default, Marshal, can serialize most objects but not Procs, anonymous Modules, 
-and a few other objects. JSON, on the other hand, can only serialize a few basic objects - Hash, 
-Array, String, Boolean, `nil` (null) and Integer. 
+xchan.rb is available as a RubyGem:
 
-It's not possible to write `nil` or `false` on its own to a channel, regardless of the 
-serializer being used. In this example `#send` would raise an error (`XChan::NilError`):
-
-```ruby
-require 'xchan'
-ch = xchan
-xchan.send nil
-```
-
-That's because `nil` has special meaning to xchan.rb, it is returned by the `#timed_recv` 
-and `#timed_send` methods to indicate a timeout.
-
-## <a id='kernelsend-xchan'>xchan.rb and `Kernel#send`</a>
-
-The `Kernel#send` method is often used for dynamic method dispatch in Ruby, where
-a method can be called by name using a String or Symbol. It has an alias, `Kernel#__send__`,
-that can be used in cases where an object has implemented its own `#send`.
-
-In the case of xchan.rb, I found `#send` and `#recv` to be the best method names
-for a channel object and I recommend using `Kernel#__send__` if you happen to be 
-doing dynamic method dispatch using an xchan object. If `#send` and `#recv` is not 
-to your taste, then there's also the aliases `#write` and `#read`.
-
-This example shows how you would use `Kernel#__send__` with an xchan.rb channel object:
-
-```ruby
-require 'xchan'
-ch = xchan
-# Send a message to channel
-ch.send "foo"
-# Receive the message from channel
-ch.__send__(:recv)
-# Close the channel
-ch.__send__(:close)
-``` 
-
-## <a id="documentation">API reference</a>
-
-* [rubydoc.info/gems/xchan.rb (gem)](https://rubydoc.info/gems/xchan.rb)
-* [rubydoc.info/github/0x1eef/xchan.rb/master](https://rubydoc.info/github/0x1eef/xchan.rb/master)
+    gem install xchan.rb
 
 ## <a id="license"> License </a>
 
