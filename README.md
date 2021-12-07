@@ -41,7 +41,7 @@ ch.close
 **Send a message to a child process**
 
 This example demos sending a message from the parent process 
-to the child process. Note that in this example, "ch.recv" performs 
+to a child process. Note that in this example, "ch.recv" performs 
 a blocking read that blocks until there is a message to read.
 
 ```ruby
@@ -83,8 +83,9 @@ ch.close
 
 **Track bytes in, bytes out**
 
-This example demos how the number of bytes read and written to a channel
-are tracked by the "#bytes_written" and "#bytes_read" methods.
+This example demos how the number of bytes read from and written to 
+a channel can be tracked using the "#bytes_written" and "#bytes_read" 
+methods.
 
 ```ruby
 require "xchan"
