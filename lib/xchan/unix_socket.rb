@@ -4,17 +4,21 @@ class XChan::UNIXSocket
 
   include Base64
 
+  ##
   # @api private
   NULL_BYTE = "\x00"
 
+  ##
   # @return [Integer]
   #  Returns the total number of bytes written to the channel
   attr_reader :bytes_written
 
+  ##
   # @return [Integer]
   #  Returns the total number of bytes read from the channel
   attr_reader :bytes_read
 
+  ##
   # @example
   #   ch = XChan::UNIXSocket.new(Marshal)
   #   ch.send [1,2,3]
@@ -22,7 +26,7 @@ class XChan::UNIXSocket
   #   ch.close
   #
   # @param [#dump, #load] serializer
-  #  A serializer (eg Marshal, JSON, YAML)
+  #  A serializer.
   #
   # @return [XChan::UNIXSocket]
   def initialize(serializer)
@@ -32,12 +36,14 @@ class XChan::UNIXSocket
     @bytes_read = 0
   end
 
+  ##
   # @return [Boolean]
   #  Returns true when the channel is closed.
   def closed?
     @reader.closed? and @writer.closed?
   end
 
+  ##
   # @raise [IOError]
   #  Raised when the channel is already closed.
   #
@@ -53,6 +59,7 @@ class XChan::UNIXSocket
     end
   end
 
+  ##
   # Performs a write that blocks until the underlying IO is writable.
   #
   # @raise (see #timed_send)
@@ -66,6 +73,7 @@ class XChan::UNIXSocket
   end
   alias_method :write, :send
 
+  ##
   # Performs a write with a time out.
   #
   # @param [Object] object
@@ -97,6 +105,7 @@ class XChan::UNIXSocket
   end
   alias_method :timed_write, :timed_send
 
+  ##
   # Performs a read that blocks until the underlying IO is readable.
   #
   # @raise (see #timed_recv)
@@ -108,6 +117,7 @@ class XChan::UNIXSocket
   end
   alias_method :read, :recv
 
+  ##
   # Performs a read with a time out.
   #
   # @param [Float, Integer] timeout
@@ -131,6 +141,7 @@ class XChan::UNIXSocket
   end
   alias_method :timed_read, :timed_recv
 
+  ##
   # @example
   #   ch = xchan
   #   ch.send 1
@@ -148,6 +159,7 @@ class XChan::UNIXSocket
   end
   alias_method :read_last, :recv_last
 
+  ##
   # @return [Boolean]
   #  Returns true when the channel is ready to be read
   def readable?

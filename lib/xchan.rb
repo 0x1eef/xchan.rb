@@ -1,11 +1,16 @@
 module XChan
+  ##
+  # The error raised when directly writing false or nil to a
+  # channel.
   NilError = Class.new(RuntimeError)
 
   require_relative "xchan/version"
   require_relative "xchan/unix_socket"
 
+  ##
   # A module that is included into Ruby's {Object} class.
   module ObjectMixin
+    ##
     # @example
     #   ch = xchan
     #   ch.send [1,2,3]
