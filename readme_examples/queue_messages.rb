@@ -1,11 +1,11 @@
 require "xchan"
+
 ch = xchan
-pid = fork do
-  sleep 3
+Process.wait fork {
+  print "Queueing messages (from child process)\n"
   ch.send(1)
   ch.send(2)
-end
-print "Received message: ", ch.recv, "\n"
-print "Received message: ", ch.recv, "\n"
+  ch.send(3)
+}
+3.times { print "Received (parent process): ", ch.recv, "\n" }
 ch.close
-Process.wait(pid)
