@@ -1,10 +1,9 @@
 # xchan.rb
 
-xchan.rb is a small library that implements a channel on top 
-of [`UNIXSocket.pair`](https://www.rubydoc.info/stdlib/socket/UNIXSocket.pair), 
-which allows for Ruby objects to be easily sent between parent and child Ruby 
-processes.
-  
+xchan.rb is a small library that implements a channel through 
+serialization and [`UNIXSocket.pair`](https://www.rubydoc.info/stdlib/socket/UNIXSocket.pair).
+An xchan.rb channel allows for easily sending Ruby objects between parent and child Ruby processes.
+
 ## Demo
 
 **Choose a serializer**
