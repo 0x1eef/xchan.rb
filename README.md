@@ -41,7 +41,7 @@ ch.close
 
 **Send a message to a child process**
 
-This example demos sending a message from the parent process 
+This example shows how to send a message from the parent process 
 to a child process. Note that in this example, "ch.recv" performs 
 a blocking read that blocks until there is a message to read.
 
@@ -60,7 +60,7 @@ ch.close
 
 **Queue messages for a parent process**
 
-This example demos how a channel can queue messages that 
+This example shows how a channel can queue messages that 
 can later be read one by one. The order in which the messages 
 are read from the channel follows the 
 [First In, First out (FIFO)](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics))
@@ -84,7 +84,7 @@ ch.close
 
 **Track bytes in, bytes out**
 
-This example demos how the number of bytes read from and written to 
+This example shows how the number of bytes read from and written to 
 a channel can be tracked using the "#bytes_written" and "#bytes_read" 
 methods.
 
