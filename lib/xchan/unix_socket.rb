@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
+##
+# The {Chan::UNIXSocket Chan::UNIXSocket} class implements a channel
+# for interprocess communication using an unnamed UNIXSocket.
 class Chan::UNIXSocket
   require "socket"
   require "lockf"
   require_relative "byte_buffer"
-
-  ##
-  # @return [<#dump, #load>]
-  #  Returns the serializer being used by a channel.
-  attr_reader :serializer
 
   ##
   # @example
@@ -27,6 +25,13 @@ class Chan::UNIXSocket
     @reader, @writer = ::UNIXSocket.pair(:STREAM)
     @buffer = Chan::ByteBuffer.new
     @lock = Lock::File.new(Tempfile.new("xchan-lock_file").tap(&:unlink))
+  end
+
+  ##
+  # @return [<#dump, #load>]
+  #  Returns the serializer being used by a channel.
+  def serializer
+    @serializer
   end
 
   ##
@@ -51,6 +56,9 @@ class Chan::UNIXSocket
         @buffer, @lock.file].each(&:close)
     end
   end
+
+  ##
+  # @group Write operations
 
   ##
   # Performs a write that could block.
@@ -99,6 +107,12 @@ class Chan::UNIXSocket
   alias_method :write_nonblock, :send_nonblock
 
   ##
+  # @endgroup
+
+  ##
+  # @group Read operations
+
+  ##
   # Performs a read that could block.
   #
   # @raise [IOError]
@@ -141,6 +155,9 @@ class Chan::UNIXSocket
   alias_method :read_nonblock, :recv_nonblock
 
   ##
+  # @endgroup
+
+  ##
   # @example
   #   ch = xchan
   #   1.upto(4) { ch.send(_1) }
@@ -171,6 +188,9 @@ class Chan::UNIXSocket
   end
 
   ##
+  # @group Size operations
+
+  ##
   # @return [Integer]
   #  Returns the total number of bytes written to a channel.
   def bytes_sent
@@ -192,6 +212,12 @@ class Chan::UNIXSocket
   def size
     lock { @buffer.size }
   end
+
+  ##
+  # @endgroup
+
+  ##
+  # @group Wait operations
 
   ##
   # Waits for a channel to be readable.
@@ -218,6 +244,9 @@ class Chan::UNIXSocket
   def wait_writable(s = nil)
     @writer.wait_writable(s) and self
   end
+
+  ##
+  # @endgroup
 
   private
 

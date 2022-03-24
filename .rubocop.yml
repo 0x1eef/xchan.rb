@@ -31,3 +31,5 @@ RSpec/EmptyLineAfterSubject:
 # Disabled cops (lib-specific)
 Layout/MultilineMethodCallIndentation:
   Enabled: false
+Style/TrivialAccessors:
+  Enabled: false
