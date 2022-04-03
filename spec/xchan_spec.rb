@@ -12,11 +12,12 @@ RSpec.shared_examples "xchan" do |serializer|
   end
 
   describe "#send" do
-    let(:payload) { %w[0x1eef] }
+    subject(:payload) { %w[xchan] }
     let(:payload_size) { ch.serializer.dump(payload).bytesize }
 
-    it "returns the number of written bytes" do
-      expect(ch.send(payload)).to eq(payload_size)
+    context "when returning the number of bytes written" do
+      subject { ch.send(payload) }
+      it { is_expected.to eq(payload_size) }
     end
 
     context "when queueing messages from a child process" do
@@ -27,13 +28,17 @@ RSpec.shared_examples "xchan" do |serializer|
   end
 
   describe "#recv" do
-    it "returns a string with a null byte" do
-      ch.send ["hello\x00"]
-      expect(ch.recv).to eq(["hello\x00"])
+    subject { ch.recv }
+
+    context "when given a write with a null byte" do
+      before { ch.send(["nullbyte\x00"]) }
+      it { is_expected.to eq(["nullbyte\x00"]) }
     end
 
-    it "performs a blocking read" do
-      expect { Timeout.timeout(0.1) { ch.recv } }.to raise_error(Timeout::Error)
+    context "when a read should block" do
+      subject(:recv) { timeout(0.1) { ch.recv } }
+      include Timeout
+      it { expect { recv }.to raise_error(Timeout::Error) }
     end
   end
 
@@ -56,95 +61,97 @@ RSpec.shared_examples "xchan" do |serializer|
   end
 
   describe "#readable?" do
-    subject { ch.readable? }
+    subject { ch }
 
-    it "returns false when the channel is empty" do
-      expect(ch).to_not be_readable
+    context "when a write hasn't taken place" do
+      it { is_expected.to_not be_readable }
     end
 
-    it "returns false when the channel is closed" do
-      ch.send [1]
-      ch.close
-      expect(ch).to_not be_readable
-    end
+    context "when a write takes place" do
+      before { ch.send([1]) }
+      it { is_expected.to be_readable }
 
-    it "returns true when an object is waiting to be read" do
-      ch.send [1]
-      expect(ch).to be_readable
-    end
-
-    context "when the channel is locked" do
-      let(:lock) do
-        double({"locked?" => true, :synchronize => nil, :file => double(close: nil)})
+      context "when the channel is closed" do
+        before { ch.close }
+        it { is_expected.to_not be_readable }
       end
 
-      before do
-        ch.instance_variable_set(:@lock, lock)
-        ch.send([1])
-      end
+      context "when the channel is locked" do
+        before do
+          ch.instance_variable_set(:@lock, lock)
+        end
 
-      it { is_expected.to eq(false) }
+        let(:lock) do
+          double({
+            "locked?" => true,
+            :synchronize => nil,
+            :file => double(close: nil)
+          })
+        end
+
+        it { is_expected.to_not be_readable }
+      end
     end
   end
 
   describe "#bytes_written" do
-    let(:payload) { %w[0x1eef] }
+    subject { ch.bytes_written }
+    let(:payload) { %w[xchan] }
     let(:payload_size) { ch.serializer.dump(payload).bytesize }
 
-    it "records the bytes written by one message" do
-      Process.wait fork { ch.send(payload) }
-      expect(ch.bytes_written).to eq(payload_size)
+    context "when one write takes place" do
+      before { Process.wait fork { ch.send(payload) } }
+      it { is_expected.to eq(payload_size) }
     end
 
-    it "records the bytes written by two messages" do
-      Process.wait fork { 2.times { ch.send(payload) } }
-      expect(ch.bytes_written).to eq(payload_size * 2)
+    context "when two writes take place" do
+      before { Process.wait fork { 2.times { ch.send(payload) } } }
+      it { is_expected.to eq(payload_size * 2) }
     end
   end
 
   describe "#bytes_read" do
-    let(:payload) { %w[0x1eef] }
+    subject { ch.bytes_read }
+    let(:payload) { %w[xchan] }
     let(:payload_size) { ch.serializer.dump(payload).bytesize }
 
-    it "records the bytes read from one message" do
-      ch.send(payload)
-      Process.wait fork { ch.recv }
-      expect(ch.bytes_read).to eq(payload_size)
+    context "when one read takes place do" do
+      before do
+        ch.send(payload)
+        Process.wait fork { ch.recv }
+      end
+      it { is_expected.to eq(payload_size) }
     end
 
-    it "records the bytes read from two messages" do
-      2.times { ch.send payload }
-      Process.wait fork { 2.times { ch.recv } }
-      expect(ch.bytes_read).to eq(payload_size * 2)
+    context "when two reads take place" do
+      before do
+        2.times { ch.send payload }
+        Process.wait fork { 2.times { ch.recv } }
+      end
+      it { is_expected.to eq(payload_size * 2) }
     end
   end
 
   describe "#empty?" do
     subject { ch }
 
-    context "when the channel is considered empty" do
-      context "when a write hasn't taken place" do
+    context "when a write hasn't taken place" do
+      it { is_expected.to be_empty }
+    end
+
+    context "when a write takes place" do
+      before { ch.send(%w[foo]) }
+
+      it { is_expected.to_not be_empty }
+
+      context "when a read takes place" do
+        before { ch.read }
         it { is_expected.to be_empty }
       end
 
-      context "when a write has taken place" do
-        before { ch.send(%w[foo]) }
-        context "when the channel is read from" do
-          before { ch.read }
-          it { is_expected.to be_empty }
-        end
-
-        context "when the channel is closed" do
-          before { ch.close }
-          it { is_expected.to be_empty }
-        end
-      end
-    end
-
-    context "when the channel is not considered empty" do
-      context "when a write has taken place" do
-        before { ch.send(%w[foo]) }
-        it { is_expected.to_not be_empty }
+      context "when the channel is closed" do
+        before { ch.close }
+        it { is_expected.to be_empty }
       end
     end
   end
@@ -177,21 +184,21 @@ RSpec.shared_examples "xchan" do |serializer|
   describe "#size" do
     subject { ch.size }
 
-    context "when one object is written to the channel" do
+    context "when one write takes place" do
       before { ch.send([1]) }
       it { is_expected.to eq(1) }
 
-      context "when a read is performed" do
+      context "when a read takes place" do
         before { ch.recv }
         it { is_expected.to be_zero }
       end
     end
 
-    context "when two objects are written to the channel" do
+    context "when two writes take place" do
       before { 2.times { ch.send([1]) } }
       it { is_expected.to eq(2) }
 
-      context "when a read is performed" do
+      context "when a read takes place" do
         before { ch.recv }
         it { is_expected.to eq(1) }
       end
