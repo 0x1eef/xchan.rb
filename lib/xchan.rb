@@ -12,11 +12,11 @@ module XChan
       Marshal
     },
     json: lambda {
-      require "json"
+      require "json" unless defined?(JSON)
       JSON
     },
     yaml: lambda {
-      require "yaml"
+      require "yaml" unless defined?(YAML)
       YAML
     }
   }
