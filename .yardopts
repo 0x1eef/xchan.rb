@@ -1,5 +1,4 @@
--m markdown -M redcarpet --no-private
+-m markdown -M redcarpet --no-private -t default -p .yardoc-template
 -
-CHANGELOG.md
 README.md
 LICENSE.txt
