@@ -1,6 +1,7 @@
+require_relative "setup"
 require "xchan"
 
-ch = xchan
+ch = xchan(:marshal)
 pid = fork do
   print "Received magic number (child process): ", ch.recv, "\n"
 end
