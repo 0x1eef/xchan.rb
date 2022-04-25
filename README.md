@@ -55,7 +55,7 @@ a blocking read that blocks until there is a message to read.
 ```ruby
 require "xchan"
 
-ch = xchan
+ch = xchan(:marshal)
 pid = fork do
   print "Received magic number (child process): ", ch.recv, "\n"
 end
@@ -63,6 +63,7 @@ print "Sending a magic number (from parent process)\n"
 ch.send(rand(21))
 Process.wait(pid)
 ch.close
+
 ```
 
 **Queue messages for a parent process**
