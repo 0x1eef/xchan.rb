@@ -9,9 +9,10 @@ Gem::Specification.new do |gem|
   gem.files = `git ls-files`.split($/)
   gem.require_paths = ["lib"]
   gem.description = <<-DESCRIPTION.each_line.map(&:strip).join(" ")
-  xchan.rb is a small library that implements a channel through serialization
-  and UNIXSocket.pair - an xchan.rb channel allows for easily sending Ruby
-  objects between parent and child Ruby processes.
+  xchan.rb is a library for sending Ruby objects between Ruby
+  processes who have a parent<->child relationship. The implementation
+  uses a UNIXSocket, and the serialization format of your choice -
+  the default is Marshal.
   DESCRIPTION
   gem.summary = gem.description
   gem.add_development_dependency "yard", "~> 0.9"

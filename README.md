@@ -1,9 +1,10 @@
 # xchan.rb
 
-xchan.rb is a light library for easily sending Ruby objects
-between parent and child Ruby processes, using a
-[`UNIXSocket`](https://rubydoc.info/stdlib/socket/UNIXSocket.pair'),
+xchan.rb is a library for sending Ruby objects
+between Ruby processes who have a parent&lt;-&gt;child relationship. The
+implementation uses a <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>,
 and the serialization format of your choice - the default is Marshal.
+
 
 ## Examples
 
