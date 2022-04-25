@@ -30,7 +30,7 @@ class XChan::UNIXSocket
   #
   # @return [XChan::UNIXSocket]
   def initialize(serializer)
-    @serializer = serializer
+    @serializer = XChan::SERIALIZERS[serializer]&.call || serializer
     @reader, @writer = ::UNIXSocket.pair :STREAM
     @bytes_written = 0
     @bytes_read = 0

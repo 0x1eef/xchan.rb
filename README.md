@@ -25,17 +25,22 @@ Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
 
 ##
+# This channel also uses Marshal to serialize objects.
+ch = xchan(:marshal)
+ch.send({msg: "Serialized by Marshal"})
+Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
+ch.close
+
+##
 # This channel uses JSON to serialize objects.
-require "json"
-ch = xchan(JSON)
+ch = xchan(:json)
 ch.send({msg: "Serialized by JSON"})
 Process.wait fork { print "Received message: ", ch.recv["msg"], "\n" }
 ch.close
 
 ##
 # This channel uses YAML to serialize objects.
-require "yaml"
-ch = xchan(YAML)
+ch = xchan(:yaml)
 ch.send({msg: "Serialized by YAML"})
 Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
@@ -103,7 +108,7 @@ print "Bytes read: ", ch.bytes_read, "\n"
 ## Resources
 
 * [**Source code (github.com/0x1eef/xchan.rb)**](https://github.com/0x1eef/xchan.rb)
-* [**Docs (0x1eef.github.io/x/xchan.rb**](https://0x1eef.github.io/x/xchan.rb)
+* [**Docs (0x1eef.github.io/x/xchan.rb)**](https://0x1eef.github.io/x/xchan.rb)
 
 
 ## Install
