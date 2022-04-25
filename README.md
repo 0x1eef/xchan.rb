@@ -11,7 +11,7 @@ and the serialization format of your choice - the default is Marshal.
 **Serializers**
 
 xchan.rb depends on serialization when writing and reading from
-a channel. By default the ["Marshal"](https://www.rubydoc.info/stdlib/core/Marshal)
+a channel. By default the [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal)
 module is used for serialization - other options exist:
 
 ```ruby
@@ -46,7 +46,7 @@ Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
 ```
 
-**Send a message to a child process**
+**Send a Ruby object to a child process**
 
 This example shows how to send a message from the parent process
 to a child process. Note that in this example, "ch.recv" performs
@@ -66,7 +66,7 @@ ch.close
 
 ```
 
-**Queue messages for a parent process**
+**Queue messages**
 
 This example shows how a channel can queue messages that
 can later be read one by one. The order in which the messages
