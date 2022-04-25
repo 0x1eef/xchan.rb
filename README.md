@@ -100,10 +100,10 @@ ch.recv
 print "Bytes read: ", ch.bytes_read, "\n"
 ```
 
-## Further reading
+## Resources
 
-* [API docs: rubydoc.info/gems/xchan.rb (gem)](https://rubydoc.info/gems/xchan.rb)
-* [API docs: rubydoc.info/github/0x1eef/xchan.rb/master (git)](https://rubydoc.info/github/0x1eef/xchan.rb/master)
+* [**Source code (github.com/0x1eef/xchan.rb)**](https://github.com/0x1eef/xchan.rb)
+* [**Docs (0x1eef.github.io/x/xchan.rb**](https://0x1eef.github.io/x/xchan.rb)
 
 
 ## Install
