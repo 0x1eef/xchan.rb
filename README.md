@@ -100,7 +100,7 @@ methods.
 ```ruby
 require "xchan"
 
-ch = xchan
+ch = xchan(:marshal)
 ch.send %w[0x1eef]
 print "Bytes written: ", ch.bytes_written, "\n"
 ch.recv
