@@ -56,10 +56,9 @@ ch.close
 
 **Send a Ruby object to a child process**
 
-This example shows how to send a Ruby object from a parent process
-to a child process. Something to keep in mind - `ch.recv` performs a
-blocking read until an object is sent to the channel. In this case,
-the object being sent is a string.
+The following example shows how to send a Ruby object from a parent process
+to a child process. `ch.recv` performs a blocking read until an object is sent
+to the channel. In the example, the object being sent is a string:
 
 ```ruby
 require "xchan"
@@ -81,12 +80,12 @@ ch.close
 
 **Queue messages**
 
-This example shows how a channel can queue messages that
+The following example shows how a channel can queue messages that
 can later be read one by one. The order in which the messages
 are read from the channel follows the
 [First In, First out (FIFO)](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics))
-methodology. In other words this example will read messages in the
-order they were sent: 1 first, then 2, and finally 3.
+methodology. In other words the example will read messages in the
+order they were sent: 1 first, then 2, and finally 3:
 
 ```ruby
 require "xchan"
@@ -112,9 +111,8 @@ ch.close
 
 **Track bytes in, bytes out**
 
-This example shows how the number of bytes read from and written to
-a channel can be tracked using the "#bytes_written" and "#bytes_read"
-methods.
+The following example shows how the number of bytes read from and written to
+a channel can be tracked using the `#bytes_written` and `#bytes_read` methods:
 
 ```ruby
 require "xchan"
