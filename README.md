@@ -58,7 +58,7 @@ ch.close
 
 The following example shows how to send a Ruby object from a parent process
 to a child process. `ch.recv` performs a blocking read until an object is sent
-to the channel. In the example, the object being sent is a string:
+to the channel. In the example, the object being sent is an Integer:
 
 ```ruby
 require "xchan"
