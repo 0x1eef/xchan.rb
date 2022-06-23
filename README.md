@@ -67,7 +67,7 @@ ch = xchan(:marshal)
 pid = fork do
   print "Received magic number (child process): ", ch.recv, "\n"
 end
-print "Sending a magic number (from parent process)\n"
+print "Sending a magic number (from parent process)", "\n"
 ch.send(rand(21))
 Process.wait(pid)
 ch.close
@@ -92,7 +92,7 @@ require "xchan"
 
 ch = xchan(:marshal)
 Process.wait fork {
-  print "Queueing messages (from child process)\n"
+  print "Queueing messages (from child process)", "\n"
   ch.send(1)
   ch.send(2)
   ch.send(3)
