@@ -6,8 +6,8 @@ def p_map(enum)
       .with_index { |e, i| fork { ch.send [yield(e), i] } }
       .each { Process.wait(_1) }
   enum.map { ch.recv }
-      .sort_by { _1.pop }
-      .map { _1.pop }
+      .sort_by(&:pop)
+      .map(&:pop)
 end
 
 t = Time.now
