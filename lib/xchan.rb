@@ -1,9 +1,4 @@
 module XChan
-  ##
-  # The error raised when directly writing false or nil to a
-  # channel.
-  NilError = Class.new(RuntimeError)
-
   require_relative "xchan/version"
   require_relative "xchan/unix_socket"
 

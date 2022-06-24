@@ -41,11 +41,6 @@ RSpec.describe XChan do
   end
 
   describe "#send" do
-    it "raises NilError when false or nil is written to a channel" do
-      expect { ch.send(nil) }.to raise_error(XChan::NilError)
-      expect { ch.send(false) }.to raise_error(XChan::NilError)
-    end
-
     it "returns the number of written bytes" do
       expect(ch.send(%w[0x1eef])).to eq(25)
     end
