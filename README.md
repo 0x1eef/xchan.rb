@@ -54,6 +54,28 @@ ch.close
 
 ```
 
+**Parallel map**
+
+The following example demonstrates a short and sweet `p_map` method
+that runs a map operation in parallel, with no more than 10 LOC:
+
+```ruby
+require "xchan"
+
+def p_map(enum)
+  ch = xchan
+  enum.map { |e| Process.fork { ch.send yield(e) } }
+      .each { Process.wait(_1) }
+  enum.map  { ch.recv }
+end
+
+Kernel.p p_map([1,2,3]) { _1 * 2 }
+
+##
+# == Output
+# [2, 4, 6]
+```
+
 **Send a Ruby object to a child process**
 
 The following example shows how to send a Ruby object from a parent process
@@ -106,28 +128,6 @@ ch.close
 # Received (parent process): 1
 # Received (parent process): 2
 # Received (parent process): 3
-```
-
-**Parallel map**
-
-The following example demonstrates a short and sweet `p_map` method
-that runs a map operation in parallel, with no more than 10 LOC:
-
-```ruby
-require "xchan"
-
-def p_map(enum)
-  ch = xchan
-  enum.map { |e| Process.fork { ch.send yield(e) } }
-      .each { Process.wait(_1) }
-  enum.map  { ch.recv }
-end
-
-p p_map([1,2,3]) { _1 * 2 }
-
-##
-# == Output
-# [2, 4, 6]
 ```
 
 **Track bytes in, bytes out**
