@@ -76,10 +76,10 @@ t = Time.now
 print p_map([3, 2, 1]) { |e| sleep(e); e * 2 }, "\n"
 print "Duration: #{Time.now - t}", "\n"
 
+##
 # == Output
 # [6, 4, 2]
 # Duration: 3.00XXX
-
 ```
 
 **Send a Ruby object to a child process**
