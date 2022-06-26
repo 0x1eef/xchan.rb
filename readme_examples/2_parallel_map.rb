@@ -1,3 +1,4 @@
+require_relative "setup"
 require "xchan"
 
 def p_map(enum)
