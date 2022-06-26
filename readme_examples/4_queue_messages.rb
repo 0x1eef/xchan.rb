@@ -3,7 +3,7 @@ require "xchan"
 
 ch = xchan(:marshal)
 Process.wait fork {
-  print "Queueing messages (from child process)", "\n"
+  print "Queue messages (from child process)", "\n"
   ch.send(1)
   ch.send(2)
   ch.send(3)

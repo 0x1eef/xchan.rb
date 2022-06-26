@@ -12,7 +12,7 @@ and the serialization format of your choice - the default is [`Marshal`](https:/
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
 or deserialized (on read). The form of serialization used can be customized, the
-example illustrates a few different options:
+example demonstrates a few different options:
 
 ```ruby
 require "xchan"
@@ -82,9 +82,9 @@ print "Duration: #{Time.now - t}", "\n"
 # Duration: 3.00XXX
 ```
 
-**Send a Ruby object to a child process**
+**Blocking read**
 
-The following example shows how to send a Ruby object from a parent process
+The following example demonstrates how to send a Ruby object from a parent process
 to a child process. `ch.recv` performs a blocking read until an object is sent
 to the channel. In the example, the object being sent is an Integer:
 
@@ -108,7 +108,7 @@ ch.close
 
 **Queue messages**
 
-The following example shows how a channel can queue messages that
+The following example demonstrates how a channel can queue messages that
 can later be read one by one. The order in which the messages
 are read from the channel follows the
 [First In, First out (FIFO)](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics))
@@ -120,7 +120,7 @@ require "xchan"
 
 ch = xchan(:marshal)
 Process.wait fork {
-  print "Queueing messages (from child process)", "\n"
+  print "Queue messages (from child process)", "\n"
   ch.send(1)
   ch.send(2)
   ch.send(3)
@@ -130,7 +130,7 @@ ch.close
 
 ##
 # == Output
-# Queueing messages (from child process)
+# Queue messages (from child process)
 # Received (parent process): 1
 # Received (parent process): 2
 # Received (parent process): 3
@@ -138,7 +138,7 @@ ch.close
 
 **Track bytes in, bytes out**
 
-The following example shows how the number of bytes read from and written to
+The following example demonstrates how the number of bytes read from and written to
 a channel can be tracked using the `#bytes_written` and `#bytes_read` methods:
 
 ```ruby
