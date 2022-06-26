@@ -18,5 +18,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "yard", "~> 0.9"
   gem.add_development_dependency "redcarpet", "~> 3.5"
   gem.add_development_dependency "rspec", "~> 3.10"
-  gem.add_development_dependency "standardrb", "~> 1.1"
+  gem.add_development_dependency "standardrb", "~> 1.0"
 end
