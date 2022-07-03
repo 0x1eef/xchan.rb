@@ -31,7 +31,7 @@ class XChan::UNIXSocket
   # @return [XChan::UNIXSocket]
   def initialize(serializer)
     @serializer = XChan::SERIALIZERS[serializer]&.call || serializer
-    @reader, @writer = ::UNIXSocket.pair :STREAM
+    @reader, @writer = ::UNIXSocket.pair(:STREAM)
     @bytes_written = 0
     @bytes_read = 0
   end
@@ -157,7 +157,7 @@ class XChan::UNIXSocket
 
   ##
   # @return [Boolean]
-  #  Returns true when the channel is ready to be read
+  #  Returns true when the channel is ready for a read
   def readable?
     if closed?
       false
@@ -165,5 +165,12 @@ class XChan::UNIXSocket
       readable, _ = IO.select [@reader], nil, nil, 0
       !!readable
     end
+  end
+
+  ##
+  # @return [Boolean]
+  #   Returns true when the channel is empty, or closed
+  def empty?
+    @bytes_read == @bytes_written || closed?
   end
 end

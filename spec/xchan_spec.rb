@@ -40,6 +40,37 @@ RSpec.describe XChan do
     end
   end
 
+  describe "#empty?" do
+    subject { ch }
+
+    context "when the channel is considered empty" do
+      context "when a write hasn't taken place" do
+        it { is_expected.to be_empty }
+      end
+
+      context "when a write has taken place" do
+        before { ch.send(%w[foo]) }
+
+        context "when the channel is read from" do
+          before { ch.read }
+          it { is_expected.to be_empty }
+        end
+
+        context "when the channel is closed" do
+          before { ch.close }
+          it { is_expected.to be_empty }
+        end
+      end
+    end
+
+    context "when the channel is not considered empty" do
+      context "when a write has taken place" do
+        before { ch.send(%w[foo]) }
+        it { is_expected.to_not be_empty }
+      end
+    end
+  end
+
   describe "#send" do
     it "returns the number of written bytes" do
       expect(ch.send(%w[0x1eef])).to eq(25)
