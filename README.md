@@ -173,7 +173,7 @@ ch = xchan
 print "Sum: ", sum(*ch), "\n"
 
 ##
-# == Ouput
+# == Output
 # Sum: 10
 ```
 
