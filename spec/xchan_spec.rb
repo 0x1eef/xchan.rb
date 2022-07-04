@@ -71,6 +71,31 @@ RSpec.describe XChan do
     end
   end
 
+  describe '#to_a' do
+    context 'when used by the splat operator' do
+      subject { lambda { |a,b,c| [a,b,c] }.call(*ch) }
+      before { 1.upto(3) { ch.send([_1]) } }
+      it { is_expected.to eq([[1],[2],[3]]) }
+    end
+
+    context 'when used to read the most recent write' do
+      subject { ch.to_a.last }
+      before { 1.upto(5) { ch.send [_1] } }
+      it { is_expected.to eq([5]) }
+    end
+
+    context 'when used to consume the contents of the channel' do
+      subject { ch.to_a }
+      before { 1.upto(3) { ch.send [_1] } }
+      it { is_expected.to eq([[1], [2], [3]]) }
+    end
+
+    context 'when the channel is empty' do
+      subject { ch.to_a }
+      it { is_expected.to eq([]) }
+    end
+  end
+
   describe "#send" do
     it "returns the number of written bytes" do
       expect(ch.send(%w[0x1eef])).to eq(25)
@@ -113,13 +138,6 @@ RSpec.describe XChan do
     it "returns true when there is a message waiting to be read" do
       ch.send [1]
       expect(ch).to be_readable
-    end
-  end
-
-  describe "#recv_last" do
-    it "returns the last message written to a channel" do
-      [1, 2, 3, 4, 5].each { |number| ch.send [number] }
-      expect(ch.recv_last).to eq([5])
     end
   end
 end

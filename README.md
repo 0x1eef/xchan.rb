@@ -137,6 +137,46 @@ ch.close
 # Received (parent process): 3
 ```
 
+**XChan::UNIXSocket#to_a**
+
+1. Direct call
+
+The following example demonstrates how the `#to_a` method can be used
+to consume the contents of a channel:
+
+```ruby
+require "xchan"
+
+ch = xchan
+1.upto(5) { ch.send(_1) }
+print "read from populated channel ", ch.to_a, "\n"
+print "read from empty channel ", " " * 4, ch.to_a, "\n"
+
+##
+# == Output
+# read from populated channel [1, 2, 3, 4, 5]
+# read from empty channel     []
+```
+
+2. Splat operator
+
+The following example demonstrates how the splat operator can be used
+to forward the contents of a channel as arguments to a method:
+
+```ruby
+def sum(a, b, c, d)
+  [a,b,c,d].sum
+end
+
+ch = xchan
+1.upto(4) { ch.send(_1) }
+print "Sum: ", sum(*ch), "\n"
+
+##
+# == Ouput
+# Sum: 10
+```
+
 **Track bytes in, bytes out**
 
 The following example demonstrates how the number of bytes read from and written to
