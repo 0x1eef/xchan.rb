@@ -71,26 +71,26 @@ RSpec.describe XChan do
     end
   end
 
-  describe '#to_a' do
-    context 'when used by the splat operator' do
-      subject { lambda { |a,b,c| [a,b,c] }.call(*ch) }
+  describe "#to_a" do
+    context "when used by the splat operator" do
+      subject { lambda { |a, b, c| [a, b, c] }.call(*ch) }
       before { 1.upto(3) { ch.send([_1]) } }
-      it { is_expected.to eq([[1],[2],[3]]) }
+      it { is_expected.to eq([[1], [2], [3]]) }
     end
 
-    context 'when used to read the most recent write' do
+    context "when used to read the most recent write" do
       subject { ch.to_a.last }
       before { 1.upto(5) { ch.send [_1] } }
       it { is_expected.to eq([5]) }
     end
 
-    context 'when used to consume the contents of the channel' do
+    context "when used to consume the contents of the channel" do
       subject { ch.to_a }
       before { 1.upto(3) { ch.send [_1] } }
       it { is_expected.to eq([[1], [2], [3]]) }
     end
 
-    context 'when the channel is empty' do
+    context "when the channel is empty" do
       subject { ch.to_a }
       it { is_expected.to eq([]) }
     end
