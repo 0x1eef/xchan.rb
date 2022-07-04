@@ -1,0 +1,25 @@
+##
+# Plugins
+require:
+  - standard
+  - rubocop-rspec
+
+##
+# Defaults: standard-rb
+inherit_gem:
+  standard: config/base.yml
+
+##
+# Disabled cops
+RSpec/FilePath:
+  Enabled: false
+RSpec/NestedGroups:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Enabled: false
+RSpec/NotToNot:
+  Enabled: false
+RSpec/EmptyLineAfterHook:
+  Enabled: false
+RSpec/EmptyLineAfterSubject:
+  Enabled: false
