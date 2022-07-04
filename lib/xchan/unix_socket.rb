@@ -140,20 +140,17 @@ class XChan::UNIXSocket
   ##
   # @example
   #   ch = xchan
-  #   ch.send 1
-  #   ch.send 2
-  #   ch.send 3
-  #   ch.recv_last # => 3
+  #   1.upto(4) { ch.send(_1) }
+  #   ch.to_a.last # => 4
   #
-  # @return [Object, nil]
-  #  Returns the last object written to the channel or "nil" if the underlying IO is
-  #  not readable.
-  def recv_last
-    last = nil
-    last = recv while readable?
-    last
+  # @return [Array<Object>]
+  #  Returns and consumes the contents of the channel.
+  def to_a
+    return [] unless readable?
+    ary = []
+    ary.push(recv) while readable?
+    ary
   end
-  alias_method :read_last, :recv_last
 
   ##
   # @return [Boolean]
