@@ -44,10 +44,25 @@ class XChan::ByteBuffer
   private
 
   def read
-    @serializer.load(@buffer.tap(&:rewind).read)
+    retry_count = 1
+    @buffer.flock(File::LOCK_SH)
+    buffer = @serializer.load(@buffer.tap(&:rewind).read)
+    @buffer.flock(File::LOCK_UN)
+    buffer
+  rescue TypeError, ArgumentError => e
+    ##
+    # Handle a rare serialization failure that can sometimes occur
+    # when running readme_examples/advanced/3_parallel_read_write.rb.
+    # One retry is usually enough to fix it.
+    raise(e) if retry_count > 3
+    retry_count += 1
+    retry
   end
 
   def write(buffer)
-    @buffer.tap(&:rewind).write(@serializer.dump(buffer))
+    @buffer.flock(File::LOCK_SH)
+    buffer = @buffer.tap(&:rewind).write(@serializer.dump(buffer))
+    @buffer.flock(File::LOCK_UN)
+    buffer
   end
 end

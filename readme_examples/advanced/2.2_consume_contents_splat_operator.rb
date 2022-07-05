@@ -1,4 +1,4 @@
-require_relative "setup"
+require_relative "../setup"
 require "xchan"
 
 def sum(a, b, c, d)
