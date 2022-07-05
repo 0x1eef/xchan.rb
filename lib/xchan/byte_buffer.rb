@@ -10,8 +10,8 @@ class XChan::ByteBuffer
   #  The serializer used to serialize the contents of the buffer.
   #
   # @return [XChan::Buffer]
-  def initialize(serializer)
-    @serializer = serializer
+  def initialize
+    @serializer = Marshal
     @buffer = Tempfile.new('xchan').tap(&:unlink)
     write([])
   end
