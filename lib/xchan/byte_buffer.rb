@@ -10,7 +10,7 @@ class XChan::ByteBuffer
   def initialize
     @serializer = Marshal
     @buffer = Tempfile.new('xchan-byte_buffer').tap(&:unlink)
-    write([])
+    write({bytes_written: 0, bytes_read: 0, bytes: []})
   end
 
   ##
@@ -20,8 +20,8 @@ class XChan::ByteBuffer
   # @return [void]
   def push(byte_size)
     buffer = read
-    buffer.push(byte_size)
-    byte_size.tap { write(buffer) }
+    buffer[:bytes].push(byte_size)
+    byte_size.tap { write(buffer, bytes_written: byte_size) }
   end
 
   ##
@@ -30,7 +30,21 @@ class XChan::ByteBuffer
   #  written to a channel.
   def shift
     buffer = read
-    buffer.shift.tap { write(buffer) }
+    buffer[:bytes].shift.tap { write(buffer, bytes_read: _1) }
+  end
+
+  ##
+  # @return [Integer]
+  #  Returns the total number of bytes written to the channel
+  def bytes_written
+    read[:bytes_written]
+  end
+
+  ##
+  # @return [Integer]
+  #  Returns the total number of bytes read from the channel
+  def bytes_read
+    read[:bytes_read]
   end
 
   ##
@@ -59,8 +73,10 @@ class XChan::ByteBuffer
     @buffer.flock(File::LOCK_UN)
   end
 
-  def write(buffer)
+  def write(buffer, bytes_written: 0, bytes_read: 0)
     @buffer.flock(File::LOCK_SH)
+    buffer[:bytes_written] += bytes_written
+    buffer[:bytes_read] += bytes_read
     @buffer.tap(&:rewind).write(@serializer.dump(buffer))
   ensure
     @buffer.flock(File::LOCK_UN)
