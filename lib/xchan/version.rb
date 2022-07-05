@@ -1,3 +1,3 @@
 module XChan
-  VERSION = "0.7.4"
+  VERSION = "0.7.5"
 end
