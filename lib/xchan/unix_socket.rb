@@ -33,7 +33,7 @@ class XChan::UNIXSocket
     @reader, @writer = ::UNIXSocket.pair(:STREAM)
     @bytes_written = 0
     @bytes_read = 0
-    @buffer = XChan::ByteBuffer.new(@serializer)
+    @buffer = XChan::ByteBuffer.new
   end
 
   ##
