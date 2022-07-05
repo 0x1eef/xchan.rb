@@ -1,5 +1,6 @@
 class XChan::UNIXSocket
   require "socket"
+  require_relative "byte_buffer"
 
   ##
   # @return [Integer]
@@ -32,7 +33,7 @@ class XChan::UNIXSocket
     @reader, @writer = ::UNIXSocket.pair(:STREAM)
     @bytes_written = 0
     @bytes_read = 0
-    @writes = []
+    @buffer = XChan::ByteBuffer.new(@serializer)
   end
 
   ##
@@ -54,6 +55,7 @@ class XChan::UNIXSocket
     else
       @reader.close
       @writer.close
+      @buffer.close
       true
     end
   end
@@ -95,7 +97,7 @@ class XChan::UNIXSocket
       msg = @serializer.dump(object)
       byte_count = writable[0].syswrite(msg)
       @bytes_written += byte_count
-      @writes.push(byte_count)
+      @buffer.push(byte_count)
       byte_count
     end
   end
@@ -130,7 +132,7 @@ class XChan::UNIXSocket
     end
     readable, = IO.select [@reader], nil, nil, timeout
     if readable
-      byte_count = @writes.shift
+      byte_count = @buffer.shift
       str = readable[0].read(byte_count)
       @bytes_read += byte_count
       @serializer.load(str)
