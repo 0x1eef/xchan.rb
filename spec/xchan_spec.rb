@@ -9,13 +9,16 @@ RSpec.describe XChan do
   end
 
   describe "#send" do
+  let(:payload) { %w[0x1eef] }
+  let(:payload_size) { ch.serializer.dump(payload).bytesize }
+
     it "returns the number of written bytes" do
-      expect(ch.send(%w[0x1eef])).to eq(25)
+      expect(ch.send(payload)).to eq(payload_size)
     end
 
     it "consistently returns the number of written bytes by the last write" do
-      expect(ch.send(%w[0x1eef])).to eq(25)
-      expect(ch.send(%w[0x1eef])).to eq(25)
+      expect(ch.send(payload)).to eq(payload_size)
+      expect(ch.send(payload)).to eq(payload_size)
     end
   end
 
@@ -55,7 +58,7 @@ RSpec.describe XChan do
 
   describe "#bytes_written" do
     let(:payload) { %w[0x1eef] }
-    let(:payload_size) { 25 }
+    let(:payload_size) { ch.serializer.dump(payload).bytesize }
 
     it "records the bytes written by one message" do
       ch.send payload
@@ -70,7 +73,7 @@ RSpec.describe XChan do
 
   describe "#bytes_read" do
     let(:payload) { %w[0x1eef] }
-    let(:payload_size) { 25 }
+    let(:payload_size) { ch.serializer.dump(payload).bytesize }
 
     it "records the bytes read from one message" do
       ch.send payload
