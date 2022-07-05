@@ -193,8 +193,8 @@ print "Bytes read: ", ch.bytes_read, "\n"
 
 ##
 # == Output
-# Bytes written: 25
-# Bytes read: 25
+# Bytes written: 18
+# Bytes read: 18
 ```
 
 ## Resources
