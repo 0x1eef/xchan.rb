@@ -94,8 +94,8 @@ class XChan::UNIXSocket
     raise IOError, "closed channel" if @writer.closed?
     _, writable, _ = IO.select nil, [@writer], nil, timeout
     if writable
-      msg = @serializer.dump(object)
-      byte_count = writable[0].syswrite(msg)
+      obj = @serializer.dump(object)
+      byte_count = @writer.write(obj)
       @bytes_written += byte_count
       @buffer.push(byte_count)
       byte_count
@@ -133,9 +133,9 @@ class XChan::UNIXSocket
     readable, = IO.select [@reader], nil, nil, timeout
     if readable
       byte_count = @buffer.shift
-      str = readable[0].read(byte_count)
+      obj = @serializer.load(@reader.read(byte_count))
       @bytes_read += byte_count
-      @serializer.load(str)
+      obj
     end
   end
   alias_method :timed_read, :timed_recv

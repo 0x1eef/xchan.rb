@@ -6,9 +6,6 @@ class XChan::ByteBuffer
   require 'tempfile'
 
   ##
-  # @param [#dump, #load] serializer
-  #  The serializer used to serialize the contents of the buffer.
-  #
   # @return [XChan::Buffer]
   def initialize
     @serializer = Marshal
@@ -47,10 +44,10 @@ class XChan::ByteBuffer
   private
 
   def read
-    @serializer.load @buffer.tap(&:rewind).read
+    @serializer.load(@buffer.tap(&:rewind).read)
   end
 
   def write(buffer)
-    @buffer.tap(&:rewind).write  @serializer.dump(buffer)
+    @buffer.tap(&:rewind).write(@serializer.dump(buffer))
   end
 end
