@@ -54,35 +54,6 @@ ch.close
 
 ```
 
-**Parallel map**
-
-The following example demonstrates a short and sweet `p_map` method
-that runs a map operation in parallel, with no more than 10 LOC:
-
-```ruby
-require "xchan"
-
-def p_map(enum)
-  ch = xchan
-  enum.map
-      .with_index { |e, i| fork { ch.send [yield(e), i] } }
-      .each { Process.wait(_1) }
-  enum.map { ch.recv }
-      .tap { ch.close }
-      .sort_by(&:pop)
-      .map(&:pop)
-end
-
-t = Time.now
-print p_map([3, 2, 1]) { |e| sleep(e); e * 2 }, "\n"
-print "Duration: #{Time.now - t}", "\n"
-
-##
-# == Output
-# [6, 4, 2]
-# Duration: 3.00XXX
-```
-
 **Blocking read**
 
 The following example demonstrates how to send a Ruby object from a parent process
@@ -137,6 +108,58 @@ ch.close
 # Received (parent process): 3
 ```
 
+**Track bytes in, bytes out**
+
+The following example demonstrates how the number of bytes read from and written to
+a channel can be tracked using the `#bytes_written` and `#bytes_read` methods:
+
+```ruby
+require "xchan"
+
+ch = xchan(:marshal)
+ch.send %w[0x1eef]
+print "Bytes written: ", ch.bytes_written, "\n"
+ch.recv
+print "Bytes read: ", ch.bytes_read, "\n"
+
+##
+# == Output
+# Bytes written: 18
+# Bytes read: 18
+```
+
+## Advanced examples
+
+**Parallel map**
+
+The following example demonstrates a short and sweet `p_map` method
+that runs a map operation in parallel, with no more than 10 LOC:
+
+```ruby
+require "xchan"
+
+def p_map(enum)
+  ch = xchan
+  enum.map
+      .with_index { |e, i| fork { ch.send [yield(e), i] } }
+      .each { Process.wait(_1) }
+  enum.map { ch.recv }
+      .tap { ch.close }
+      .sort_by(&:pop)
+      .map(&:pop)
+end
+
+t = Time.now
+print p_map([3, 2, 1]) { |e| sleep(e); e * 2 }, "\n"
+print "Duration: #{Time.now - t}", "\n"
+
+##
+# == Output
+# [6, 4, 2]
+# Duration: 3.00XXX
+```
+
+
 **Consume contents**
 
 *Directly*
@@ -175,26 +198,6 @@ print "Sum: ", sum(*ch), "\n"
 ##
 # == Output
 # Sum: 10
-```
-
-**Track bytes in, bytes out**
-
-The following example demonstrates how the number of bytes read from and written to
-a channel can be tracked using the `#bytes_written` and `#bytes_read` methods:
-
-```ruby
-require "xchan"
-
-ch = xchan(:marshal)
-ch.send %w[0x1eef]
-print "Bytes written: ", ch.bytes_written, "\n"
-ch.recv
-print "Bytes read: ", ch.bytes_read, "\n"
-
-##
-# == Output
-# Bytes written: 18
-# Bytes read: 18
 ```
 
 ## Resources
