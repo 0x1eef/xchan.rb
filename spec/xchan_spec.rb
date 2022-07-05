@@ -1,6 +1,6 @@
 require_relative "setup"
 RSpec.describe XChan do
-  let(:ch) do
+  let!(:ch) do
     xchan Object.const_get(ENV["SERIALIZER"] || "Marshal")
   end
 
@@ -9,8 +9,8 @@ RSpec.describe XChan do
   end
 
   describe "#send" do
-  let(:payload) { %w[0x1eef] }
-  let(:payload_size) { ch.serializer.dump(payload).bytesize }
+    let(:payload) { %w[0x1eef] }
+    let(:payload_size) { ch.serializer.dump(payload).bytesize }
 
     it "returns the number of written bytes" do
       expect(ch.send(payload)).to eq(payload_size)
@@ -19,6 +19,16 @@ RSpec.describe XChan do
     it "consistently returns the number of written bytes by the last write" do
       expect(ch.send(payload)).to eq(payload_size)
       expect(ch.send(payload)).to eq(payload_size)
+    end
+
+    context "when queueing messages from a child process" do
+      subject { 3.times.map { ch.recv } }
+      before do
+        Process.wait fork {
+          1.upto(3) { ch.send([_1]) }
+        }
+      end
+      it { is_expected.to eq([[1], [2], [3]]) }
     end
   end
 
