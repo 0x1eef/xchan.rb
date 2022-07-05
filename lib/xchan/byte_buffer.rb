@@ -6,10 +6,10 @@ class XChan::ByteBuffer
   require 'tempfile'
 
   ##
-  # @return [XChan::Buffer]
+  # @return [XChan::ByteBuffer]
   def initialize
     @serializer = Marshal
-    @buffer = Tempfile.new('xchan').tap(&:unlink)
+    @buffer = Tempfile.new('xchan-byte_buffer').tap(&:unlink)
     write([])
   end
 
@@ -46,24 +46,23 @@ class XChan::ByteBuffer
   def read
     retry_count = 0
     @buffer.flock(File::LOCK_SH)
-    buffer = @serializer.load(@buffer.tap(&:rewind).read)
-    @buffer.flock(File::LOCK_UN)
-    buffer
+    @serializer.load(@buffer.tap(&:rewind).read)
   rescue TypeError, ArgumentError => e
     ##
     # Handle a rare serialization failure that can sometimes occur
     # when running readme_examples/advanced/3_parallel_read_write.rb.
     # One retry is usually enough to fix it.
     raise(e) if retry_count > 3
-    @buffer.flock(File::LOCK_UN)
     retry_count += 1
     retry
+  ensure
+    @buffer.flock(File::LOCK_UN)
   end
 
   def write(buffer)
     @buffer.flock(File::LOCK_SH)
-    buffer = @buffer.tap(&:rewind).write(@serializer.dump(buffer))
+    @buffer.tap(&:rewind).write(@serializer.dump(buffer))
+  ensure
     @buffer.flock(File::LOCK_UN)
-    buffer
   end
 end
