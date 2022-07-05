@@ -3,16 +3,6 @@ class XChan::UNIXSocket
   require_relative "byte_buffer"
 
   ##
-  # @return [Integer]
-  #  Returns the total number of bytes written to the channel
-  attr_reader :bytes_written
-
-  ##
-  # @return [Integer]
-  #  Returns the total number of bytes read from the channel
-  attr_reader :bytes_read
-
-  ##
   # @return [#dump, #load]
   #  Returns the serializer being used by the channel
   attr_reader :serializer
@@ -31,8 +21,6 @@ class XChan::UNIXSocket
   def initialize(serializer)
     @serializer = XChan::SERIALIZERS[serializer]&.call || serializer
     @reader, @writer = ::UNIXSocket.pair(:STREAM)
-    @bytes_written = 0
-    @bytes_read = 0
     @buffer = XChan::ByteBuffer.new
   end
 
@@ -96,7 +84,6 @@ class XChan::UNIXSocket
     if writable
       obj = @serializer.dump(object)
       byte_count = @writer.write(obj)
-      @bytes_written += byte_count
       @buffer.push(byte_count)
       byte_count
     end
@@ -134,7 +121,6 @@ class XChan::UNIXSocket
     if readable
       byte_count = @buffer.shift
       obj = @serializer.load(@reader.read(byte_count))
-      @bytes_read += byte_count
       obj
     end
   end
@@ -171,6 +157,20 @@ class XChan::UNIXSocket
   # @return [Boolean]
   #   Returns true when the channel is empty, or closed
   def empty?
-    @bytes_read == @bytes_written || closed?
+    closed? || bytes_read == bytes_written
+  end
+
+  ##
+  # @return [Integer]
+  #  Returns the total number of bytes written to the channel
+  def bytes_written
+    @buffer.bytes_written
+  end
+
+  ##
+  # @return [Integer]
+  #  Returns the total number of bytes read from the channel
+  def bytes_read
+    @buffer.bytes_read
   end
 end

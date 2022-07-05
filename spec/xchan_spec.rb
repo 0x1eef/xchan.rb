@@ -71,12 +71,12 @@ RSpec.describe XChan do
     let(:payload_size) { ch.serializer.dump(payload).bytesize }
 
     it "records the bytes written by one message" do
-      ch.send payload
+      Process.wait fork { ch.send(payload) }
       expect(ch.bytes_written).to eq(payload_size)
     end
 
     it "records the bytes written by two messages" do
-      2.times { ch.send payload }
+      Process.wait fork { 2.times { ch.send(payload) } }
       expect(ch.bytes_written).to eq(payload_size * 2)
     end
   end
@@ -86,14 +86,14 @@ RSpec.describe XChan do
     let(:payload_size) { ch.serializer.dump(payload).bytesize }
 
     it "records the bytes read from one message" do
-      ch.send payload
-      ch.recv
+      ch.send(payload)
+      Process.wait fork { ch.recv }
       expect(ch.bytes_read).to eq(payload_size)
     end
 
     it "records the bytes read from two messages" do
       2.times { ch.send payload }
-      2.times { ch.recv }
+      Process.wait fork { 2.times { ch.recv } }
       expect(ch.bytes_read).to eq(payload_size * 2)
     end
   end
