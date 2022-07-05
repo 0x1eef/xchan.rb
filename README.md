@@ -137,9 +137,9 @@ ch.close
 # Received (parent process): 3
 ```
 
-**XChan::UNIXSocket#to_a**
+**Consume contents**
 
-1. Direct call
+*Directly*
 
 The following example demonstrates how the `#to_a` method can be used
 to consume the contents of a channel:
@@ -158,7 +158,7 @@ print "read from empty channel ", " " * 4, ch.to_a, "\n"
 # read from empty channel     []
 ```
 
-2. Splat operator
+*Splat operator*
 
 The following example demonstrates how the splat operator can be used
 to forward the contents of a channel as arguments to a method:
