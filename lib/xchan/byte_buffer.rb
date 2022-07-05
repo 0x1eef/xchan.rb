@@ -56,6 +56,7 @@ class XChan::ByteBuffer
     # One retry is usually enough to fix it.
     raise(e) if retry_count > 3
     retry_count += 1
+    @buffer.flock(File::LOCK_UN)
     retry
   end
 
