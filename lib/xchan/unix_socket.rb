@@ -120,8 +120,7 @@ class XChan::UNIXSocket
     readable, = IO.select [@reader], nil, nil, timeout
     if readable
       byte_count = @buffer.shift
-      obj = @serializer.load(@reader.read(byte_count))
-      obj
+      @serializer.load(@reader.read(byte_count))
     end
   end
   alias_method :timed_read, :timed_recv
