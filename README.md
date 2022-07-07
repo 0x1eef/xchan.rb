@@ -63,18 +63,18 @@ to the channel. In the example, the object being sent is an Integer:
 ```ruby
 require "xchan"
 
-ch = xchan(:marshal)
+ch = xchan
 pid = fork do
   print "Received magic number (child process): ", ch.recv, "\n"
 end
-print "Sending a magic number (from parent process)", "\n"
+print "Send a magic number (from parent process)", "\n"
 ch.send(rand(21))
 Process.wait(pid)
 ch.close
 
 ##
 # == Output
-# Sending a magic number (from parent process)
+# Send a magic number (from parent process)
 # Received magic number (child process): XX
 ```
 
@@ -90,7 +90,7 @@ order they were sent: 1 first, then 2, and finally 3:
 ```ruby
 require "xchan"
 
-ch = xchan(:marshal)
+ch = xchan
 Process.wait fork {
   print "Queue messages (from child process)", "\n"
   ch.send(1)
@@ -116,12 +116,12 @@ a channel can be tracked using the `#bytes_written` and `#bytes_read` methods:
 ```ruby
 require "xchan"
 
-ch = xchan(:marshal)
+ch = xchan
 Process.wait fork { ch.send %w[0x1eef] }
 print "Bytes written: ", ch.bytes_written, "\n"
 Process.wait fork { ch.recv }
 print "Bytes read: ", ch.bytes_read, "\n"
-
+ch.close
 
 ##
 # == Output
@@ -173,13 +173,14 @@ require "xchan"
 
 ch = xchan
 1.upto(5) { ch.send(_1) }
-print "read from populated channel ", ch.to_a, "\n"
-print "read from empty channel ", " " * 4, ch.to_a, "\n"
+print "Read from populated channel ", ch.to_a, "\n"
+print "Read from empty channel ", " " * 4, ch.to_a, "\n"
+ch.close
 
 ##
 # == Output
-# read from populated channel [1, 2, 3, 4, 5]
-# read from empty channel     []
+# Read from populated channel [1, 2, 3, 4, 5]
+# Read from empty channel     []
 ```
 
 *Splat operator*
@@ -195,6 +196,7 @@ end
 ch = xchan
 1.upto(4) { ch.send(_1) }
 print "Sum: ", sum(*ch), "\n"
+ch.close
 
 ##
 # == Output

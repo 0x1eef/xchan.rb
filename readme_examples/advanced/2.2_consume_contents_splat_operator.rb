@@ -8,3 +8,4 @@ end
 ch = xchan
 1.upto(4) { ch.send(_1) }
 print "Sum: ", sum(*ch), "\n"
+ch.close
