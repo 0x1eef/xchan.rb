@@ -1,7 +1,7 @@
 require_relative "setup"
 require "xchan"
 
-ch = xchan(:marshal)
+ch = xchan
 Process.wait fork {
   print "Queue messages (from child process)", "\n"
   ch.send(1)
