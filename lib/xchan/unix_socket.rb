@@ -82,8 +82,7 @@ class XChan::UNIXSocket
     raise IOError, "closed channel" if @writer.closed?
     writable = @writer.wait_writable(timeout)
     return unless writable
-    obj = @serializer.dump(object)
-    byte_count = @writer.write(obj)
+    byte_count = @writer.write(@serializer.dump(object))
     @buffer.push(byte_count)
     byte_count
   end
