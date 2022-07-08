@@ -3,13 +3,13 @@
 # of bytes used to store each object written to a channel,
 # which in turn is used when reading an object from a channel.
 class XChan::ByteBuffer
-  require 'tempfile'
+  require "tempfile"
 
   ##
   # @return [XChan::ByteBuffer]
   def initialize
     @serializer = Marshal
-    @buffer = Tempfile.new('xchan-byte_buffer').tap(&:unlink)
+    @buffer = Tempfile.new("xchan-byte_buffer").tap(&:unlink)
     write({bytes_written: 0, bytes_read: 0, bytes: []})
   end
 

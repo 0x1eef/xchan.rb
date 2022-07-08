@@ -80,13 +80,12 @@ class XChan::UNIXSocket
   #  times out.
   def timed_send(object, timeout = 0.1)
     raise IOError, "closed channel" if @writer.closed?
-    _, writable, _ = IO.select nil, [@writer], nil, timeout
-    if writable
-      obj = @serializer.dump(object)
-      byte_count = @writer.write(obj)
-      @buffer.push(byte_count)
-      byte_count
-    end
+    writable = @writer.wait_writable(timeout)
+    return unless writable
+    obj = @serializer.dump(object)
+    byte_count = @writer.write(obj)
+    @buffer.push(byte_count)
+    byte_count
   end
   alias_method :timed_write, :timed_send
 
@@ -114,14 +113,11 @@ class XChan::UNIXSocket
   # @return [Object, nil]
   #  An object from the channel, or `nil` if the read times out.
   def timed_recv(timeout = 0.1)
-    if @reader.closed?
-      raise IOError, "closed channel"
-    end
-    readable, = IO.select [@reader], nil, nil, timeout
-    if readable
-      byte_count = @buffer.shift
-      @serializer.load(@reader.read(byte_count))
-    end
+    raise IOError, "closed channel" if @reader.closed?
+    readable = @reader.wait_readable(timeout)
+    return unless readable
+    byte_count = @buffer.shift
+    @serializer.load(@reader.read(byte_count))
   end
   alias_method :timed_read, :timed_recv
 
@@ -147,7 +143,7 @@ class XChan::UNIXSocket
     if closed?
       false
     else
-      readable, _ = IO.select [@reader], nil, nil, 0
+      readable = @reader.wait_readable(0)
       !!readable
     end
   end
