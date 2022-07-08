@@ -21,7 +21,7 @@ class XChan::ByteBuffer
   def push(byte_size)
     buffer = read
     buffer[:bytes].push(byte_size)
-    byte_size.tap { write(buffer, bytes_written: byte_size) }
+    byte_size.tap { write(buffer, bytes_written: _1) }
   end
 
   ##
