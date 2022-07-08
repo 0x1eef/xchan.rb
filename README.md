@@ -133,8 +133,8 @@ ch.close
 
 **Parallel map**
 
-The following example demonstrates a short and sweet `p_map` method
-that runs a map operation in parallel, with no more than 10 LOC:
+The following example demonstrates a method by the name `p_map` - implemented in 10 LOC -
+that runs a map operation in parallel:
 
 ```ruby
 require "xchan"
