@@ -46,7 +46,6 @@ Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
 
 ##
-# == Output
 # Received message: serialized by Marshal
 # Received message: serialized by Marshal
 # Received message: serialized by JSON
@@ -73,7 +72,6 @@ Process.wait(pid)
 ch.close
 
 ##
-# == Output
 # Send a magic number (from parent process)
 # Received magic number (child process): XX
 ```
@@ -101,7 +99,6 @@ Process.wait fork {
 ch.close
 
 ##
-# == Output
 # Queue messages (from child process)
 # Received (parent process): 1
 # Received (parent process): 2
@@ -128,7 +125,6 @@ print "channel size: ", ch.size, "\n"
 ch.close
 
 ##
-# == Output
 # channel size: 3
 # read: [0]
 # channel size: 2
@@ -154,7 +150,6 @@ print "Bytes read: ", ch.bytes_read, "\n"
 ch.close
 
 ##
-# == Output
 # Bytes written: 18
 # Bytes read: 18
 ```
@@ -185,7 +180,6 @@ print p_map([3, 2, 1]) { |e| sleep(e); e * 2 }, "\n"
 print "Duration: #{Time.now - t}", "\n"
 
 ##
-# == Output
 # [6, 4, 2]
 # Duration: 3.00XXX
 ```
@@ -208,7 +202,6 @@ print "Read from empty channel ", " " * 4, ch.to_a, "\n"
 ch.close
 
 ##
-# == Output
 # Read from populated channel [1, 2, 3, 4, 5]
 # Read from empty channel     []
 ```
@@ -229,7 +222,6 @@ print "Sum: ", sum(*ch), "\n"
 ch.close
 
 ##
-# == Output
 # Sum: 10
 ```
 
