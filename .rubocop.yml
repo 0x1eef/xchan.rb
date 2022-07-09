@@ -10,12 +10,10 @@ inherit_gem:
   standard: config/base.yml
 
 ##
-# Disabled cops
+# Disabled cops (rspec-specific)
 RSpec/FilePath:
   Enabled: false
 RSpec/NestedGroups:
-  Enabled: false
-RSpec/MultipleExpectations:
   Enabled: false
 RSpec/NotToNot:
   Enabled: false
@@ -23,6 +21,9 @@ RSpec/EmptyLineAfterHook:
   Enabled: false
 RSpec/EmptyLineAfterSubject:
   Enabled: false
+
+##
+# Disabled cops (lib-specific)
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 Style/Semicolon:

@@ -16,18 +16,9 @@ RSpec.describe XChan do
       expect(ch.send(payload)).to eq(payload_size)
     end
 
-    it "consistently returns the number of written bytes by the last write" do
-      expect(ch.send(payload)).to eq(payload_size)
-      expect(ch.send(payload)).to eq(payload_size)
-    end
-
     context "when queueing messages from a child process" do
       subject { 3.times.map { ch.recv } }
-      before do
-        Process.wait fork {
-          1.upto(3) { ch.send([_1]) }
-        }
-      end
+      before { Process.wait fork { 1.upto(3) { ch.send([_1]) } } }
       it { is_expected.to eq([[1], [2], [3]]) }
     end
   end
