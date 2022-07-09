@@ -108,6 +108,36 @@ ch.close
 # Received (parent process): 3
 ```
 
+**Count objects**
+
+The following example demonstrates how the `#size` method can be
+used to count how many objects are waiting to be read from a channel:
+
+```ruby
+require "xchan"
+
+ch = xchan
+3.times do |i|
+  Process.wait fork { ch.send([i]) }
+end
+3.times do
+  print "channel size: ", ch.size, "\n"
+  print "read: ", ch.recv, "\n"
+end
+print "channel size: ", ch.size, "\n"
+ch.close
+
+##
+# == Output
+# channel size: 3
+# read: [0]
+# channel size: 2
+# read: [1]
+# channel size: 1
+# read: [2]
+# channel size: 0
+```
+
 **Track bytes in, bytes out**
 
 The following example demonstrates how the number of bytes read from and written to
@@ -133,8 +163,8 @@ ch.close
 
 **Parallel map**
 
-The following example demonstrates a method by the name `p_map` - implemented in 10 LOC -
-that runs a map operation in parallel:
+The following example demonstrates a method by the name `p_map` -
+implemented in 10 LOC - that runs a map operation in parallel:
 
 ```ruby
 require "xchan"
@@ -165,8 +195,8 @@ print "Duration: #{Time.now - t}", "\n"
 
 *Directly*
 
-The following example demonstrates how the `#to_a` method can be used
-to consume the contents of a channel:
+The following example demonstrates how the `#to_a` method can be
+used to consume the contents of a channel:
 
 ```ruby
 require "xchan"
@@ -185,12 +215,12 @@ ch.close
 
 *Splat operator*
 
-The following example demonstrates how the splat operator can be used
-to forward the contents of a channel as arguments to a method:
+The following example demonstrates how the splat operator can be
+used to forward the contents of a channel as arguments to a method:
 
 ```ruby
 def sum(a, b, c, d)
-  [a,b,c,d].sum
+  [a, b, c, d].sum
 end
 
 ch = xchan

@@ -152,4 +152,28 @@ RSpec.describe XChan do
       it { is_expected.to eq([]) }
     end
   end
+
+  describe "#size" do
+    subject { ch.size }
+
+    context "when one object is written to the channel" do
+      before { ch.send([1]) }
+      it { is_expected.to eq(1) }
+
+      context "when a read is performed" do
+        before { ch.recv }
+        it { is_expected.to be_zero }
+      end
+    end
+
+    context "when two objects are written to the channel" do
+      before { 2.times { ch.send([1]) } }
+      it { is_expected.to eq(2) }
+
+      context "when a read is performed" do
+        before { ch.recv }
+        it { is_expected.to eq(1) }
+      end
+    end
+  end
 end

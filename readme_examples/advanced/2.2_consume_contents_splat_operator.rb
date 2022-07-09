@@ -2,7 +2,7 @@ require_relative "../setup"
 require "xchan"
 
 def sum(a, b, c, d)
-  [a,b,c,d].sum
+  [a, b, c, d].sum
 end
 
 ch = xchan
