@@ -48,6 +48,14 @@ class XChan::ByteBuffer
   end
 
   ##
+  # @return [Integer]
+  #  Returns the number of objects waiting to be read from the
+  #  channel
+  def size
+    read[:bytes].size
+  end
+
+  ##
   # Close the buffer
   #
   # @return [void]

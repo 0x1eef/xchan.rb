@@ -23,3 +23,8 @@ RSpec/EmptyLineAfterHook:
   Enabled: false
 RSpec/EmptyLineAfterSubject:
   Enabled: false
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+Style/Semicolon:
+  Exclude:
+    - 'readme_examples/advanced/1_parallel_map.rb'

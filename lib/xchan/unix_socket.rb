@@ -167,4 +167,12 @@ class XChan::UNIXSocket
   def bytes_read
     @buffer.bytes_read
   end
+
+  ##
+  # @return [Integer]
+  #  Returns the number of objects waiting to be read from the
+  #  channel
+  def size
+    @buffer.size
+  end
 end
