@@ -176,7 +176,7 @@ def p_map(enum)
 end
 
 t = Time.now
-print p_map([3, 2, 1]) { |e| sleep(e); e * 2 }, "\n"
+print p_map([3, 2, 1]) { |e| sleep(e).then { e * 2 } }, "\n"
 print "Duration: #{Time.now - t}", "\n"
 
 ##
