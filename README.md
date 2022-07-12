@@ -11,8 +11,10 @@ and the serialization format of your choice - the default is [`Marshal`](https:/
 **Serializers**
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
-or deserialized (on read). The form of serialization used can be customized, the
-example demonstrates a few different options:
+or deserialized (on read). The form of serialization used can be customized by
+the first argument given to `xchan()`. For example any of the following could
+used: `xchan(:marshal)`, `xchan(:json)`, or `xchan(:yaml)`. The example demonstrates
+using [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
 ```ruby
 require "xchan"
@@ -32,24 +34,8 @@ Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
 
 ##
-# This channel uses JSON to serialize objects.
-ch = xchan(:json)
-ch.send(msg: "serialized by JSON")
-Process.wait fork { print "Received message: ", ch.recv["msg"], "\n" }
-ch.close
-
-##
-# This channel uses YAML to serialize objects.
-ch = xchan(:yaml)
-ch.send(msg: "serialized by YAML")
-Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
-ch.close
-
-##
 # Received message: serialized by Marshal
 # Received message: serialized by Marshal
-# Received message: serialized by JSON
-# Received message: serialized by YAML
 
 ```
 
