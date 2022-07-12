@@ -12,7 +12,7 @@ and the serialization format of your choice - the default is [`Marshal`](https:/
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
 or deserialized (on read). The form of serialization used can be customized by
-the first argument given to `xchan()`. For example any of the following could
+the first argument given to `xchan()`. For example any of the following could be
 used: `xchan(:marshal)`, `xchan(:json)`, or `xchan(:yaml)`. The example demonstrates
 using [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
