@@ -1,7 +1,9 @@
 ##
-# The ByteBuffer class is responsible for storing the number
-# of bytes used to store each object written to a channel,
-# which in turn is used when reading an object from a channel.
+# The {Chan::ByteBuffer} class is responsible for tracking the
+# number of bytes used to store each object written to a channel.
+# This class also tracks the total number of bytes read from and
+# written to a channel. The information tracked by this class is
+# utilized when reading an object from a channel.
 class Chan::ByteBuffer
   require "tempfile"
 
@@ -10,6 +12,7 @@ class Chan::ByteBuffer
   def initialize
     @serializer = Marshal
     @buffer = Tempfile.new("xchan-byte_buffer").tap(&:unlink)
+    @buffer.sync = true
     write({bytes_written: 0, bytes_read: 0, bytes: []})
   end
 
@@ -35,22 +38,21 @@ class Chan::ByteBuffer
 
   ##
   # @return [Integer]
-  #  Returns the total number of bytes written to the channel
+  #  Returns the total number of bytes written to a channel
   def bytes_written
     read[:bytes_written]
   end
 
   ##
   # @return [Integer]
-  #  Returns the total number of bytes read from the channel
+  #  Returns the total number of bytes read from a channel
   def bytes_read
     read[:bytes_read]
   end
 
   ##
   # @return [Integer]
-  #  Returns the number of objects waiting to be read from the
-  #  channel
+  #  Returns the number of objects waiting to be read from a channel
   def size
     read[:bytes].size
   end
@@ -66,27 +68,12 @@ class Chan::ByteBuffer
   private
 
   def read
-    retry_count = 0
-    @buffer.flock(File::LOCK_SH)
     @serializer.load(@buffer.tap(&:rewind).read)
-  rescue TypeError, ArgumentError => e
-    ##
-    # Handle a rare serialization failure that can sometimes occur
-    # when running readme_examples/advanced/3_parallel_read_write.rb.
-    # One retry is usually enough to fix it.
-    raise(e) if retry_count > 3
-    retry_count += 1
-    retry
-  ensure
-    @buffer.flock(File::LOCK_UN)
   end
 
   def write(buffer, bytes_written: 0, bytes_read: 0)
-    @buffer.flock(File::LOCK_SH)
     buffer[:bytes_written] += bytes_written
     buffer[:bytes_read] += bytes_read
     @buffer.tap(&:rewind).write(@serializer.dump(buffer))
-  ensure
-    @buffer.flock(File::LOCK_UN)
   end
 end
