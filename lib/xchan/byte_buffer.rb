@@ -6,14 +6,15 @@
 # utilized when reading an object from a channel.
 class Chan::ByteBuffer
   require "tempfile"
+  require "json"
 
   ##
   # @return [Chan::ByteBuffer]
   def initialize
-    @serializer = Marshal
+    @serializer = JSON
     @buffer = Tempfile.new("xchan-byte_buffer").tap(&:unlink)
     @buffer.sync = true
-    write({bytes_written: 0, bytes_read: 0, bytes: []})
+    write({"bytes_written" => 0, "bytes_read" => 0, "bytes" => []})
   end
 
   ##
@@ -23,7 +24,7 @@ class Chan::ByteBuffer
   # @return [void]
   def push(byte_size)
     buffer = read
-    buffer[:bytes].push(byte_size)
+    buffer["bytes"].push(byte_size)
     byte_size.tap { write(buffer, bytes_written: _1) }
   end
 
@@ -33,28 +34,28 @@ class Chan::ByteBuffer
   #  written to a channel.
   def shift
     buffer = read
-    buffer[:bytes].shift.tap { write(buffer, bytes_read: _1) }
+    buffer["bytes"].shift.tap { write(buffer, bytes_read: _1) }
   end
 
   ##
   # @return [Integer]
   #  Returns the total number of bytes written to a channel
   def bytes_written
-    read[:bytes_written]
+    read["bytes_written"]
   end
 
   ##
   # @return [Integer]
   #  Returns the total number of bytes read from a channel
   def bytes_read
-    read[:bytes_read]
+    read["bytes_read"]
   end
 
   ##
   # @return [Integer]
   #  Returns the number of objects waiting to be read from a channel
   def size
-    read[:bytes].size
+    read["bytes"].size
   end
 
   ##
@@ -72,8 +73,9 @@ class Chan::ByteBuffer
   end
 
   def write(buffer, bytes_written: 0, bytes_read: 0)
-    buffer[:bytes_written] += bytes_written
-    buffer[:bytes_read] += bytes_read
+    buffer["bytes_written"] += bytes_written
+    buffer["bytes_read"] += bytes_read
+    @buffer.truncate(0)
     @buffer.tap(&:rewind).write(@serializer.dump(buffer))
   end
 end
