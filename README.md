@@ -2,7 +2,7 @@
 
 xchan.rb is a library for sending Ruby objects
 between Ruby processes who have a parent&lt;-&gt;child relationship. The
-implementation uses a <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>,
+implementation uses a <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>
 and the serialization format of your choice - the default is [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
 
 
@@ -11,10 +11,10 @@ and the serialization format of your choice - the default is [`Marshal`](https:/
 **Serializers**
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
-or deserialized (on read). The form of serialization used can be customized by
-the first argument given to `xchan()`. For example any of the following could be
-used: `xchan(:marshal)`, `xchan(:json)`, or `xchan(:yaml)`. The example demonstrates
-using [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
+and deserialized (on read). The form of serialization used can be customized by
+the first argument given to `xchan()`. For instance any of the following could be
+used: `xchan(:marshal)`, `xchan(:json)`, or `xchan(:yaml)`. The example uses
+[`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
 ```ruby
 require "xchan"
@@ -36,30 +36,29 @@ ch.close
 ##
 # Received message: serialized by Marshal
 # Received message: serialized by Marshal
-
 ```
 
 **Blocking read**
 
 The following example demonstrates how to send a Ruby object from a parent process
 to a child process. `ch.recv` performs a blocking read until an object is sent
-to the channel. In the example, the object being sent is an Integer:
+to the channel. The example sends a random Integer:
 
 ```ruby
 require "xchan"
 
 ch = xchan
 pid = fork do
-  print "Received magic number (child process): ", ch.recv, "\n"
+  print "Received a random number (child process): ", ch.recv, "\n"
 end
-print "Send a magic number (from parent process)", "\n"
+print "Send a random number (from parent process)", "\n"
 ch.send(rand(21))
 Process.wait(pid)
 ch.close
 
 ##
-# Send a magic number (from parent process)
-# Received magic number (child process): XX
+# Send a random number (from parent process)
+# Received random number (child process): XX
 ```
 
 **Queue messages**
@@ -120,7 +119,7 @@ ch.close
 # channel size: 0
 ```
 
-**Track bytes in, bytes out**
+**Bytes in, bytes out**
 
 The following example demonstrates how the number of bytes read from and written to
 a channel can be tracked using the `#bytes_written` and `#bytes_read` methods:
@@ -173,10 +172,10 @@ print "Duration: #{Time.now - t}", "\n"
 
 **Consume contents**
 
-*Directly*
+**#to_a**
 
 The following example demonstrates how the `#to_a` method can be
-used to consume the contents of a channel:
+used to consume and return the contents of a channel as an Array:
 
 ```ruby
 require "xchan"
@@ -192,10 +191,11 @@ ch.close
 # Read from empty channel     []
 ```
 
-*Splat operator*
+**Splat operator**
 
 The following example demonstrates how the splat operator can be
-used to forward the contents of a channel as arguments to a method:
+used to consume and forward the contents of a channel as arguments
+to a method:
 
 ```ruby
 def sum(a, b, c, d)
@@ -213,8 +213,8 @@ ch.close
 
 ## Resources
 
-* [Homepage](https://0x1eef.github.io/x/xchan.rb)
-* [Source code](https://github.com/0x1eef/xchan.rb)
+* [Source code (GitHub)](https://github.com/0x1eef/xchan.rb)
+* [Documentation](https://0x1eef.github.io/x/xchan.rb)
 
 ## Install
 
