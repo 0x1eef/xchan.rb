@@ -33,7 +33,7 @@ RSpec.shared_examples "xchan specs" do |serializer|
     end
 
     it "performs a blocking read" do
-      expect { Timeout.timeout(1) { ch.recv } }.to raise_error(Timeout::Error)
+      expect { Timeout.timeout(0.1) { ch.recv } }.to raise_error(Timeout::Error)
     end
   end
 
