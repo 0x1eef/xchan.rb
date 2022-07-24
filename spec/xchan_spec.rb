@@ -2,7 +2,7 @@
 
 require_relative "setup"
 
-RSpec.shared_examples "xchan specs" do |serializer|
+RSpec.shared_examples "xchan" do |serializer|
   let!(:ch) do
     xchan(serializer)
   end
@@ -173,7 +173,7 @@ RSpec.shared_examples "xchan specs" do |serializer|
 end
 
 RSpec.describe "xchan" do
-  include_examples "xchan specs", :marshal
-  include_examples "xchan specs", :yaml
-  include_examples "xchan specs", :json
+  include_examples "xchan", :marshal
+  include_examples "xchan", :yaml
+  include_examples "xchan", :json
 end
