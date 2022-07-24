@@ -10,6 +10,11 @@ inherit_gem:
   standard: config/base.yml
 
 ##
+# Extra cops
+Style/FrozenStringLiteralComment:
+  Enabled: true
+
+##
 # Disabled cops (rspec-specific)
 RSpec/FilePath:
   Enabled: false
@@ -26,6 +31,3 @@ RSpec/EmptyLineAfterSubject:
 # Disabled cops (lib-specific)
 Layout/MultilineMethodCallIndentation:
   Enabled: false
-Style/Semicolon:
-  Exclude:
-    - 'readme_examples/advanced/1_parallel_map.rb'

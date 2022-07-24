@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Chan
   require_relative "xchan/version"
   require_relative "xchan/unix_socket"
