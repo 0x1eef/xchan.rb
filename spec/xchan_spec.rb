@@ -38,7 +38,7 @@ RSpec.describe Chan do
 
   describe "#timed_recv" do
     it "returns nil when a read times out" do
-      expect(ch.timed_recv(0.1)).to eq(nil)
+      expect(ch.timed_recv(timeout: 0.1)).to eq(nil)
     end
   end
 
