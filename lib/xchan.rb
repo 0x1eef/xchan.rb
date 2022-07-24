@@ -1,4 +1,4 @@
-module XChan
+module Chan
   require_relative "xchan/version"
   require_relative "xchan/unix_socket"
 
@@ -36,5 +36,5 @@ module XChan
 end
 
 class Object
-  include XChan::ObjectMixin
+  include Chan::ObjectMixin
 end

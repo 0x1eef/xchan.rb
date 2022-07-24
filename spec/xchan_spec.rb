@@ -1,5 +1,5 @@
 require_relative "setup"
-RSpec.describe XChan do
+RSpec.describe Chan do
   let!(:ch) do
     xchan Object.const_get(ENV["SERIALIZER"] || "Marshal")
   end
