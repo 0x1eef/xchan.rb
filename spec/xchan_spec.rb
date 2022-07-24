@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require_relative "setup"
-RSpec.describe Chan do
+
+RSpec.shared_examples "xchan specs" do |serializer|
   let!(:ch) do
-    xchan Object.const_get(ENV["SERIALIZER"] || "Marshal")
+    xchan(serializer)
   end
 
   after do
@@ -169,4 +170,10 @@ RSpec.describe Chan do
       end
     end
   end
+end
+
+RSpec.describe "xchan" do
+  include_examples "xchan specs", :marshal
+  include_examples "xchan specs", :yaml
+  include_examples "xchan specs", :json
 end

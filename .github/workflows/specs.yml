@@ -21,5 +21,3 @@ jobs:
         ruby-version: ${{ matrix.ruby }}
     - run: bundle install
     - run: bundle exec rspec spec/
-    - run: SERIALIZER=JSON bundle exec rspec spec/
-    - run: SERIALIZER=YAML bundle exec rspec spec/
