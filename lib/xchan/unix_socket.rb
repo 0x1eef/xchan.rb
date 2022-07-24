@@ -84,7 +84,7 @@ class Chan::UNIXSocket
     raise IOError, "closed channel" if @writer.closed?
     writable = @writer.wait_writable(timeout)
     return unless writable
-    byte_count = @writer.write(@serializer.dump(object))
+    byte_count = @writer.syswrite(@serializer.dump(object))
     @buffer.push(byte_count)
     byte_count
   ensure
@@ -121,7 +121,7 @@ class Chan::UNIXSocket
     readable = @reader.wait_readable(timeout)
     return unless readable
     byte_count = @buffer.shift
-    @serializer.load(@reader.read(byte_count))
+    @serializer.load(@reader.sysread(byte_count))
   ensure
     release_lock(lock: lock)
   end
