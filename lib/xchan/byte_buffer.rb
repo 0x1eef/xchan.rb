@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # The {Chan::ByteBuffer} class is responsible for tracking the
 # number of bytes used to store each object written to a channel.

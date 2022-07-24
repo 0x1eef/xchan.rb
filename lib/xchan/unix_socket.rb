@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Chan::UNIXSocket
   require "socket"
   require_relative "byte_buffer"
