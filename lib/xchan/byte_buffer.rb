@@ -2,11 +2,11 @@
 # The ByteBuffer class is responsible for storing the number
 # of bytes used to store each object written to a channel,
 # which in turn is used when reading an object from a channel.
-class XChan::ByteBuffer
+class Chan::ByteBuffer
   require "tempfile"
 
   ##
-  # @return [XChan::ByteBuffer]
+  # @return [Chan::ByteBuffer]
   def initialize
     @serializer = Marshal
     @buffer = Tempfile.new("xchan-byte_buffer").tap(&:unlink)
