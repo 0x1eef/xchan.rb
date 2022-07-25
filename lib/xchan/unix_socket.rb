@@ -6,14 +6,14 @@ class Chan::UNIXSocket
   require_relative "lock"
 
   ##
-  # @return [#dump, #load]
-  #  Returns the serializer being used by a channel
+  # @return [<#dump, #load>]
+  #  Returns the serializer being used by a channel.
   attr_reader :serializer
 
   ##
   # @example
-  #   ch = Chan::UNIXSocket.new(Marshal)
-  #   ch.send [1,2,3]
+  #   ch = Chan::UNIXSocket.new(:marshal)
+  #   ch.send([1,2,3])
   #   ch.recv.pop # => 3
   #   ch.close
   #
@@ -21,6 +21,7 @@ class Chan::UNIXSocket
   #  A serializer.
   #
   # @return [Chan::UNIXSocket]
+  #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}.
   def initialize(serializer)
     @serializer = Chan::SERIALIZERS[serializer]&.call || serializer
     @reader, @writer = ::UNIXSocket.pair(:STREAM)
@@ -36,8 +37,10 @@ class Chan::UNIXSocket
   end
 
   ##
+  # Closes a channel.
+  #
   # @raise [IOError]
-  #  Raised when a channel is already closed.
+  #  When a channel is already closed.
   #
   # @return [void]
   def close
@@ -57,6 +60,7 @@ class Chan::UNIXSocket
   # @param [Object] object
   #  The object to send to a channel.
   #
+  # @param lock (see UNIXSocket#timed_send)
   # @return (see #timed_send)
   def send(object, lock: true)
     timed_send(object, timeout: nil, lock: lock)
@@ -70,11 +74,13 @@ class Chan::UNIXSocket
   #  The object to write to a channel.
   #
   # @param [Float, Integer] timeout
-  #  The amount of time to wait for the underlying IO to
-  #  be writable
+  #  The amount of time to wait for the underlying IO to be writable.
+  #
+  # @param [Boolean] lock
+  #  When `true` the method will be wrapped in an exclusive lock.
   #
   # @raise [IOError]
-  #  Raised when a channel is closed.
+  #  When a channel is closed.
   #
   # @return [Integer, nil]
   #  The number of bytes written to a channel, or `nil` if the write
@@ -95,6 +101,8 @@ class Chan::UNIXSocket
   ##
   # Performs a read that blocks until the underlying IO is readable.
   #
+  # @param lock (see UNIXSocket#timed_recv)
+  #
   # @raise (see #timed_recv)
   #
   # @return [Object]
@@ -110,8 +118,11 @@ class Chan::UNIXSocket
   # @param [Float, Integer] timeout
   #  The amount of time to wait for the underlying IO to be readable.
   #
+  # @param [Boolean] lock
+  #  When `true` the method will be wrapped in an exclusive lock.
+  #
   # @raise [IOError]
-  #  Raised when a channel is closed.
+  #  When a channel is closed.
   #
   # @return [Object, nil]
   #  An object from a channel, or `nil` if the read times out.
@@ -147,7 +158,7 @@ class Chan::UNIXSocket
 
   ##
   # @return [Boolean]
-  #  Returns true when a channel is ready for a read
+  #  Returns true when a channel can be read from without blocking.
   def readable?
     if closed?
       false
@@ -159,14 +170,14 @@ class Chan::UNIXSocket
 
   ##
   # @return [Boolean]
-  #   Returns true when a channel is empty, or closed
+  #   Returns true when a channel is empty, or closed.
   def empty?
     closed? || bytes_read == bytes_written
   end
 
   ##
   # @return [Integer]
-  #  Returns the total number of bytes written to a channel
+  #  Returns the total number of bytes written to a channel.
   def bytes_written
     obtain_lock
     @buffer.bytes_written
