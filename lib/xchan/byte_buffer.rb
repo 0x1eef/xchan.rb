@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
 ##
-# The {Chan::ByteBuffer} class is responsible for tracking the
-# number of bytes used to store each object written to a channel.
-# This class also tracks the total number of bytes read from and
-# written to a channel. The information tracked by this class is
-# utilized when reading an object from a channel.
+# {Chan::ByteBuffer Chan::ByteBuffer} is responsible for providing the
+# number of bytes used to store each object written to a channel - information
+# that a channel uses when reading an object from its underlying IO object.
 class Chan::ByteBuffer
   require "tempfile"
   require "json"
@@ -32,7 +30,7 @@ class Chan::ByteBuffer
 
   ##
   # @return [Integer]
-  #  Returns the number of bytes stored for an object
+  #  Returns the number of bytes used to store an object
   #  written to a channel.
   def shift
     buffer = read
