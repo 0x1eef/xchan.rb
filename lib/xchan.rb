@@ -24,14 +24,14 @@ module Chan
     ##
     # @example
     #   ch = xchan
-    #   ch.send [1,2,3]
+    #   ch.send([1,2,3])
     #   ch.recv.pop # => 3
     #   ch.close
     #
-    # @param [#dump, #load] serializer (see UNIXSocket#initialize)
+    # @param serializer (see Chan::UNIXSocket#initialize)
     #
-    # @return (see UNIXSocket#initialize)
-    def xchan(serializer = Marshal)
+    # @return (see Chan::UNIXSocket#initialize)
+    def xchan(serializer = :marshal)
       UNIXSocket.new(serializer)
     end
   end
