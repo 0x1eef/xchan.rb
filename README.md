@@ -144,7 +144,9 @@ ch.close
 **Parallel map**
 
 The following example demonstrates a method by the name `p_map` -
-implemented in 10 LOC - that runs a map operation in parallel:
+implemented in 10 LOC - that runs a map operation in parallel.
+There is a slight overhead - less than a tenth of a second - for
+an operation that would otherwise take 6 seconds to execute sequentially:
 
 ```ruby
 require "xchan"
@@ -162,11 +164,12 @@ end
 
 t = Time.now
 print p_map([3, 2, 1]) { |e| sleep(e).then { e * 2 } }, "\n"
-print "Duration: #{Time.now - t}", "\n"
+print format("Duration: %.2f", Time.now - t), "\n"
 
 ##
+# == Output
 # [6, 4, 2]
-# Duration: 3.00XXX
+# Duration: 3.01
 ```
 
 
@@ -191,7 +194,7 @@ ch.close
 # Read from empty channel     []
 ```
 
-**Splat operator**
+**Splat**
 
 The following example demonstrates how the splat operator can be
 used to consume and forward the contents of a channel as arguments

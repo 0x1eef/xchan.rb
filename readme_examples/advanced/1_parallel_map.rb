@@ -16,9 +16,9 @@ end
 
 t = Time.now
 print p_map([3, 2, 1]) { |e| sleep(e).then { e * 2 } }, "\n"
-print "Duration: #{Time.now - t}", "\n"
+print format("Duration: %.2f", Time.now - t), "\n"
 
 ##
 # == Output
 # [6, 4, 2]
-# Duration: 3.00XXX
+# Duration: 3.01
