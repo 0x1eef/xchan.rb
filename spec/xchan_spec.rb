@@ -44,7 +44,9 @@ RSpec.shared_examples "xchan" do |serializer|
   end
 
   describe "#readable?" do
-    it "returns false when there are no messages waiting to be read" do
+    subject { ch.readable? }
+
+    it "returns false when the channel is empty" do
       expect(ch).to_not be_readable
     end
 
@@ -54,9 +56,18 @@ RSpec.shared_examples "xchan" do |serializer|
       expect(ch).to_not be_readable
     end
 
-    it "returns true when there is a message waiting to be read" do
+    it "returns true when an object is waiting to be read" do
       ch.send [1]
       expect(ch).to be_readable
+    end
+
+    context "when the channel is locked" do
+      before do
+        ch.send([1])
+        ch.instance_variable_set(:@lock, double({'locked?' => true, close: nil}))
+      end
+
+      it { is_expected.to eq(false) }
     end
   end
 

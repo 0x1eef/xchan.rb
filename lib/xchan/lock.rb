@@ -20,7 +20,7 @@ class Chan::Lock
   # This method blocks until a lock can be obtained.
   #
   # @raise [SystemCallError]
-  #   Might raise a number of Errno exceptions.
+  #  Might raise a number of Errno exceptions.
   #
   # @return [Integer]
   #  Returns 0 on success.
@@ -29,10 +29,10 @@ class Chan::Lock
   end
 
   ##
-  # Releases the lock.
+  # Releases an exclusive lock.
   #
   # @raise [SystemCallError]
-  #   Might raise a number of Errno exceptions.
+  #  Might raise a number of Errno exceptions.
   #
   # @return [Integer]
   #  Returns 0 on success.
@@ -41,7 +41,18 @@ class Chan::Lock
   end
 
   ##
-  #  Closes the underlying IO that's used to implement the lock.
+  # @return [Boolean]
+  #  Returns true when an exclusive lock is held by another process.
+  def locked?
+    @f.lockf(File::F_TEST, 0)
+    false
+  rescue Errno::EACESS
+    true
+  end
+
+  ##
+  #  Closes the underlying IO that's used to implement an exclusive
+  #  lock.
   #
   # @return [void]
   def close

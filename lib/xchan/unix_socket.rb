@@ -160,12 +160,8 @@ class Chan::UNIXSocket
   # @return [Boolean]
   #  Returns true when a channel can be read from without blocking.
   def readable?
-    if closed?
-      false
-    else
-      readable = @reader.wait_readable(0)
-      !!readable
-    end
+    return false if closed? || @lock.locked?
+    !! @reader.wait_readable(0)
   end
 
   ##
