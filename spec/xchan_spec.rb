@@ -62,9 +62,16 @@ RSpec.shared_examples "xchan" do |serializer|
     end
 
     context "when the channel is locked" do
+      let(:lock) do
+        instance_double(
+          'Chan::Lock',
+          {'locked?' => true, release: nil, obtain: nil, close: nil}
+        )
+      end
+
       before do
+        ch.instance_variable_set(:@lock, lock)
         ch.send([1])
-        ch.instance_variable_set(:@lock, double({'locked?' => true, close: nil}))
       end
 
       it { is_expected.to eq(false) }
