@@ -46,7 +46,7 @@ class Chan::Lock
   def locked?
     @f.lockf(File::F_TEST, 0)
     false
-  rescue Errno::EACESS
+  rescue Errno::EACCES
     true
   end
 
