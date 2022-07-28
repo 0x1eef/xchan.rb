@@ -64,8 +64,8 @@ RSpec.shared_examples "xchan" do |serializer|
     context "when the channel is locked" do
       let(:lock) do
         instance_double(
-          'Chan::Lock',
-          {'locked?' => true, release: nil, obtain: nil, close: nil}
+          "Chan::Lock",
+          {"locked?" => true, :release => nil, :obtain => nil, :close => nil}
         )
       end
 
@@ -190,7 +190,7 @@ RSpec.shared_examples "xchan" do |serializer|
   end
 end
 
-RSpec.describe "xchan" do
+RSpec.describe Chan::UNIXSocket do
   include_examples "xchan", :marshal
   include_examples "xchan", :yaml
   include_examples "xchan", :json
