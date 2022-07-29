@@ -135,8 +135,8 @@ print "Bytes received: ", ch.bytes_received, "\n"
 ch.close
 
 ##
-# Bytes written: 18
-# Bytes read: 18
+# Bytes sent: 18
+# Bytes received: 18
 ```
 
 ## Advanced examples
