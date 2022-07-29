@@ -121,7 +121,7 @@ ch.close
 
 **Bytes in, bytes out**
 
-The following example demonstrates how the number of written to and read from
+The following example demonstrates how the number of sent to and received from
 a channel can be tracked using the `#bytes_sent` and `#bytes_received` methods:
 
 ```ruby
@@ -129,9 +129,9 @@ require "xchan"
 
 ch = xchan
 Process.wait fork { ch.send %w[0x1eef] }
-print "Bytes written: ", ch.bytes_sent, "\n"
+print "Bytes sent: ", ch.bytes_sent, "\n"
 Process.wait fork { ch.recv }
-print "Bytes read: ", ch.bytes_received, "\n"
+print "Bytes received: ", ch.bytes_received, "\n"
 ch.close
 
 ##
