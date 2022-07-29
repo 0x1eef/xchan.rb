@@ -121,8 +121,8 @@ ch.close
 
 **Bytes in, bytes out**
 
-The following example demonstrates how the number of sent to and received from
-a channel can be tracked using the `#bytes_sent` and `#bytes_received` methods:
+The following example demonstrates how the number of bytes sent to and received
+from a channel can be tracked using the `#bytes_sent` and `#bytes_received` methods:
 
 ```ruby
 require "xchan"
