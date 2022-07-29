@@ -174,22 +174,24 @@ class Chan::UNIXSocket
   ##
   # @return [Integer]
   #  Returns the total number of bytes written to a channel.
-  def bytes_written
+  def bytes_sent
     obtain_lock
     @buffer.bytes_written
   ensure
     release_lock
   end
+  alias_method :bytes_written, :bytes_sent
 
   ##
   # @return [Integer]
   #  Returns the total number of bytes read from a channel
-  def bytes_read
+  def bytes_received
     obtain_lock
     @buffer.bytes_read
   ensure
     release_lock
   end
+  alias_method :bytes_read, :bytes_received
 
   ##
   # @return [Integer]
