@@ -160,9 +160,9 @@ class Chan::UNIXSocket
 
   ##
   # @return [Boolean]
-  #   Returns true when a channel is empty, or closed.
+  #  Returns true when a channel is empty, or closed.
   def empty?
-    closed? || bytes_read == bytes_written
+    closed? || size.zero?
   end
 
   ##
