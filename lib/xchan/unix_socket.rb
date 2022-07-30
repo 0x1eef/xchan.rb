@@ -62,8 +62,11 @@ class Chan::UNIXSocket
   #
   # @param lock (see UNIXSocket#timed_send)
   # @return (see #timed_send)
-  def send(object, lock: true)
-    timed_send(object, timeout: nil, lock: lock)
+  def send(object)
+    obtain_lock
+    perform_write(object) { _1.write(_2) }
+  ensure
+    release_lock
   end
   alias_method :write, :send
 
@@ -73,9 +76,6 @@ class Chan::UNIXSocket
   # @param [Object] object
   #  The object to write to a channel.
   #
-  # @param [Float, Integer] timeout
-  #  The amount of time to wait for the underlying IO to be writable.
-  #
   # @param [Boolean] lock
   #  When `true` the method will be wrapped in an exclusive lock.
   #
@@ -83,20 +83,14 @@ class Chan::UNIXSocket
   #  When a channel is closed.
   #
   # @return [Integer, nil]
-  #  The number of bytes written to a channel, or `nil` if the write
-  #  times out.
-  def timed_send(object, timeout: 0.1, lock: true)
-    obtain_lock(lock: lock)
-    raise IOError, "closed channel" if @writer.closed?
-    writable = @writer.wait_writable(timeout)
-    return unless writable
-    byte_count = @writer.syswrite(@serializer.dump(object))
-    @buffer.push(byte_count)
-    byte_count
+  #  The number of bytes sent to a channel.
+  def send_nonblock(object)
+    obtain_lock(nonblock: true)
+    perform_write(object) { _1.write_nonblock(_2) }
   ensure
-    release_lock(lock: lock)
+    release_lock
   end
-  alias_method :timed_write, :timed_send
+  alias_method :write_nonblock, :send_nonblock
 
   ##
   # Performs a read that blocks until the underlying IO is readable.
@@ -107,8 +101,12 @@ class Chan::UNIXSocket
   #
   # @return [Object]
   #  An object from a channel.
-  def recv(lock: true)
-    timed_recv(timeout: nil, lock: lock)
+  def recv
+    obtain_lock
+    wait_readable if empty?
+    perform_read { _1.read(_2) }
+  ensure
+    release_lock
   end
   alias_method :read, :recv
 
@@ -126,17 +124,14 @@ class Chan::UNIXSocket
   #
   # @return [Object, nil]
   #  An object from a channel, or `nil` if the read times out.
-  def timed_recv(timeout: 0.1, lock: true)
-    obtain_lock(lock: lock)
-    raise IOError, "closed channel" if @reader.closed?
-    readable = @reader.wait_readable(timeout)
-    return unless readable
-    byte_count = @buffer.shift
-    @serializer.load(@reader.sysread(byte_count))
+  def recv_nonblock
+    obtain_lock(nonblock: true)
+    raise IO::EAGAINWaitReadable, "read would block" if empty?
+    perform_read { _1.read_nonblock(_2) }
   ensure
-    release_lock(lock: lock)
+    release_lock
   end
-  alias_method :timed_read, :timed_recv
+  alias_method :read_nonblock, :recv_nonblock
 
   ##
   # @example
@@ -148,9 +143,8 @@ class Chan::UNIXSocket
   #  Returns and consumes the contents of a channel.
   def to_a
     obtain_lock
-    return [] unless readable?
     ary = []
-    ary.push(recv(lock: false)) while readable?
+    ary.push(perform_read { _1.read(_2) }) until empty?
     ary
   ensure
     release_lock
@@ -161,7 +155,7 @@ class Chan::UNIXSocket
   #  Returns true when a channel can be read from without blocking.
   def readable?
     return false if closed? || @lock.locked?
-    !!@reader.wait_readable(0)
+    !!wait_readable(0)
   end
 
   ##
@@ -205,13 +199,24 @@ class Chan::UNIXSocket
 
   private
 
-  def obtain_lock(lock: true)
-    return unless lock
-    @lock.obtain
+  def obtain_lock(nonblock: false)
+    nonblock ? @lock.obtain_nonblock : @lock.obtain
   end
 
-  def release_lock(lock: true)
-    return unless lock
+  def release_lock
     @lock.release
+  end
+
+  def perform_write(object)
+    raise IOError, "closed channel" if @writer.closed?
+    byte_count = yield(@writer, @serializer.dump(object))
+    @buffer.push(byte_count)
+    byte_count
+  end
+
+  def perform_read
+    raise IOError, "closed channel" if @reader.closed?
+    byte_count = @buffer.shift
+    @serializer.load(yield(@reader, byte_count))
   end
 end

@@ -37,9 +37,19 @@ RSpec.shared_examples "xchan" do |serializer|
     end
   end
 
-  describe "#timed_recv" do
-    it "returns nil when a read times out" do
-      expect(ch.timed_recv(timeout: 0.1)).to eq(nil)
+  describe "#recv_nonblock" do
+    subject(:recv_nonblock) { ch.recv_nonblock }
+
+    context "when a channel is empty" do
+      it { expect { recv_nonblock }.to raise_error(IO::EAGAINWaitReadable) }
+    end
+
+    context "when a lock is held by another process" do
+      let(:lock) { ch.instance_variable_get(:@lock).obtain }
+      let!(:child_pid) { fork { lock.then { sleep 5 } } }
+      after { Process.kill('SIGKILL', child_pid) }
+
+      it { expect { recv_nonblock }.to raise_error(Errno::EWOULDBLOCK) }
     end
   end
 
