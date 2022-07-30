@@ -197,6 +197,32 @@ class Chan::UNIXSocket
     release_lock
   end
 
+  ##
+  # Waits for a channel to be readable.
+  #
+  # @param [Float, Integer, nil] s
+  #  The amount of time to wait.
+  #  Waits indefinitely when `nil`.
+  #
+  # @return [Chan::UNIXSocket, nil]
+  #  Returns self when a channel is readable, otherwise returns nil.
+  def wait_readable(s=nil)
+    @reader.wait_readable(s) and self
+  end
+
+  ##
+  # Waits for a channel to be writable.
+  #
+  # @param [Float, Integer, nil] s
+  #  The amount of time to wait.
+  #  Waits indefinitely when `nil`.
+  #
+  # @return [Chan::UNIXSocket, nil]
+  #  Returns self when a channel is writable, otherwise returns nil.
+  def wait_writable(s=nil)
+    @writer.wait_writable(s) and self
+  end
+
   private
 
   def obtain_lock(nonblock: false)
