@@ -10,12 +10,10 @@ Gem::Specification.new do |gem|
   gem.licenses = ["MIT"]
   gem.files = `git ls-files`.split($/)
   gem.require_paths = ["lib"]
-  gem.summary = "A library for sending Ruby objects between Ruby processes"
+  gem.summary = "A library for sending Ruby objects between Ruby processes."
   gem.description = <<-DESCRIPTION.each_line.map(&:strip).join(" ")
-  xchan.rb is a library for sending Ruby objects between Ruby
-  processes who have a parent<->child relationship. The implementation
-  uses a UNIXSocket, and the serialization format of your choice -
-  the default is Marshal.
+  xchan.rb is a library for sending Ruby objects between Ruby processes who have
+  a parent <=> child relationship.
   DESCRIPTION
   gem.add_runtime_dependency "lockf.rb", "~> 0.2"
   gem.add_development_dependency "yard", "~> 0.9"
