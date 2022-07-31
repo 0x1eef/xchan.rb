@@ -4,6 +4,9 @@ module Chan
   require_relative "xchan/version"
   require_relative "xchan/unix_socket"
 
+  WaitReadable = Class.new(IO::EAGAINWaitReadable)
+  WaitLockable = Class.new(Errno::EWOULDBLOCK)
+
   SERIALIZERS = {
     marshal: lambda {
       Marshal
