@@ -1,7 +1,7 @@
 # xchan.rb
 
 xchan.rb is a library for sending Ruby objects
-between Ruby processes who have a parent&lt;-&gt;child relationship. The
+between Ruby processes who have a parent &lt;=&gt; child relationship. The
 implementation uses a <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>
 and the serialization format of your choice - the default is [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
 
@@ -10,7 +10,7 @@ and the serialization format of your choice - the default is [`Marshal`](https:/
 
 ### Serialization
 
-**Serializers**
+#### Serializers
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
 and deserialized (on read). The form of serialization used can be customized by
@@ -42,7 +42,7 @@ ch.close
 
 ### Read operations
 
-**Blocking read**
+#### Blocking read
 
 The following example demonstrates how to send a Ruby object from a parent process
 to a child process. `ch.recv` performs a read that can block - either because a
@@ -67,7 +67,7 @@ ch.close
 # Received random number (child process): XX
 ```
 
-**Non-blocking read**
+#### Non-blocking read
 
 The following example demonstrates the non-blocking counterpart to `#recv`:
 `#recv_nonblock`. The `#recv_nonblock` method raises `Chan::WaitReadable`
@@ -98,7 +98,7 @@ read(xchan)
 
 ### Write operations
 
-**Blocking write**
+#### Blocking write
 
 The following example (and previous examples) introduced the `#send` method -
 a method that performs a blocking write. The `#send` method might block when a
@@ -114,7 +114,7 @@ ch = xchan
 500.times { ch.send("a" * 500) }
 ```
 
-**Non-blocking write**
+#### Non-blocking write
 
 The following example demonstrates the non-blocking counterpart to
 `#send`: `#send_nonblock`. The `#send_nonblock` method raises `Chan::WaitWritable`
@@ -148,7 +148,7 @@ ch = xchan
 
 ### Queue
 
-**Queue messages**
+#### Queue
 
 The following example demonstrates how a channel can queue messages that
 can later be read one by one. The order in which the messages
@@ -179,7 +179,7 @@ ch.close
 
 ### Size methods
 
-**Count objects**
+#### The `#size` method
 
 The following example demonstrates how the `#size` method can be
 used to count how many objects are waiting to be read from a channel:
@@ -208,7 +208,7 @@ ch.close
 # channel size: 0
 ```
 
-**Bytes in, bytes out**
+#### Bytes in, bytes out
 
 The following example demonstrates how the number of bytes sent to and received
 from a channel can be tracked using the `#bytes_sent` and `#bytes_received` methods:
