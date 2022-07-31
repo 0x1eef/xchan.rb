@@ -47,8 +47,9 @@ RSpec.shared_examples "xchan" do |serializer|
     context "when a lock is held by another process" do
       let(:lock) { ch.instance_variable_get(:@lock).lock }
       let!(:child_pid) { fork { lock.then { sleep 5 } } }
+
       before { ch.send([1]).then { sleep 0.05 } }
-      after { Process.kill('SIGKILL', child_pid) }
+      after { Process.kill("SIGKILL", child_pid) }
 
       it { expect { recv_nonblock }.to raise_error(Errno::EWOULDBLOCK) }
     end
