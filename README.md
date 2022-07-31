@@ -87,7 +87,7 @@ rescue Chan::WaitLockable
   sleep 0.01
   retry
 end
-trap('SIGINT') { exit(1) }
+trap("SIGINT") { exit(1) }
 read(xchan)
 
 ##
@@ -111,7 +111,7 @@ buffer being full:
 require "xchan"
 
 ch = xchan
-500.times { ch.send("a"*500) }
+500.times { ch.send("a" * 500) }
 ```
 
 **Non-blocking write**
@@ -138,7 +138,7 @@ rescue Chan::WaitLockable
 end
 
 ch = xchan
-170.times { send_nonblock(ch, "a"*500) }
+170.times { send_nonblock(ch, "a" * 500) }
 
 ##
 # Blocked - free send buffer
