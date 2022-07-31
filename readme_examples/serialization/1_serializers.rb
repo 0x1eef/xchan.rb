@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "setup"
+require_relative "../setup"
 require "xchan"
 
 ##
@@ -16,8 +16,3 @@ ch = xchan(:marshal)
 ch.send(msg: "serialized by Marshal")
 Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
-
-##
-# == Output
-# Received message: serialized by Marshal
-# Received message: serialized by Marshal
