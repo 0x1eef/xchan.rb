@@ -48,7 +48,7 @@ RSpec.shared_examples "xchan" do |serializer|
       let(:lock) { ch.instance_variable_get(:@lock).lock }
       let!(:child_pid) { fork { lock.then { sleep 5 } } }
 
-      before { ch.send([1]).then { sleep 0.2 } }
+      before { ch.send([1]).then { sleep 0.3 } }
       after { Process.kill("SIGKILL", child_pid) }
 
       it { expect { recv_nonblock }.to raise_error(Chan::WaitLockable) }
