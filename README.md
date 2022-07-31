@@ -70,8 +70,8 @@ ch.close
 **Non-blocking read**
 
 The following example demonstrates the non-blocking counterpart to `#recv`:
-`#recv_nonblock`. The `#recv_nonblock` method raises `IO::EAGAINWaitReadable`
-when reading from the underlying IO would block, and it raises `Errno::EWOULDBLOCK`
+`#recv_nonblock`. The `#recv_nonblock` method raises `Chan::WaitReadable`
+when reading from the underlying IO would block, and it raises `Chan::WaitLockable`
 when a read would block because of a lock held by another process:
 
 ```ruby
@@ -83,7 +83,7 @@ rescue Chan::WaitReadable
   print "Wait 1 second for channel to be readable", "\n"
   ch.wait_readable(1)
   retry
-rescue Errno::EWOULDBLOCK
+rescue Chan::WaitLockable
   sleep 0.01
   retry
 end

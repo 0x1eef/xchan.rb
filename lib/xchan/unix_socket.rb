@@ -116,10 +116,10 @@ class Chan::UNIXSocket
   # @raise [IOError]
   #  When a channel is closed.
   #
-  # @raise [IO::EAGAINWaitReadable]
+  # @raise [Chan::WaitReadable]
   #  When a read from the underlying IO would block.
   #
-  # @raise [Errno::EWOULDBLOCK]
+  # @raise [Chan::WaitLockable]
   #  When a read would block because a lock is held by another process.
   #
   # @return [Object]
@@ -129,6 +129,10 @@ class Chan::UNIXSocket
       raise IO::EAGAINWaitReadable, "read would block" if empty?
       perform_read { _1.read_nonblock(_2) }
     end
+  rescue IO::EAGAINWaitReadable => ex
+    raise Chan::WaitReadable, ex.message
+  rescue Errno::EWOULDBLOCK => ex
+    raise Chan::WaitLockable, ex.message
   end
   alias_method :read_nonblock, :recv_nonblock
 
