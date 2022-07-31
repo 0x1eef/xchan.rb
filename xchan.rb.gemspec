@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
   uses a UNIXSocket, and the serialization format of your choice -
   the default is Marshal.
   DESCRIPTION
-  gem.add_runtime_dependency "lockf.rb", "~> 0.1"
+  gem.add_runtime_dependency "lockf.rb", "~> 0.2"
   gem.add_development_dependency "yard", "~> 0.9"
   gem.add_development_dependency "redcarpet", "~> 3.5"
   gem.add_development_dependency "rspec", "~> 3.10"
