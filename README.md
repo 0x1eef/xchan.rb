@@ -8,6 +8,8 @@ and the serialization format of your choice - the default is [`Marshal`](https:/
 
 ## Examples
 
+### Serialization
+
 **Serializers**
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
@@ -38,11 +40,15 @@ ch.close
 # Received message: serialized by Marshal
 ```
 
+### Read operations
+
 **Blocking read**
 
 The following example demonstrates how to send a Ruby object from a parent process
-to a child process. `ch.recv` performs a blocking read until an object is sent
-to the channel. The example sends a random Integer:
+to a child process. `ch.recv` performs a read that can block - either because a
+channel is locked by another process, or because a read from the underlying IO would
+block. The example demonstrates a read that blocks until the parent process writes
+to the channel:
 
 ```ruby
 require "xchan"
@@ -60,6 +66,87 @@ ch.close
 # Send a random number (from parent process)
 # Received random number (child process): XX
 ```
+
+**Non-blocking read**
+
+The following example demonstrates the non-blocking counterpart to `#recv`:
+`#recv_nonblock`. The `#recv_nonblock` method raises `IO::EAGAINWaitReadable`
+when reading from the underlying IO would block, and it raises `Errno::EWOULDBLOCK`
+when a read would block because of a lock held by another process:
+
+```ruby
+require "xchan"
+
+def read(ch)
+  ch.recv_nonblock
+rescue Chan::WaitReadable
+  print "Wait 1 second for channel to be readable", "\n"
+  ch.wait_readable(1)
+  retry
+rescue Errno::EWOULDBLOCK
+  sleep 0.01
+  retry
+end
+trap('SIGINT') { exit(1) }
+read(xchan)
+
+##
+# Wait 1 second for channel to be readable
+# Wait 1 second for channel to be readable
+# ^C
+```
+
+### Write operations
+
+**Blocking write**
+
+The following example (and previous examples) introduced the `#send` method -
+a method that performs a blocking write. The `#send` method might block when a
+channel's send buffer is full, or when a lock is held by another process. The
+following example demonstrates a write that will eventually block - due to the send
+buffer being full:
+
+
+```ruby
+require "xchan"
+
+ch = xchan
+500.times { ch.send("a"*500) }
+```
+
+**Non-blocking write**
+
+The following example demonstrates the non-blocking counterpart to
+`#send`: `#send_nonblock`. The `#send_nonblock` method raises `Chan::WaitWritable`
+when writing to the underlying IO would block, and it raises `Chan::WaitLockable`
+when a write would block because of a lock held by another process. The following
+example builds upon the last example by freeing space on the send buffer when a write
+is found to block:
+
+```ruby
+require "xchan"
+
+def send_nonblock(ch, buf)
+  ch.send_nonblock(buf)
+rescue Chan::WaitWritable
+  print "Blocked - free send buffer", "\n"
+  ch.recv
+  retry
+rescue Chan::WaitLockable
+  sleep 0.01
+  retry
+end
+
+ch = xchan
+170.times { send_nonblock(ch, "a"*500) }
+
+##
+# Blocked - free send buffer
+# Blocked - free send buffer
+# Blocked - free send buffer
+```
+
+### Queue
 
 **Queue messages**
 
@@ -89,6 +176,8 @@ ch.close
 # Received (parent process): 2
 # Received (parent process): 3
 ```
+
+### Size methods
 
 **Count objects**
 
