@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "setup"
+require_relative "../setup"
 require "xchan"
 
 ch = xchan
