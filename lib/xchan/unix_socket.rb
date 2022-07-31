@@ -79,10 +79,10 @@ class Chan::UNIXSocket
   # @raise [IOError]
   #  When a channel is closed.
   #
-  # @raise [IO::EAGAINWaitReadable]
+  # @raise [Chan::WaitWritable]
   #  When a write to the underlying IO would block.
   #
-  # @raise [Errno::EWOULDBLOCK]
+  # @raise [Chan::WaitLockable]
   #  When a write would block because a lock is held by another process.
   #
   # @return [Integer, nil]
@@ -91,6 +91,10 @@ class Chan::UNIXSocket
     lock(nonblock: true) do
       perform_write(object) { _1.write_nonblock(_2) }
     end
+  rescue IO::EAGAINWaitWritable => ex
+    raise Chan::WaitWritable, ex.message
+  rescue Errno::EWOULDBLOCK => ex
+    raise Chan::WaitLockable, ex.message
   end
   alias_method :write_nonblock, :send_nonblock
 
