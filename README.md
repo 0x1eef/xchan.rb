@@ -10,7 +10,7 @@ and the serialization format of your choice - the default is [`Marshal`](https:/
 
 ### Serialization
 
-#### Serializers
+#### Choose a serializer
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
 and deserialized (on read). The form of serialization used can be customized by
@@ -179,7 +179,7 @@ ch.close
 
 ### Consume
 
-#### to_a method
+#### "to_a" method
 
 The following example demonstrates how the `#to_a` method can be
 used to consume and return the contents of a channel as an Array:
@@ -220,7 +220,7 @@ ch.close
 
 ### Size
 
-#### Size method
+#### "size" method
 
 The following example demonstrates how the `#size` method can be
 used to count how many objects are waiting to be read from a channel:
