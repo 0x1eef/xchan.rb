@@ -271,7 +271,9 @@ ch.close
 
 ## Advanced
 
-### Parallel map
+### Parallelism
+
+#### Parallel map
 
 The following example demonstrates a method by the name `p_map` -
 implemented in 10 LOC - that runs a map operation in parallel.
