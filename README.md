@@ -179,7 +179,7 @@ ch.close
 
 ### Consume
 
-#### `#to_a`
+#### ch.to_a
 
 The following example demonstrates how the `#to_a` method can be
 used to consume and return the contents of a channel as an Array:
@@ -198,7 +198,7 @@ ch.close
 # Read from empty channel     []
 ```
 
-#### `*ch`
+#### *ch
 
 The following example demonstrates how the splat operator can be
 used to consume and forward the contents of a channel as arguments
@@ -220,7 +220,7 @@ ch.close
 
 ### Size
 
-#### `ch.size`
+#### ch.size
 
 The following example demonstrates how the `#size` method can be
 used to count how many objects are waiting to be read from a channel:
