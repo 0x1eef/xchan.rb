@@ -148,7 +148,7 @@ ch = xchan
 
 ### Queue
 
-#### Queue
+#### Queue messages
 
 The following example demonstrates how a channel can queue messages that
 can later be read one by one. The order in which the messages
@@ -177,9 +177,50 @@ ch.close
 # Received (parent process): 3
 ```
 
-### Size methods
+### Consume
 
-#### The `#size` method
+#### `#to_a`
+
+The following example demonstrates how the `#to_a` method can be
+used to consume and return the contents of a channel as an Array:
+
+```ruby
+require "xchan"
+
+ch = xchan
+1.upto(5) { ch.send(_1) }
+print "Read from populated channel ", ch.to_a, "\n"
+print "Read from empty channel ", " " * 4, ch.to_a, "\n"
+ch.close
+
+##
+# Read from populated channel [1, 2, 3, 4, 5]
+# Read from empty channel     []
+```
+
+#### `*ch`
+
+The following example demonstrates how the splat operator can be
+used to consume and forward the contents of a channel as arguments
+to a method:
+
+```ruby
+def sum(a, b, c, d)
+  [a, b, c, d].sum
+end
+
+ch = xchan
+1.upto(4) { ch.send(_1) }
+print "Sum: ", sum(*ch), "\n"
+ch.close
+
+##
+# Sum: 10
+```
+
+### Size
+
+#### `ch.size`
 
 The following example demonstrates how the `#size` method can be
 used to count how many objects are waiting to be read from a channel:
@@ -228,9 +269,9 @@ ch.close
 # Bytes received: 18
 ```
 
-## Advanced examples
+## Advanced
 
-**Parallel map**
+### Parallel map
 
 The following example demonstrates a method by the name `p_map` -
 implemented in 10 LOC - that runs a map operation in parallel.
@@ -259,48 +300,6 @@ print format("Duration: %.2f", Time.now - t), "\n"
 # == Output
 # [6, 4, 2]
 # Duration: 3.01
-```
-
-
-**Consume contents**
-
-**#to_a**
-
-The following example demonstrates how the `#to_a` method can be
-used to consume and return the contents of a channel as an Array:
-
-```ruby
-require "xchan"
-
-ch = xchan
-1.upto(5) { ch.send(_1) }
-print "Read from populated channel ", ch.to_a, "\n"
-print "Read from empty channel ", " " * 4, ch.to_a, "\n"
-ch.close
-
-##
-# Read from populated channel [1, 2, 3, 4, 5]
-# Read from empty channel     []
-```
-
-**Splat**
-
-The following example demonstrates how the splat operator can be
-used to consume and forward the contents of a channel as arguments
-to a method:
-
-```ruby
-def sum(a, b, c, d)
-  [a, b, c, d].sum
-end
-
-ch = xchan
-1.upto(4) { ch.send(_1) }
-print "Sum: ", sum(*ch), "\n"
-ch.close
-
-##
-# Sum: 10
 ```
 
 ## Resources
