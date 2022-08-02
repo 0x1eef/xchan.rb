@@ -1,4 +1,4 @@
-# xchan.rb
+## Introduction
 
 xchan.rb is a library for sending Ruby objects
 between Ruby processes who have a parent &lt;=&gt; child relationship. The
