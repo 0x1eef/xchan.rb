@@ -10,7 +10,7 @@ and the serialization format of your choice - the default is [`Marshal`](https:/
 
 ### Serialization
 
-#### Choose a serializer
+#### Available options
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
 and deserialized (on read). The form of serialization used can be customized by
@@ -268,8 +268,6 @@ ch.close
 # Bytes sent: 18
 # Bytes received: 18
 ```
-
-## Advanced
 
 ### Parallelism
 
