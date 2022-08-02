@@ -2,9 +2,12 @@
 
 xchan.rb is a library for sending Ruby objects
 between Ruby processes who have a parent &lt;=&gt; child relationship. The
-implementation uses a <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>
-and the serialization format of your choice - the default is [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
+implementation currently uses an unnamed <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>
+and offers a number of serialization options - the default is [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
 
+xchan.rb makes a concentrated effort to be safe from race conditions when used across processes
+by using a record lock that is implemented on top of fcntl - at any given time, only one process
+can hold a lock on a channel and other processes must wait until the lock is released.
 
 ## Examples
 
