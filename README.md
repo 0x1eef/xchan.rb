@@ -11,6 +11,10 @@ can hold a lock on a channel and other processes must wait until the lock is rel
 
 ## Examples
 
+The examples cover quite a lot - but not everything. The [API documentation](https://0x1eef.github.io/x/xchan.rb)
+is available as a complete reference - and covers parts of the interface not
+covered by the examples.
+
 ### Serialization
 
 #### Available options
@@ -45,7 +49,7 @@ ch.close
 
 ### Read operations
 
-#### Blocking read
+#### `#recv`
 
 The following example demonstrates how to send a Ruby object from a parent process
 to a child process. `ch.recv` performs a read that can block - either because a
@@ -70,7 +74,7 @@ ch.close
 # Received random number (child process): XX
 ```
 
-#### Non-blocking read
+#### `#recv_nonblock`
 
 The following example demonstrates the non-blocking counterpart to `#recv`:
 `#recv_nonblock`. The `#recv_nonblock` method raises `Chan::WaitReadable`
@@ -101,7 +105,7 @@ read(xchan)
 
 ### Write operations
 
-#### Blocking write
+#### `#send`
 
 The following example (and previous examples) introduced the `#send` method -
 a method that performs a blocking write. The `#send` method might block when a
@@ -117,7 +121,7 @@ ch = xchan
 500.times { ch.send("a" * 500) }
 ```
 
-#### Non-blocking write
+#### `#send_nonblock`
 
 The following example demonstrates the non-blocking counterpart to
 `#send`: `#send_nonblock`. The `#send_nonblock` method raises `Chan::WaitWritable`
@@ -178,98 +182,6 @@ ch.close
 # Received (parent process): 1
 # Received (parent process): 2
 # Received (parent process): 3
-```
-
-### Consume
-
-#### "to_a" method
-
-The following example demonstrates how the `#to_a` method can be
-used to consume and return the contents of a channel as an Array:
-
-```ruby
-require "xchan"
-
-ch = xchan
-1.upto(5) { ch.send(_1) }
-print "Read from populated channel ", ch.to_a, "\n"
-print "Read from empty channel ", " " * 4, ch.to_a, "\n"
-ch.close
-
-##
-# Read from populated channel [1, 2, 3, 4, 5]
-# Read from empty channel     []
-```
-
-#### Splat
-
-The following example demonstrates how the splat operator can be
-used to consume and forward the contents of a channel as arguments
-to a method:
-
-```ruby
-def sum(a, b, c, d)
-  [a, b, c, d].sum
-end
-
-ch = xchan
-1.upto(4) { ch.send(_1) }
-print "Sum: ", sum(*ch), "\n"
-ch.close
-
-##
-# Sum: 10
-```
-
-### Size
-
-#### "size" method
-
-The following example demonstrates how the `#size` method can be
-used to count how many objects are waiting to be read from a channel:
-
-```ruby
-require "xchan"
-
-ch = xchan
-3.times do |i|
-  Process.wait fork { ch.send([i]) }
-end
-3.times do
-  print "channel size: ", ch.size, "\n"
-  print "read: ", ch.recv, "\n"
-end
-print "channel size: ", ch.size, "\n"
-ch.close
-
-##
-# channel size: 3
-# read: [0]
-# channel size: 2
-# read: [1]
-# channel size: 1
-# read: [2]
-# channel size: 0
-```
-
-#### Bytes in, bytes out
-
-The following example demonstrates how the number of bytes sent to and received
-from a channel can be tracked using the `#bytes_sent` and `#bytes_received` methods:
-
-```ruby
-require "xchan"
-
-ch = xchan
-Process.wait fork { ch.send %w[0x1eef] }
-print "Bytes sent: ", ch.bytes_sent, "\n"
-Process.wait fork { ch.recv }
-print "Bytes received: ", ch.bytes_received, "\n"
-ch.close
-
-##
-# Bytes sent: 18
-# Bytes received: 18
 ```
 
 ### Parallelism
