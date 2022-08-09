@@ -75,7 +75,7 @@ RSpec.shared_examples "xchan" do |serializer|
 
     context "when the channel is locked" do
       let(:lock) do
-        double({"locked?" => true, :synchronize => nil, :file => double(:close => nil)})
+        double({"locked?" => true, :synchronize => nil, :file => double(close: nil)})
       end
 
       before do
