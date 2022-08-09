@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   xchan.rb is a library for sending Ruby objects between Ruby processes who have
   a parent <=> child relationship.
   DESCRIPTION
-  gem.add_runtime_dependency "lockf.rb", "~> 0.2"
+  gem.add_runtime_dependency "lockf.rb", "~> 0.3.1"
   gem.add_development_dependency "yard", "~> 0.9"
   gem.add_development_dependency "redcarpet", "~> 3.5"
   gem.add_development_dependency "rspec", "~> 3.10"

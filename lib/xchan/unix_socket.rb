@@ -48,7 +48,7 @@ class Chan::UNIXSocket
       raise IOError, "channel is already closed"
     else
       [@reader, @writer,
-        @buffer, @lock].each(&:close)
+        @buffer, @lock.file].each(&:close)
     end
   end
 
