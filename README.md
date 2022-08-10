@@ -12,7 +12,7 @@ can hold a lock on a channel and other processes must wait until the lock is rel
 ## Examples
 
 The examples cover quite a lot - but not everything. The [API documentation](https://0x1eef.github.io/x/xchan.rb)
-is available as a complete reference - and covers parts of the interface not
+is available as a complete reference, and covers parts of the interface not
 covered by the examples.
 
 ### Serialization
