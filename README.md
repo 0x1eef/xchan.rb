@@ -230,4 +230,5 @@ xchan.rb is available as a RubyGem:
 
 ## <a id="license"> License </a>
 
-The MIT license, see [LICENSE.txt](./LICENSE.txt) for details.
+This project is released under the terms of the MIT license.
+See [LICENSE.txt](./LICENSE.txt) for details.
