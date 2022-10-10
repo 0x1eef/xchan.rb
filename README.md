@@ -1,19 +1,18 @@
 ## About
 
-xchan.rb is a library for sending Ruby objects
-between Ruby processes who have a parent &lt;=&gt; child relationship. The
-implementation currently uses an unnamed <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>
+xchan.rb is an easy to use library for InterProcess Communication (IPC).
+
+xchan.rb can send Ruby objects between Ruby processes who have a
+parent &lt;=&gt; child relationship. The implementation currently
+uses an unnamed <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>
 and offers a number of serialization options - the default is [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
 
-xchan.rb makes a concentrated effort to be safe from race conditions when used across processes
-by using a record lock that is implemented on top of fcntl - at any given time, only one process
-can hold a lock on a channel and other processes must wait until the lock is released.
+xchan.rb makes a concentrated effort to be safe from race conditions when
+used across processes by using a record lock that is implemented on top of
+fcntl - at any given time, only one process can hold a lock on a channel
+and other processes must wait until the lock is released.
 
 ## Examples
-
-The examples cover a lot - but not everything. The [API documentation](https://0x1eef.github.io/x/xchan.rb)
-is available as a complete reference, and covers parts of the interface not
-covered by the examples.
 
 ### Serialization
 
@@ -217,10 +216,16 @@ print format("Duration: %.2f", Time.now - t), "\n"
 # Duration: 3.01
 ```
 
-## Resources
+## API
 
-* [Source code (GitHub)](https://github.com/0x1eef/xchan.rb)
-* [Documentation](https://0x1eef.github.io/x/xchan.rb)
+The examples covered a lot - but not everything. <br>
+The [API documentation](https://0x1eef.github.io/x/xchan.rb) is available
+as a complete reference.
+
+## Sources
+
+* [Source code (GitHub)](https://github.com/0x1eef/xchan.rb#readme)
+* [Source code (GitLab)](https://gitlab.com/0x1eef/xchan-rb#about)
 
 ## Install
 
