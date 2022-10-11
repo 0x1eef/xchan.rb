@@ -2,13 +2,14 @@
 
 xchan.rb is an easy to use library for InterProcess Communication (IPC).
 
-xchan.rb can send Ruby objects between Ruby processes who have a
-parent &lt;=&gt; child relationship. The implementation currently
-uses an unnamed <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>
+The library implements a channel that can send Ruby objects between
+Ruby processes who have a parent &lt;=&gt; child relationship. The implementation
+currently uses an unnamed
+<code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>
 and offers a number of serialization options - the default is [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
 
-xchan.rb makes a concentrated effort to be safe from race conditions when
-used across processes by using a record lock that is implemented on top of
+A concentrated effort is made for a channel to be safe from race conditions
+when used across processes by using a record lock that is implemented on top of
 fcntl - at any given time, only one process can hold a lock on a channel
 and other processes must wait until the lock is released.
 
@@ -154,7 +155,7 @@ ch = xchan
 
 ### Queue
 
-#### Queue messages
+#### FIFO
 
 The following example demonstrates how a channel can queue messages that
 can later be read one by one. The order in which the messages
