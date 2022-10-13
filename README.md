@@ -15,6 +15,13 @@ and other processes must wait until the lock is released.
 
 ## Examples
 
+### Introduction
+
+The examples provide a high-level overview, and cover a lot - but not
+everything. <br>
+The  [API documentation](https://0x1eef.github.io/x/xchan.rb) is available
+as a complete reference.
+
 ### Serialization
 
 #### Available options
@@ -183,45 +190,6 @@ ch.close
 # Received (parent process): 2
 # Received (parent process): 3
 ```
-
-### Parallelism
-
-#### Parallel map
-
-The following example demonstrates a method by the name `p_map` -
-implemented in 10 LOC - that runs a map operation in parallel.
-There is a slight overhead - less than a tenth of a second - for
-an operation that would otherwise take 6 seconds to execute sequentially:
-
-```ruby
-require "xchan"
-
-def p_map(enum)
-  ch = xchan
-  enum.map
-      .with_index { |e, i| fork { ch.send [yield(e), i] } }
-      .each { Process.wait(_1) }
-  enum.map { ch.recv }
-      .tap { ch.close }
-      .sort_by(&:pop)
-      .map(&:pop)
-end
-
-t = Time.now
-print p_map([3, 2, 1]) { |e| sleep(e).then { e * 2 } }, "\n"
-print format("Duration: %.2f", Time.now - t), "\n"
-
-##
-# == Output
-# [6, 4, 2]
-# Duration: 3.01
-```
-
-## API
-
-The examples covered a lot - but not everything. <br>
-The [API documentation](https://0x1eef.github.io/x/xchan.rb) is available
-as a complete reference.
 
 ## Sources
 
