@@ -3,9 +3,8 @@
 require_relative "setup"
 
 RSpec.shared_examples "xchan" do |serializer|
-  let!(:ch) do
-    xchan(serializer)
-  end
+  let!(:ch) { xchan(serializer) }
+  let(:delay) { 0.2 }
 
   after do
     ch.close unless ch.closed?
@@ -15,27 +14,51 @@ RSpec.shared_examples "xchan" do |serializer|
     subject(:payload) { %w[xchan] }
     let(:payload_size) { ch.serializer.dump(payload).bytesize }
 
-    context "when returning the number of bytes written" do
+    context "when counting the number of bytes sent" do
       subject { ch.send(payload) }
       it { is_expected.to eq(payload_size) }
     end
 
-    context "when queueing messages from a child process" do
+    context "when there are multiple objects to read" do
       subject { 3.times.map { ch.recv } }
       before { Process.wait fork { 1.upto(3) { ch.send([_1]) } } }
       it { is_expected.to eq([[1], [2], [3]]) }
+    end
+
+    context "when a deadlock / race condition can occur" do
+      subject do
+        pids.map { Process.wait2(_1).last.exitstatus }
+      end
+
+      let(:process_count) { 4 }
+
+      let!(:pids) do
+        process_count.times.map { fork { exit(ch.recv[0]) } }
+      end
+
+      before do
+        sleep(delay * process_count)
+        pids.each.with_index(1) do
+          if _2 % 2 == 0
+            sleep(delay)
+          end
+          ch.send([42])
+        end
+      end
+
+      it { is_expected.to eq(pids.map { 42 }) }
     end
   end
 
   describe "#recv" do
     subject { ch.recv }
 
-    context "when given a write with a null byte" do
+    context "when reading a null byte" do
       before { ch.send(["nullbyte\x00"]) }
       it { is_expected.to eq(["nullbyte\x00"]) }
     end
 
-    context "when a read should block" do
+    context "when a read blocks" do
       subject(:recv) { timeout(0.1) { ch.recv } }
       include Timeout
       it { expect { recv }.to raise_error(Timeout::Error) }
@@ -53,7 +76,7 @@ RSpec.shared_examples "xchan" do |serializer|
       let(:lock) { ch.instance_variable_get(:@lock).obtain }
       let!(:child_pid) { fork { lock.then { sleep 5 } } }
 
-      before { ch.send([1]).then { sleep 0.5 } }
+      before { ch.send([1]).then { sleep(delay) } }
       after { Process.kill("SIGKILL", child_pid) }
 
       it { expect { recv_nonblock }.to raise_error(Chan::WaitLockable) }

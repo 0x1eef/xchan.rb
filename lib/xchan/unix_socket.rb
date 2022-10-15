@@ -9,6 +9,11 @@ class Chan::UNIXSocket
   require_relative "byte_buffer"
 
   ##
+  # @private
+  WAIT_TIME = 0.03
+  private_constant :WAIT_TIME
+
+  ##
   # @example
   #   ch = Chan::UNIXSocket.new(:marshal)
   #   ch.send([1,2,3])
@@ -72,9 +77,10 @@ class Chan::UNIXSocket
   # @return [Object]
   #  The number of bytes written to a channel.
   def send(object)
-    lock do
-      perform_write(object) { _1.write(_2) }
-    end
+    lock(nonblock: true) { perform_write(object) { _1.write(_2) } }
+  rescue Errno::EAGAIN
+    sleep(WAIT_TIME)
+    retry
   end
   alias_method :write, :send
 
@@ -121,10 +127,11 @@ class Chan::UNIXSocket
   # @return [Object]
   #  An object from a channel.
   def recv
-    lock do
-      wait_readable if empty?
-      perform_read { _1.read(_2) }
-    end
+    wait_readable if empty?
+    lock(nonblock: true) { perform_read { _1.read(_2) } }
+  rescue Errno::EAGAIN
+    sleep(WAIT_TIME)
+    retry
   end
   alias_method :read, :recv
 
