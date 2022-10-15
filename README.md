@@ -2,16 +2,18 @@
 
 xchan.rb is an easy to use library for InterProcess Communication (IPC).
 
-The library implements a channel that can send Ruby objects between
+xchan.rb implements a channel that can transfer Ruby objects between
 Ruby processes who have a parent &lt;=&gt; child relationship. The implementation
-currently uses an unnamed
-<code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>
-and offers a number of serialization options - the default is [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
+uses an unnamed
+<code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>,
+serialization, and offers a number of serialization options -
+the default is
+[`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
 
-A concentrated effort is made for a channel to be safe from race conditions
-when used across processes by using a record lock that is implemented on top of
-fcntl - at any given time, only one process can hold a lock on a channel
-and other processes must wait until the lock is released.
+xchan.rb tries to ensure a channel is safe from race conditions
+when used across processes by using a record lock that is implemented
+on top of fcntl - at any given time, only one process can hold a lock
+on a channel and other processes must wait until the lock is released.
 
 ## Examples
 
@@ -28,7 +30,7 @@ as a complete reference.
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
 and deserialized (on read). The form of serialization used can be customized by
-the first argument given to `xchan()`. For instance any of the following could be
+the first argument given to `xchan()`. For example any of the following could be
 used: `xchan(:marshal)`, `xchan(:json)`, or `xchan(:yaml)`. The example uses
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
@@ -71,6 +73,8 @@ ch = xchan
 pid = fork do
   print "Received a random number (child process): ", ch.recv, "\n"
 end
+# Delay for a second to let a process fork, and call "ch.recv"
+sleep(1)
 print "Send a random number (from parent process)", "\n"
 ch.send(rand(21))
 Process.wait(pid)
