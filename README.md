@@ -198,7 +198,7 @@ ch.close
 ## Sources
 
 * [Source code (GitHub)](https://github.com/0x1eef/xchan.rb#readme)
-* [Source code (GitLab)](https://gitlab.com/0x1eef/xchan-rb#about)
+* [Source code (GitLab)](https://gitlab.com/0x1eef/xchan.rb#about)
 
 ## Install
 
