@@ -10,7 +10,7 @@ serialization, and offers a number of serialization options -
 the default is
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
 
-xchan.rb tries to ensure a channel is safe from race conditions
+xchan.rb aims to ensure a channel is safe from race conditions
 when used across processes by using a record lock that is implemented
 on top of fcntl - at any given time, only one process can hold a lock
 on a channel and other processes must wait until the lock is released.
