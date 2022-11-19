@@ -2,20 +2,19 @@
 
 xchan.rb is an easy to use library for InterProcess Communication (IPC).
 
-xchan.rb implements a channel that can transfer Ruby objects between
-Ruby processes who have a parent &lt;=&gt; child relationship. The implementation
-uses an unnamed
+xchan.rb implements a channel that can send Ruby objects between
+Ruby processes who have a parent &lt;=&gt; child relationship. The
+implementation uses an unnamed
 <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>,
-serialization, and offers a number of serialization options -
-the default is
+serialization, and provides multiple serializers to choose from. The default is
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
 
 ## Safety
 
-xchan.rb aims to ensure a channel is safe from race conditions
-when used across processes by using a record lock that is implemented
-on top of fcntl - at any given time, only one process can hold a lock
-on a channel and other processes must wait until the lock is released.
+xchan.rb aims for a channel to be safe from race conditions when used across
+processes by using a record lock that is implemented on top of fcntl -
+at any given time, only one process can hold a lock on a channel and
+other processes must wait until the lock is released.
 
 ## Examples
 
@@ -28,12 +27,12 @@ as a complete reference.
 
 ### Serialization
 
-#### Available options
+#### Choice of serializer
 
 When a channel is written to and read from, a Ruby object is serialized (on write)
-and deserialized (on read). The form of serialization used can be customized by
-the first argument given to `xchan()`. For example any of the following could be
-used: `xchan(:marshal)`, `xchan(:json)`, or `xchan(:yaml)`. The example uses
+and deserialized (on read). There are a number of serializers to choose from.
+For  example any of the following could be used: `xchan(:marshal)`,
+`xchan(:json)`,  or `xchan(:yaml)`. The example uses
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
 ```ruby
