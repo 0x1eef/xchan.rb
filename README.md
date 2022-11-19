@@ -10,7 +10,7 @@ serialization, and offers a number of serialization options -
 the default is
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal).
 
-## Race conditions
+## Safety
 
 xchan.rb aims to ensure a channel is safe from race conditions
 when used across processes by using a record lock that is implemented
