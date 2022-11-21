@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 ##
-# {Chan::ByteBuffer Chan::ByteBuffer} is responsible for keeping track of the
-# number of bytes used to store each object written to a channel.
+# {Chan::ByteBuffer Chan::ByteBuffer} is responsible for keeping track of
+# how many bytes have been written to, and read from a channel.
 class Chan::ByteBuffer
   require "tempfile"
   require "json"
@@ -17,6 +17,11 @@ class Chan::ByteBuffer
   end
 
   ##
+  # @group Mutations
+
+  ##
+  # Adds the number of bytes used to store the most recent object on a channel.
+  #
   # @param [Integer] byte_size
   #  The number of bytes written to a channel.
   #
@@ -29,36 +34,40 @@ class Chan::ByteBuffer
 
   ##
   # @return [Integer]
-  #  Returns the number of bytes used to store an object
-  #  written to a channel.
+  #  Returns the number of bytes used to store the oldest object on a channel.
   def shift
     buffer = read
     buffer["bytes"].shift.tap { write(buffer, bytes_read: _1) }
   end
+  # @groupend
+
+  ##
+  # @group Counters
 
   ##
   # @return [Integer]
-  #  Returns the total number of bytes written to a channel
+  #  Returns the total number of bytes written to a channel.
   def bytes_written
     read["bytes_written"]
   end
 
   ##
   # @return [Integer]
-  #  Returns the total number of bytes read from a channel
+  #  Returns the total number of bytes read from a channel.
   def bytes_read
     read["bytes_read"]
   end
 
   ##
   # @return [Integer]
-  #  Returns the number of objects waiting to be read from a channel
+  #  Returns the number of objects waiting to be read from a channel.
   def size
     read["bytes"].size
   end
+  # @endgroup
 
   ##
-  # Close the buffer
+  # Close the buffer.
   #
   # @return [void]
   def close
