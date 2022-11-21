@@ -20,8 +20,7 @@ other processes must wait until the lock is released.
 
 ### Introduction
 
-The examples provide a high-level overview, and cover a lot - but not
-everything. <br>
+The examples introduce xchan.rb, and cover a lot - but not everything. <br>
 The  [API documentation](https://0x1eef.github.io/x/xchan.rb) is available
 as a complete reference.
 
