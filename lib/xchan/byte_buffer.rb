@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 ##
-# {Chan::ByteBuffer Chan::ByteBuffer} is responsible for providing the
-# number of bytes used to store each object written to a channel - information
-# that a channel uses when reading an object from its underlying IO object.
+# {Chan::ByteBuffer Chan::ByteBuffer} is responsible for keeping track of the
+# number of bytes used to store each object written to a channel.
 class Chan::ByteBuffer
   require "tempfile"
   require "json"
