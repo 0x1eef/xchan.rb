@@ -63,7 +63,7 @@ class Chan::UNIXSocket
   end
 
   ##
-  # @group Write operations
+  # @group Write methods
 
   ##
   # Performs a write that could block.
@@ -116,7 +116,7 @@ class Chan::UNIXSocket
   # @endgroup
 
   ##
-  # @group Read operations
+  # @group Read methods
 
   ##
   # Performs a read that could block.
@@ -195,7 +195,7 @@ class Chan::UNIXSocket
   end
 
   ##
-  # @group Size operations
+  # @group Size methods
 
   ##
   # @return [Integer]
@@ -224,7 +224,7 @@ class Chan::UNIXSocket
   # @endgroup
 
   ##
-  # @group Wait operations
+  # @group Wait methods
 
   ##
   # Waits for a channel to be readable.

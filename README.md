@@ -6,26 +6,24 @@ who have a parent &lt;=&gt; child relationship.
 
 The channel is implemented with an unnamed
 <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>,
-and serialization. There are multiple serializers to choose from - with
+and serialization. There are multiple serializers to choose from.
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal)
-being the default. Safety from race conditions is provided by an advisory lock that
+is the default. Safety from race conditions is provided by an advisory lock that
 allows only one process to read from, or write to a channel at any given time.
+
+The [API documentation](https://0x1eef.github.io/x/xchan.rb) is available as a
+complete reference. xchan.rb is distributed as a RubyGem through its git
+repositories. See [INSTALL](#install) for details.
 
 ## Examples
 
-### Introduction
-
-The examples introduce xchan.rb, and cover a lot - but not everything. <br>
-The  [API documentation](https://0x1eef.github.io/x/xchan.rb) is available
-as a complete reference.
-
 ### Serialization
 
-#### Choice of serializer
+#### Options
 
 When a channel is written to or read from, a Ruby object is serialized (on write)
 or deserialized (on read). There are a number of serializers to choose from:
-`xchan(:marshal)`, `xchan(:json)`,  or `xchan(:yaml)`. The example uses
+`xchan(:marshal)`, `xchan(:json)`,  and `xchan(:yaml)`. The example uses
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
 ```ruby
@@ -54,11 +52,10 @@ ch.close
 
 #### `#recv`
 
-The following example demonstrates how to send a Ruby object from a parent process
-to a child process. `ch.recv` performs a read that can block - either because a
-channel is locked by another process, or because a read from the underlying IO would
-block. The example demonstrates a read that blocks until the parent process writes
-to the channel:
+The `ch.recv` method performs a read that can block. A read might block because
+of a lock held by another process, or because a read from the underlying UNIX socket
+would block. The example performs a read that blocks in a child process until the
+parent process writes to the channel:
 
 ```ruby
 require "xchan"
@@ -81,10 +78,10 @@ ch.close
 
 #### `#recv_nonblock`
 
-The following example demonstrates the non-blocking counterpart to `#recv`:
-`#recv_nonblock`. The `#recv_nonblock` method raises `Chan::WaitReadable`
-when reading from the underlying IO would block, and it raises `Chan::WaitLockable`
-when a read would block because of a lock held by another process:
+The non-blocking counterpart to `#recv` is `#recv_nonblock`. The `#recv_nonblock` method
+raises `Chan::WaitReadable` when a read from the underlying UNIX socket would block, and
+it raises `Chan::WaitLockable` when a read would block because of a lock held by another
+process. The example performs a read that will raise `Chan::WaitReadable`:
 
 ```ruby
 require "xchan"
@@ -112,11 +109,9 @@ read(xchan)
 
 #### `#send`
 
-The following example (and previous examples) introduced the `#send` method -
-a method that performs a blocking write. The `#send` method might block when a
+The `#send` method performs a blocking write. The `#send` method might block when a
 channel's send buffer is full, or when a lock is held by another process. The
-following example demonstrates a write that will eventually block - due to the send
-buffer being full:
+example performs a write that will block when the send buffer becomes full:
 
 
 ```ruby
@@ -128,12 +123,11 @@ ch = xchan
 
 #### `#send_nonblock`
 
-The following example demonstrates the non-blocking counterpart to
-`#send`: `#send_nonblock`. The `#send_nonblock` method raises `Chan::WaitWritable`
-when writing to the underlying IO would block, and it raises `Chan::WaitLockable`
-when a write would block because of a lock held by another process. The following
-example builds upon the last example by freeing space on the send buffer when a write
-is found to block:
+The non-blocking counterpart to `#send` is `#send_nonblock`. The `#send_nonblock`
+method raises `Chan::WaitWritable` when a write to the underlying UNIX socket would block,
+and it raises `Chan::WaitLockable` when a lock held by another process. The example
+builds on the last example by freeing space on the send buffer when a write is found
+to block:
 
 ```ruby
 require "xchan"
@@ -162,12 +156,9 @@ ch = xchan
 
 #### FIFO
 
-The following example demonstrates how a channel can queue messages that
-can later be read one by one. The order in which the messages
-are read from the channel follows the
-[First In, First out (FIFO)](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics))
-methodology. In other words the example will read messages in the
-order they were sent: 1 first, then 2, and finally 3:
+The order in which messages are read from a channel follows
+[First In, First out (FIFO)](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)).
+The example reads messages in the order they were sent (1 first, then 2, and finally 3):
 
 ```ruby
 require "xchan"
@@ -196,9 +187,18 @@ ch.close
 
 ## Install
 
-xchan.rb is available as a RubyGem:
+xchan.rb is distributed as a RubyGem through its git repositories. <br>
+[GitHub](https://github.com/0x1eef/xchan.rb),
+and
+[GitLab](https://gitlab.com/0x1eef/xchan.rb)
+are available as sources.
 
-    gem install xchan.rb
+### Gemfile
+
+```
+gem "xchan.rb", git: "https://github.com/0x1eef/xchan.rb.git", tag: "v0.9.12"
+gem "lockf.rb", git: "https://github.com/0x1eef/lockf.rb.git", tag: "v0.5.1"
+```
 
 ## <a id="license"> License </a>
 
