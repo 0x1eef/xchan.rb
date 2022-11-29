@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.summary = "xchan.rb is an easy to use InterProcess Communication (IPC) library."
   gem.description = gem.summary
-  gem.add_runtime_dependency "lockf.rb", "~> 0.3.1"
+  gem.add_runtime_dependency "lockf.rb", "~> 0.5"
   gem.add_development_dependency "yard", "~> 0.9"
   gem.add_development_dependency "redcarpet", "~> 3.5"
   gem.add_development_dependency "rspec", "~> 3.10"
