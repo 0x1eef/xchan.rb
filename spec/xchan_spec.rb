@@ -4,7 +4,6 @@ require_relative "setup"
 
 RSpec.shared_examples "xchan" do |serializer|
   let!(:ch) { xchan(serializer) }
-  let(:delay) { 0.2 }
 
   after do
     ch.close unless ch.closed?
@@ -31,7 +30,7 @@ RSpec.shared_examples "xchan" do |serializer|
       end
 
       let(:process_count) { 4 }
-
+      let(:delay) { 0.1 }
       let!(:pids) do
         process_count.times.map { fork { exit(ch.recv[0]) } }
       end
@@ -67,6 +66,7 @@ RSpec.shared_examples "xchan" do |serializer|
 
   describe "#recv_nonblock" do
     subject(:recv_nonblock) { ch.recv_nonblock }
+    let(:delay) { 0.5 }
 
     context "when a channel is empty" do
       it { expect { recv_nonblock }.to raise_error(Chan::WaitReadable) }
