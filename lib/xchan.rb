@@ -3,6 +3,7 @@
 module Chan
   require_relative "xchan/version"
   require_relative "xchan/unix_socket"
+  require_relative "xchan/mixin"
 
   WaitReadable = Class.new(IO::EAGAINWaitReadable)
   WaitWritable = Class.new(IO::EAGAINWaitWritable)
@@ -21,26 +22,8 @@ module Chan
       YAML
     }
   }
-
-  ##
-  # A module that is included into Ruby's {Object} class.
-  module ObjectMixin
-    ##
-    # @example
-    #   ch = xchan
-    #   ch.send([1,2,3])
-    #   ch.recv.pop # => 3
-    #   ch.close
-    #
-    # @param serializer (see Chan::UNIXSocket#initialize)
-    #
-    # @return (see Chan::UNIXSocket#initialize)
-    def xchan(serializer = :marshal)
-      UNIXSocket.new(serializer)
-    end
-  end
 end
 
 class Object
-  include Chan::ObjectMixin
+  include Chan::Mixin
 end
