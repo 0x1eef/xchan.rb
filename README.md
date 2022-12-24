@@ -195,7 +195,7 @@ are available as sources.
 
 ### Gemfile
 
-```
+```ruby
 gem "xchan.rb", git: "https://github.com/0x1eef/xchan.rb.git", tag: "v0.9.13"
 gem "lockf.rb", git: "https://github.com/0x1eef/lockf.rb.git", tag: "v0.5.1"
 ```
