@@ -9,11 +9,10 @@ The channel is implemented with an unnamed
 and serialization. There are multiple serializers to choose from.
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal)
 is the default. Safety from race conditions is provided by an advisory lock that
-allows only one process to read from, or write to a channel at any given time.
-
-The [API documentation](https://0x1eef.github.io/x/xchan.rb) is available as a
-complete reference. xchan.rb is distributed as a RubyGem through its git
-repositories. See [INSTALL](#install) for details.
+allows only one process to read from, or write to a channel at any given time. The
+[API documentation](https://0x1eef.github.io/x/xchan.rb) is available as a complete
+reference. xchan.rb is distributed as a RubyGem through its git repositories.
+See [INSTALL](#install) for details.
 
 ## Examples
 
@@ -193,7 +192,7 @@ and
 [GitLab](https://gitlab.com/0x1eef/xchan.rb)
 are available as sources.
 
-### Gemfile
+**Gemfile**
 
 ```ruby
 gem "xchan.rb", git: "https://github.com/0x1eef/xchan.rb.git", tag: "v0.9.13"
