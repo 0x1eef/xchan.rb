@@ -7,3 +7,10 @@ test-ruby31:
   script:
     - bundle install
     - bundle exec rspec spec/
+
+test-ruby32:
+  stage: test
+  image: ruby:3.2.0
+  script:
+    - bundle install
+    - bundle exec rspec spec/
