@@ -148,34 +148,6 @@ ch = xchan
 # Blocked - free send buffer
 ```
 
-### Queue
-
-#### FIFO
-
-The order in which messages are read from a channel follows
-[First In, First out (FIFO)](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)).
-The example reads messages in the order they were sent (1 first, then 2, and finally 3):
-
-```ruby
-require "xchan"
-
-ch = xchan
-Process.wait fork {
-  print "Queue messages (from child process)", "\n"
-  ch.send(1)
-  ch.send(2)
-  ch.send(3)
-}
-3.times { print "Received (parent process): ", ch.recv, "\n" }
-ch.close
-
-##
-# Queue messages (from child process)
-# Received (parent process): 1
-# Received (parent process): 2
-# Received (parent process): 3
-```
-
 ## Sources
 
 * [Source code (GitHub)](https://github.com/0x1eef/xchan.rb#readme)
