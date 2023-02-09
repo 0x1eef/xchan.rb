@@ -1,0 +1,10 @@
+#!/bin/sh
+
+for i in $(seq 1 100); do
+    bundle exec rspec spec/
+    if [ "$?" != "0" ]; then
+        echo "Error (at iteration ${i})"
+        exit $?
+    fi
+done
+echo "OK"
