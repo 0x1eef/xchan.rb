@@ -20,24 +20,43 @@ class Chan::ByteBuffer
   # @group Mutations
 
   ##
-  # Adds the number of bytes used to store the most recent object on a channel.
+  # Adds a number of bytes to the head of the buffer
+  #
+  # @param [Integer] len
+  #   Number of bytes
+  #
+  # @return [void]
+  def unshift(len)
+    return 0 if len.nil? || len.zero?
+    buffer = read
+    buffer["bytes"].unshift(len)
+    len.tap { write(buffer, bytes_written: _1) }
+  end
+
+  ##
+  # Adds a number of bytes to the tail of the buffer
   #
   # @param [Integer] byte_size
   #  The number of bytes written to a channel.
   #
   # @return [void]
-  def push(byte_size)
+  def push(len)
+    return 0 if len.nil? || len.zero?
     buffer = read
-    buffer["bytes"].push(byte_size)
-    byte_size.tap { write(buffer, bytes_written: _1) }
+    buffer["bytes"].push(len)
+    len.tap { write(buffer, bytes_written: _1) }
   end
 
   ##
   # @return [Integer]
-  #  Returns the number of bytes used to store the oldest object on a channel.
+  #  Returns (and removes) the number of bytes at the head of the buffer.
   def shift
     buffer = read
-    buffer["bytes"].shift.tap { write(buffer, bytes_read: _1) }
+    if buffer["bytes"].size > 0
+      buffer["bytes"].shift.tap { write(buffer, bytes_read: _1) }
+    else
+      0
+    end
   end
   # @groupend
 
