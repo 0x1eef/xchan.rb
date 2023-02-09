@@ -10,7 +10,7 @@ class Chan::UNIXSocket
 
   ##
   # @private
-  WAIT_TIME = 0.03
+  WAIT_TIME = 0.01
   private_constant :WAIT_TIME
 
   ##
@@ -77,9 +77,8 @@ class Chan::UNIXSocket
   # @return [Object]
   #  The number of bytes written to a channel.
   def send(object)
-    lock(nonblock: true) { perform_write(object) { _1.write(_2) } }
-  rescue Errno::EAGAIN
-    sleep(WAIT_TIME)
+    send_nonblock(object)
+  rescue Chan::WaitWritable, Chan::WaitLockable
     retry
   end
   alias_method :write, :send
@@ -102,13 +101,17 @@ class Chan::UNIXSocket
   # @return [Integer, nil]
   #  The number of bytes written to a channel.
   def send_nonblock(object)
-    lock(nonblock: true) do
-      perform_write(object) { _1.write_nonblock(_2) }
-    end
-  rescue IO::EAGAINWaitWritable => ex
+    raise IOError, "channel closed" if closed?
+    @lock.obtain_nonblock
+    len = @writer.write_nonblock(@serializer.dump(object))
+    @buffer.push(len)
+    len
+  rescue IO::WaitWritable => ex
     raise Chan::WaitWritable, ex.message
   rescue Errno::EWOULDBLOCK => ex
     raise Chan::WaitLockable, ex.message
+  ensure
+    @lock.release
   end
   alias_method :write_nonblock, :send_nonblock
 
@@ -127,10 +130,11 @@ class Chan::UNIXSocket
   # @return [Object]
   #  An object from a channel.
   def recv
-    wait_readable if empty?
-    lock(nonblock: true) { perform_read { _1.read(_2) } }
-  rescue Errno::EAGAIN
-    sleep(WAIT_TIME)
+    recv_nonblock
+  rescue Chan::WaitReadable
+    wait_readable
+    retry
+  rescue Chan::WaitLockable
     retry
   end
   alias_method :read, :recv
@@ -150,14 +154,18 @@ class Chan::UNIXSocket
   # @return [Object]
   #  An object from a channel.
   def recv_nonblock
-    lock(nonblock: true) do
-      raise IO::EAGAINWaitReadable, "read would block" if empty?
-      perform_read { _1.read_nonblock(_2) }
-    end
-  rescue IO::EAGAINWaitReadable => ex
+    @lock.obtain_nonblock
+    raise IOError, "closed channel" if closed?
+    len = @buffer.shift
+    deserialize(@reader.read_nonblock(len.zero? ? 1 : len))
+  rescue IO::WaitReadable => ex
+    @buffer.unshift(len)
     raise Chan::WaitReadable, ex.message
-  rescue Errno::EWOULDBLOCK => ex
+  rescue Errno::EAGAIN => ex
+    @buffer.unshift(len)
     raise Chan::WaitLockable, ex.message
+  ensure
+    @lock.release
   end
   alias_method :read_nonblock, :recv_nonblock
 
@@ -171,7 +179,7 @@ class Chan::UNIXSocket
   #   ch.to_a.last # => 4
   #
   # @return [Array<Object>]
-  #  Returns and consumes the contents of a channel.
+  #  Returns the consumed contents of a channel.
   def to_a
     lock do
       [].tap { _1.push(recv) until empty? }
@@ -257,28 +265,10 @@ class Chan::UNIXSocket
 
   private
 
-  ##
-  # Yields a block, and wraps it within an exclusive lock.
-  # This method avoids obtaining a lock more than once in
-  # cases where method calls are nested - for example:
-  #
-  #   lock { lock { lock { ... } } }
-  #
-  # @return [void]
   def lock(nonblock: false)
-    @lock.synchronize(nonblock: nonblock) { yield }
-  end
-
-  def perform_write(object)
-    raise IOError, "closed channel" if @writer.closed?
-    byte_count = yield(@writer, @serializer.dump(object))
-    @buffer.push(byte_count)
-    byte_count
-  end
-
-  def perform_read
-    raise IOError, "closed channel" if @reader.closed?
-    byte_count = @buffer.shift
-    @serializer.load(yield(@reader, byte_count))
+    nonblock ? @lock.obtain_nonblock : @lock.obtain
+    yield
+  ensure
+    @lock.release
   end
 end
