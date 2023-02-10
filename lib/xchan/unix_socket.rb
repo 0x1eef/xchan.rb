@@ -183,14 +183,6 @@ class Chan::UNIXSocket
 
   ##
   # @return [Boolean]
-  #  Returns true when a channel can be read from without blocking.
-  def readable?
-    return false if closed? || @lock.locked?
-    !!wait_readable(0)
-  end
-
-  ##
-  # @return [Boolean]
   #  Returns true when a channel is empty, or closed.
   def empty?
     return true if closed?
