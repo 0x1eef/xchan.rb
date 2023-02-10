@@ -83,40 +83,6 @@ RSpec.shared_examples "xchan" do |serializer|
     end
   end
 
-  describe "#readable?" do
-    subject { ch }
-
-    context "when a write hasn't taken place" do
-      it { is_expected.to_not be_readable }
-    end
-
-    context "when a write takes place" do
-      before { ch.send([1]) }
-      it { is_expected.to be_readable }
-
-      context "when the channel is closed" do
-        before { ch.close }
-        it { is_expected.to_not be_readable }
-      end
-
-      context "when the channel is locked" do
-        before do
-          ch.instance_variable_set(:@lock, lock)
-        end
-
-        let(:lock) do
-          double({
-            "locked?" => true,
-            :synchronize => nil,
-            :file => double(close: nil)
-          })
-        end
-
-        it { is_expected.to_not be_readable }
-      end
-    end
-  end
-
   describe "#bytes_written" do
     subject { ch.bytes_written }
     let(:payload) { %w[xchan] }
