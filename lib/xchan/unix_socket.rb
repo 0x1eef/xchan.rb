@@ -98,7 +98,7 @@ class Chan::UNIXSocket
   def send_nonblock(object)
     raise IOError, "channel closed" if closed?
     @lock.obtain_nonblock
-    len = @writer.write_nonblock(@serializer.dump(object))
+    len = @writer.write_nonblock(serialize(object))
     @buffer.push(len)
     len
   rescue IO::WaitWritable => ex
@@ -265,5 +265,13 @@ class Chan::UNIXSocket
     yield
   ensure
     @lock.release
+  end
+
+  def serialize(obj)
+    @serializer.dump(obj)
+  end
+
+  def deserialize(str)
+    @serializer.load(str)
   end
 end
