@@ -166,7 +166,7 @@ are available as sources.
 **Gemfile**
 
 ```ruby
-gem "xchan.rb", github: "0x1eef/xchan.rb", tag: "v0.9.13"
+gem "xchan.rb", github: "0x1eef/xchan.rb", tag: "v0.10.0"
 gem "lockf.rb", github: "0x1eef/lockf.rb", tag: "v0.5.1"
 ```
 
