@@ -2,7 +2,7 @@
 
 ##
 # The {Chan::UNIXSocket Chan::UNIXSocket} class implements a channel
-# for interprocess communication using an unnamed UNIXSocket.
+# for interprocess communication (IPC) using an unnamed UNIXSocket.
 class Chan::UNIXSocket
   require "socket"
   require "lockf"
@@ -29,28 +29,28 @@ class Chan::UNIXSocket
 
   ##
   # @return [<#dump, #load>]
-  #  Returns the serializer being used by a channel.
+  #  Returns the serializer used by the channel.
   def serializer
     @serializer
   end
 
   ##
   # @return [Boolean]
-  #  Returns true when a channel is closed.
+  #  Returns true when the channel is closed.
   def closed?
     @reader.closed? and @writer.closed?
   end
 
   ##
-  # Closes a channel.
+  # Closes the channel.
   #
   # @raise [IOError]
-  #  When a channel is already closed.
+  #  When the channel is closed.
   #
   # @return [void]
   def close
     if closed?
-      raise IOError, "channel is already closed"
+      raise IOError, "channel is closed"
     else
       [@reader, @writer,
         @buffer, @lock.file].each(&:close)
@@ -61,16 +61,16 @@ class Chan::UNIXSocket
   # @group Write methods
 
   ##
-  # Performs a write that could block.
+  # Performs a blocking write
   #
   # @param [Object] object
-  #  The object to write to a channel.
+  #  An object to write to the channel.
   #
   # @raise [IOError]
-  #  When a channel is closed.
+  #  When the channel is closed.
   #
   # @return [Object]
-  #  The number of bytes written to a channel.
+  #  Returns the number of bytes written to the channel.
   def send(object)
     send_nonblock(object)
   rescue Chan::WaitWritable, Chan::WaitLockable
@@ -79,22 +79,22 @@ class Chan::UNIXSocket
   alias_method :write, :send
 
   ##
-  # Performs a write that won't block.
+  # Performs a non-blocking write
   #
   # @param [Object] object
-  #  The object to write to a channel.
+  #  An object to write to the channel.
   #
   # @raise [IOError]
-  #  When a channel is closed.
+  #  When the channel is closed.
   #
   # @raise [Chan::WaitWritable]
-  #  When a write to the underlying IO would block.
+  #  When a write to the underlying IO blocks.
   #
   # @raise [Chan::WaitLockable]
-  #  When a write would block because a lock is held by another process.
+  #  When a write blocks because of a lock held by another process.
   #
   # @return [Integer, nil]
-  #  The number of bytes written to a channel.
+  #  Returns the number of bytes written to the channel.
   def send_nonblock(object)
     raise IOError, "channel closed" if closed?
     @lock.obtain_nonblock
@@ -117,13 +117,13 @@ class Chan::UNIXSocket
   # @group Read methods
 
   ##
-  # Performs a read that could block.
+  # Performs a blocking read
   #
   # @raise [IOError]
-  #  When a channel is closed.
+  #  When the channel is closed.
   #
   # @return [Object]
-  #  An object from a channel.
+  #  Returns an object from the channel.
   def recv
     recv_nonblock
   rescue Chan::WaitReadable
@@ -135,19 +135,19 @@ class Chan::UNIXSocket
   alias_method :read, :recv
 
   ##
-  # Performs a read that won't block.
+  # Performs a non-blocking read
   #
   # @raise [IOError]
-  #  When a channel is closed.
+  #  When the channel is closed.
   #
   # @raise [Chan::WaitReadable]
-  #  When a read from the underlying IO would block.
+  #  When a read from the underlying IO blocks.
   #
   # @raise [Chan::WaitLockable]
-  #  When a read would block because a lock is held by another process.
+  #  When a read blocks because of a lock held by another process.
   #
   # @return [Object]
-  #  An object from a channel.
+  #  Returns an object from the channel.
   def recv_nonblock
     @lock.obtain_nonblock
     raise IOError, "closed channel" if closed?
@@ -174,7 +174,7 @@ class Chan::UNIXSocket
   #   ch.to_a.last # => 4
   #
   # @return [Array<Object>]
-  #  Returns the consumed contents of a channel.
+  #  Returns the consumed contents of the channel.
   def to_a
     lock do
       [].tap { _1.push(recv) until empty? }
@@ -183,7 +183,7 @@ class Chan::UNIXSocket
 
   ##
   # @return [Boolean]
-  #  Returns true when a channel is empty, or closed.
+  #  Returns true when the channel is empty.
   def empty?
     return true if closed?
     lock { size.zero? }
@@ -194,7 +194,7 @@ class Chan::UNIXSocket
 
   ##
   # @return [Integer]
-  #  Returns the total number of bytes written to a channel.
+  #  Returns the total number of bytes written to the channel.
   def bytes_sent
     lock { @buffer.bytes_written }
   end
@@ -202,7 +202,7 @@ class Chan::UNIXSocket
 
   ##
   # @return [Integer]
-  #  Returns the total number of bytes read from a channel.
+  #  Returns the total number of bytes read from the channel.
   def bytes_received
     lock { @buffer.bytes_read }
   end
@@ -210,7 +210,7 @@ class Chan::UNIXSocket
 
   ##
   # @return [Integer]
-  #  Returns the number of objects waiting to be read from a channel.
+  #  Returns the number of objects waiting to be read.
   def size
     lock { @buffer.size }
   end
@@ -222,27 +222,25 @@ class Chan::UNIXSocket
   # @group Wait methods
 
   ##
-  # Waits for a channel to be readable.
+  # Waits for the channel to become readable.
   #
   # @param [Float, Integer, nil] s
-  #  The amount of time to wait.
-  #  Waits indefinitely when `nil`.
+  #  The number of seconds to wait. Waits indefinitely when "nil".
   #
   # @return [Chan::UNIXSocket, nil]
-  #  Returns self when a channel is readable, otherwise returns nil.
+  #  Returns self when the channel is readable, otherwise returns nil.
   def wait_readable(s = nil)
     @reader.wait_readable(s) and self
   end
 
   ##
-  # Waits for a channel to be writable.
+  # Waits for the channel to become writable.
   #
   # @param [Float, Integer, nil] s
-  #  The amount of time to wait.
-  #  Waits indefinitely when `nil`.
+  #  The number of seconds to wait. Waits indefinitely when "nil".
   #
   # @return [Chan::UNIXSocket, nil]
-  #  Returns self when a channel is writable, otherwise returns nil.
+  #  Returns self when the channel is writable, otherwise returns nil.
   def wait_writable(s = nil)
     @writer.wait_writable(s) and self
   end

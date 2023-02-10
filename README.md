@@ -28,16 +28,18 @@ require "xchan"
 ##
 # This channel uses Marshal to serialize objects.
 ch = xchan
+pid = fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.send(msg: "serialized by Marshal")
-Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
+Process.wait(pid)
 
 ##
 # This channel also uses Marshal to serialize objects.
 ch = xchan(:marshal)
+pid = fork { print "Received message: ", ch.recv[:msg], "\n"
 ch.send(msg: "serialized by Marshal")
-Process.wait fork { print "Received message: ", ch.recv[:msg], "\n" }
 ch.close
+Process.wait(pid)
 
 ##
 # Received message: serialized by Marshal
@@ -48,10 +50,10 @@ ch.close
 
 #### `#recv`
 
-The `ch.recv` method performs a read that can block. A read might block because
-of a lock held by another process, or because a read from the underlying UNIX socket
-would block. The example performs a read that blocks in a child process until the
-parent process writes to the channel:
+The `ch.recv` method performs a blocking read. A read might block because
+of a lock held by another process, or because a read from the underlying IO blocks.
+The example performs a read that blocks in a child process until the parent process
+writes to the channel:
 
 ```ruby
 require "xchan"
@@ -75,7 +77,7 @@ ch.close
 #### `#recv_nonblock`
 
 The non-blocking counterpart to `#recv` is `#recv_nonblock`. The `#recv_nonblock` method
-raises `Chan::WaitReadable` when a read from the underlying UNIX socket would block, and
+raises `Chan::WaitReadable` when a read from the underlying IO would block, and
 it raises `Chan::WaitLockable` when a read would block because of a lock held by another
 process. The example performs a read that will raise `Chan::WaitReadable`:
 
@@ -120,7 +122,7 @@ ch = xchan
 #### `#send_nonblock`
 
 The non-blocking counterpart to `#send` is `#send_nonblock`. The `#send_nonblock`
-method raises `Chan::WaitWritable` when a write to the underlying UNIX socket would block,
+method raises `Chan::WaitWritable` when a write to the underlying IO would block,
 and it raises `Chan::WaitLockable` when a lock held by another process. The example
 builds on the last example by freeing space on the send buffer when a write is found
 to block:
