@@ -9,11 +9,6 @@ class Chan::UNIXSocket
   require_relative "byte_buffer"
 
   ##
-  # @private
-  WAIT_TIME = 0.01
-  private_constant :WAIT_TIME
-
-  ##
   # @example
   #   ch = Chan::UNIXSocket.new(:marshal)
   #   ch.send([1,2,3])
