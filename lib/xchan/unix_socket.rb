@@ -251,8 +251,8 @@ class Chan::UNIXSocket
 
   private
 
-  def lock(nonblock: false)
-    nonblock ? @lock.obtain_nonblock : @lock.obtain
+  def lock
+    @lock.obtain
     yield
   ensure
     @lock.release
