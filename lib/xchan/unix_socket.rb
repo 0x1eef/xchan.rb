@@ -100,13 +100,12 @@ class Chan::UNIXSocket
     @lock.obtain_nonblock
     len = @writer.write_nonblock(serialize(object))
     @buffer.push(len)
-    len
+    len.tap { @lock.release }
   rescue IO::WaitWritable => ex
+    @lock.release
     raise Chan::WaitWritable, ex.message
   rescue Errno::EWOULDBLOCK => ex
     raise Chan::WaitLockable, ex.message
-  ensure
-    @lock.release
   end
   alias_method :write_nonblock, :send_nonblock
 
@@ -152,15 +151,14 @@ class Chan::UNIXSocket
     @lock.obtain_nonblock
     raise IOError, "closed channel" if closed?
     len = @buffer.shift
-    deserialize(@reader.read_nonblock(len.zero? ? 1 : len))
+    obj = deserialize(@reader.read_nonblock(len.zero? ? 1 : len))
+    obj.tap { @lock.release }
   rescue IO::WaitReadable => ex
     @buffer.unshift(len)
+    @lock.release
     raise Chan::WaitReadable, ex.message
   rescue Errno::EAGAIN => ex
-    @buffer.unshift(len)
     raise Chan::WaitLockable, ex.message
-  ensure
-    @lock.release
   end
   alias_method :read_nonblock, :recv_nonblock
 
