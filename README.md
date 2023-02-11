@@ -6,9 +6,9 @@ who have a parent &lt;=&gt; child relationship.
 
 The channel is implemented with an unnamed
 <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>,
-and serialization. There are multiple serializers to choose from.
+and serialization. There are multiple serializers to choose from (
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal)
-is the default. Safety from race conditions is provided by an advisory lock that
+is the default). Safety from race conditions is provided by an advisory lock that
 allows only one process to read from, or write to a channel at a given time.
 
 ## Examples
@@ -18,8 +18,10 @@ allows only one process to read from, or write to a channel at a given time.
 #### Options
 
 When a channel is written to or read from, a Ruby object is serialized (on write)
-or deserialized (on read). There are a number of serializers to choose from:
-`xchan(:marshal)`, `xchan(:json)`,  and `xchan(:yaml)`. The example uses
+or deserialized (on read). There are multiple serializers to choose from:
+`xchan(:marshal)`, `xchan(:json)`,  or `xchan(:yaml)`. Looking beyond the default
+serializers, any serializer that implements the "dump", and "load" methods can be
+used in their place. The example uses
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
 ```ruby
