@@ -6,7 +6,7 @@
 class Chan::UNIXSocket
   require "socket"
   require "lockf"
-  require_relative "byte_buffer"
+  require_relative "byte_array"
 
   ##
   # @example
@@ -23,7 +23,7 @@ class Chan::UNIXSocket
   def initialize(serializer)
     @serializer = Chan::SERIALIZERS[serializer]&.call || serializer
     @reader, @writer = ::UNIXSocket.pair(:STREAM)
-    @buffer = Chan::ByteBuffer.new
+    @bytes = Chan::ByteArray.new
     @lock = Lock::File.new(Tempfile.new("xchan-lock_file").tap(&:unlink))
   end
 
@@ -51,7 +51,7 @@ class Chan::UNIXSocket
   def close
     @lock.obtain
     raise IOError, "channel is closed" if closed?
-    [ @reader, @writer, @buffer, @lock.file ].each(&:close)
+    [ @reader, @writer, @bytes, @lock.file ].each(&:close)
   rescue IOError => ex
     @lock.release
     raise(ex)
@@ -99,7 +99,7 @@ class Chan::UNIXSocket
     @lock.obtain_nonblock
     raise IOError, "channel closed" if closed?
     len = @writer.write_nonblock(serialize(object))
-    @buffer.push(len)
+    @bytes.push(len)
     len.tap { @lock.release }
   rescue IOError, IO::WaitWritable => ex
     @lock.release
@@ -150,14 +150,14 @@ class Chan::UNIXSocket
   def recv_nonblock
     @lock.obtain_nonblock
     raise IOError, "closed channel" if closed?
-    len = @buffer.shift
+    len = @bytes.shift
     obj = deserialize(@reader.read_nonblock(len.zero? ? 1 : len))
     obj.tap { @lock.release }
   rescue IOError => ex
     @lock.release
     raise(ex)
   rescue IO::WaitReadable => ex
-    @buffer.unshift(len)
+    @bytes.unshift(len)
     @lock.release
     raise Chan::WaitReadable, ex.message
   rescue Errno::EAGAIN => ex
@@ -197,7 +197,7 @@ class Chan::UNIXSocket
   # @return [Integer]
   #  Returns the total number of bytes written to the channel.
   def bytes_sent
-    lock { @buffer.bytes_written }
+    lock { @bytes.stat.bytes_written }
   end
   alias_method :bytes_written, :bytes_sent
 
@@ -205,7 +205,7 @@ class Chan::UNIXSocket
   # @return [Integer]
   #  Returns the total number of bytes read from the channel.
   def bytes_received
-    lock { @buffer.bytes_read }
+    lock { @bytes.stat.bytes_read }
   end
   alias_method :bytes_read, :bytes_received
 
@@ -213,7 +213,7 @@ class Chan::UNIXSocket
   # @return [Integer]
   #  Returns the number of objects waiting to be read.
   def size
-    lock { @buffer.size }
+    lock { @bytes.size }
   end
 
   ##
