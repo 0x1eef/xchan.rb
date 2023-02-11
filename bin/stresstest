@@ -1,16 +1,18 @@
 #!/bin/sh
-file="$1"
+path="$1"
+count="$2"
 
-if [ "$file" = "" ]; then
-    echo "Usage: stresstest /path/to/spec.rb"
+if [ "${path}" = "" ] || [ "${count}" = "" ]; then
+    echo "Usage: stresstest PATH COUNT"
     exit 1
 fi
 
-for i in $(seq 1 750); do
-    bundle exec rspec --fail-fast $file
+for i in $(seq 1 ${count}); do
+    bundle exec rspec --fail-fast ${path}
     if [ "$?" != "0" ]; then
         echo "Error (at iteration ${i})"
         exit $?
     fi
 done
+
 echo "OK"
