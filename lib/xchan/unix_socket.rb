@@ -96,12 +96,12 @@ class Chan::UNIXSocket
   # @return [Integer, nil]
   #  Returns the number of bytes written to the channel.
   def send_nonblock(object)
-    raise IOError, "channel closed" if closed?
     @lock.obtain_nonblock
+    raise IOError, "channel closed" if closed?
     len = @writer.write_nonblock(serialize(object))
     @buffer.push(len)
     len.tap { @lock.release }
-  rescue IO::WaitWritable => ex
+  rescue IOError, IO::WaitWritable => ex
     @lock.release
     raise Chan::WaitWritable, ex.message
   rescue Errno::EWOULDBLOCK => ex
@@ -153,6 +153,9 @@ class Chan::UNIXSocket
     len = @buffer.shift
     obj = deserialize(@reader.read_nonblock(len.zero? ? 1 : len))
     obj.tap { @lock.release }
+  rescue IOError => ex
+    @lock.release
+    raise(ex)
   rescue IO::WaitReadable => ex
     @buffer.unshift(len)
     @lock.release
