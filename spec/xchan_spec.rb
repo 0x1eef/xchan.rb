@@ -73,7 +73,7 @@ RSpec.shared_examples "xchan" do |serializer|
     end
 
     context "when a lock is held by another process" do
-      let(:lock) { ch.instance_variable_get(:@lock).obtain }
+      let(:lock) { ch.instance_variable_get(:@lockf).lock }
       let!(:child_pid) { fork { lock.then { sleep 5 } } }
 
       before { ch.send([1]).then { sleep(delay) } }
