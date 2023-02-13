@@ -24,7 +24,7 @@ class Chan::UNIXSocket
     @serializer = Chan::SERIALIZERS[serializer]&.call || serializer
     @reader, @writer = ::UNIXSocket.pair(:STREAM)
     @bytes = Chan::ByteArray.new
-    @lock = Lock::File.new(Tempfile.new("xchan-lock_file").tap(&:unlink))
+    @lockf = Lock::File.new(Tempfile.new("xchan-lock_file").tap(&:unlink))
   end
 
   ##
@@ -49,11 +49,11 @@ class Chan::UNIXSocket
   #
   # @return [void]
   def close
-    @lock.obtain
+    @lockf.lock
     raise IOError, "channel is closed" if closed?
-    [ @reader, @writer, @bytes, @lock.file ].each(&:close)
+    [ @reader, @writer, @bytes, @lockf.file ].each(&:close)
   rescue IOError => ex
-    @lock.release
+    @lockf.release
     raise(ex)
   end
 
@@ -96,13 +96,13 @@ class Chan::UNIXSocket
   # @return [Integer, nil]
   #  Returns the number of bytes written to the channel.
   def send_nonblock(object)
-    @lock.obtain_nonblock
+    @lockf.lock_nonblock
     raise IOError, "channel closed" if closed?
     len = @writer.write_nonblock(serialize(object))
     @bytes.push(len)
-    len.tap { @lock.release }
+    len.tap { @lockf.release }
   rescue IOError, IO::WaitWritable => ex
-    @lock.release
+    @lockf.release
     raise Chan::WaitWritable, ex.message
   rescue Errno::EWOULDBLOCK => ex
     raise Chan::WaitLockable, ex.message
@@ -148,17 +148,17 @@ class Chan::UNIXSocket
   # @return [Object]
   #  Returns an object from the channel.
   def recv_nonblock
-    @lock.obtain_nonblock
+    @lockf.lock_nonblock
     raise IOError, "closed channel" if closed?
     len = @bytes.shift
     obj = deserialize(@reader.read_nonblock(len.zero? ? 1 : len))
-    obj.tap { @lock.release }
+    obj.tap { @lockf.release }
   rescue IOError => ex
-    @lock.release
+    @lockf.release
     raise(ex)
   rescue IO::WaitReadable => ex
     @bytes.unshift(len)
-    @lock.release
+    @lockf.release
     raise Chan::WaitReadable, ex.message
   rescue Errno::EAGAIN => ex
     raise Chan::WaitLockable, ex.message
@@ -252,10 +252,10 @@ class Chan::UNIXSocket
   private
 
   def lock
-    @lock.obtain
+    @lockf.lock
     yield
   ensure
-    @lock.release
+    @lockf.release
   end
 
   def serialize(obj)

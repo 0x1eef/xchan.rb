@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 ##
 # Runtime dependencies
-gem "lockf.rb", git: "https://github.com/0x1eef/lockf.rb.git", tag: "v0.5.1"
+gem "lockf.rb", github: "0x1eef/lockf.rb", tag: "v0.6.0"
 
 ##
 # Gem
