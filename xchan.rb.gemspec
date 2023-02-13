@@ -7,10 +7,10 @@ Gem::Specification.new do |gem|
   gem.email = ["0x1eef@protonmail.com"]
   gem.homepage = "https://github.com/0x1eef/xchan.rb#readme"
   gem.version = Chan::VERSION
-  gem.licenses = ["MIT"]
+  gem.licenses = ["0BSD"]
   gem.files = `git ls-files`.split($/)
   gem.require_paths = ["lib"]
-  gem.summary = "xchan.rb is an easy to use InterProcess Communication (IPC) library."
+  gem.summary = "An easy to use InterProcess Communication (IPC) library."
   gem.description = gem.summary
   gem.add_runtime_dependency "lockf.rb", "~> 0.5"
   gem.add_development_dependency "yard", "~> 0.9"
