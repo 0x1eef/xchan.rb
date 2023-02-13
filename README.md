@@ -174,5 +174,6 @@ gem "lockf.rb", github: "0x1eef/lockf.rb", tag: "v0.5.1"
 
 ## <a id="license"> License </a>
 
-This project is released under the terms of the MIT license. <br>
-See [LICENSE.txt](./LICENSE.txt) for details.
+[BSD Zero Clause](https://choosealicense.com/licenses/0bsd/)
+<br>
+See [LICENSE](./LICENSE)
