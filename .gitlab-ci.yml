@@ -6,11 +6,15 @@ test-ruby31:
   image: ruby:3.1.2
   script:
     - bundle install
-    - bundle exec rspec spec/
+    - SERIALIZER=marshal bundle exec ruby test/*_test.rb
+    - SERIALIZER=json bundle exec ruby test/*_test.rb
+    - SERIALIZER=yaml bundle exec ruby test/*_test.rb
 
 test-ruby32:
   stage: test
   image: ruby:3.2.0
   script:
     - bundle install
-    - bundle exec rspec spec/
+    - SERIALIZER=marshal bundle exec ruby test/*_test.rb
+    - SERIALIZER=json bundle exec ruby test/*_test.rb
+    - SERIALIZER=yaml bundle exec ruby test/*_test.rb
