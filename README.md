@@ -174,6 +174,6 @@ gem "lockf.rb", github: "0x1eef/lockf.rb", tag: "v0.6.0"
 
 ## <a id="license"> License </a>
 
-[BSD Zero Clause](https://choosealicense.com/licenses/0bsd/)
+[BSD Zero Clause](https://choosealicense.com/licenses/0bsd/).
 <br>
-See [LICENSE](./LICENSE)
+See [LICENSE](./LICENSE).
