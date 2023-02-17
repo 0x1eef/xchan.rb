@@ -167,16 +167,6 @@ class Chan::BytesWrittenTest < Chan::Test
     2.times { Process.wait fork { ch.send(object) } }
     assert_equal object_size * 2, ch.bytes_written
   end
-
-  private
-
-  def object
-    %w[xchan]
-  end
-
-  def object_size
-    ch.serializer.dump(object).bytesize
-  end
 end
 
 ##
