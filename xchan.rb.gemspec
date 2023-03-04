@@ -17,4 +17,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "yard", "~> 0.9"
   gem.add_development_dependency "redcarpet", "~> 3.5"
   gem.add_development_dependency "standard", "~> 1.13"
+  gem.add_development_dependency "test-cmd.rb", "~> 0.2"
 end

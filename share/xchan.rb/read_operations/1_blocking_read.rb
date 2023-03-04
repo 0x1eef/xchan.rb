@@ -3,6 +3,7 @@
 require_relative "../setup"
 require "xchan"
 
+$stdout.sync = true
 ch = xchan
 pid = fork do
   print "Received random number (child process): ", ch.recv, "\n"
@@ -13,3 +14,7 @@ print "Send a random number (from parent process)", "\n"
 ch.send(rand(21))
 Process.wait(pid)
 ch.close
+
+##
+# Send a random number (from parent process)
+# Received random number (child process): XX

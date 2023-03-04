@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "setup"
-require "test-unit"
 
 class Chan::Test < Test::Unit::TestCase
   def setup
