@@ -7,8 +7,8 @@ an unnamed
 <code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>,
 and serialization. There are multiple serializers to choose from
 ([`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal)
-is the default). Safety from race conditions is provided by an advisory lock that
-allows only one process to read from, or write to a channel at a given time.
+is the default). Safety from race conditions is provided by an advisory-mode lock
+that allows only one process to read from, or write to a channel at a given time.
 
 ## Examples
 
