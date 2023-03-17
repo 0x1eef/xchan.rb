@@ -17,9 +17,9 @@ that allows only one process to read from, or write to a channel at a given time
 #### Options
 
 When a channel is written to or read from, a Ruby object is serialized (on write)
-or deserialized (on read). There are multiple serializers to choose from:
+or deserialized (on read). The default serializers can be accessed by using
 `xchan(:marshal)`, `xchan(:json)`,  or `xchan(:yaml)`. Looking past the default
-serializers, any serializer that implements the "dump", and "load" methods can be
+serializers, a serializer that implements the "dump", and "load" methods can be
 used in their place. The example uses
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
