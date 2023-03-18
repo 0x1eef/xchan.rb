@@ -18,11 +18,14 @@ class Chan::UNIXSocket
   # @param [Symbol, <#dump, #load>] serializer
   #  A serializer.
   #
+  # @param [Integer] socket_type
+  #  A socket type (ie Socket::SOCK_STREAM).
+  #
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}.
-  def initialize(serializer)
+  def initialize(serializer, socket_type: Socket::SOCK_DGRAM)
     @serializer = Chan::SERIALIZERS[serializer]&.call || serializer
-    @r, @w = ::UNIXSocket.pair(:STREAM)
+    @r, @w = ::UNIXSocket.pair(socket_type)
     @bytes = Chan::ByteArray.new
     @lock = LockFile.new(new_temp_file)
   end

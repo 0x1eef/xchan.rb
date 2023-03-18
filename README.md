@@ -47,6 +47,25 @@ Process.wait(pid)
 # Received message: serialized by Marshal
 ```
 
+### Socket
+
+#### Types
+
+A channel can be created with one of three sockets types:
+
+* `Socket::SOCK_DGRAM`
+* `Socket::SOCK_STREAM`
+* `Socket::SOCK_SEQPACKET`
+
+The default is `Socket::SOCK_DGRAM` because its default settings
+provide the most buffer space. The socket type can be specified with
+the `socket_type` keyword argument:
+
+```ruby
+require "xchan"
+ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
+```
+
 ### Read operations
 
 #### `#recv`
@@ -116,7 +135,7 @@ example performs a write that will block when the send buffer becomes full:
 ```ruby
 require "xchan"
 
-ch = xchan
+ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
 500.times { ch.send("a" * 500) }
 ```
 
