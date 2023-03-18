@@ -13,12 +13,13 @@ class Chan::ByteArray
   attr_reader :stat
 
   ##
+  # @param tmp_dir (see Chan::UNIXSocket#initialize)
   # @return [Chan::ByteArray]
-  def initialize
+  def initialize(tmp_dir)
     @serializer = JSON
-    @io = Tempfile.new("xchan-byte_array").tap(&:unlink)
+    @io = Tempfile.new("xchan-byte_array", tmp_dir).tap(&:unlink)
     @io.sync = true
-    @stat = Chan::Stat.new
+    @stat = Chan::Stat.new(tmp_dir)
     write(@io, [])
   end
 

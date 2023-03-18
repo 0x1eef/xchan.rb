@@ -198,6 +198,29 @@ ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
 # Blocked - free send buffer
 ```
 
+## Notes
+
+### Temporary files
+
+A single channel will create three temporary files that are unlinked
+from the filesystem as soon as they are created:
+
+* A file for locking a channel.
+* A file that tracks the size (in bytes) of each message on a channel.
+* A file that tracks channel statistics.
+
+By default the files are stored (for a very short time) in `Dir.tmpdir`
+with read / write permissions reserved for the user who creates them.
+The parent directory for the temporary files can be changed with the
+`tmpdir:` keyword argument:
+
+```ruby
+require "xchan"
+require "fileutils"
+tmpdir = File.mkdir_p File.join(Dir.home, ".xchan", "tmp"), mode: 0700
+ch = xchan(:marshal, tmpdir:)
+```
+
 ## Sources
 
 * [Source code (GitHub)](https://github.com/0x1eef/xchan.rb#readme)
