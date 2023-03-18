@@ -22,9 +22,9 @@ class Chan::UNIXSocket
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}.
   def initialize(serializer)
     @serializer = Chan::SERIALIZERS[serializer]&.call || serializer
-    @reader, @writer = ::UNIXSocket.pair(:STREAM)
+    @r, @w = ::UNIXSocket.pair(:STREAM)
     @bytes = Chan::ByteArray.new
-    @lockf = Lock::File.new(Tempfile.new("xchan-lock_file").tap(&:unlink))
+    @lock = LockFile.new(new_temp_file)
   end
 
   ##
@@ -38,7 +38,7 @@ class Chan::UNIXSocket
   # @return [Boolean]
   #  Returns true when the channel is closed.
   def closed?
-    @reader.closed? and @writer.closed?
+    @r.closed? and @w.closed?
   end
 
   ##
@@ -49,11 +49,11 @@ class Chan::UNIXSocket
   #
   # @return [void]
   def close
-    @lockf.lock
+    @lock.lock
     raise IOError, "channel is closed" if closed?
-    [ @reader, @writer, @bytes, @lockf.file ].each(&:close)
+    [ @r, @w, @bytes, @lock.file ].each(&:close)
   rescue IOError => ex
-    @lockf.release
+    @lock.release
     raise(ex)
   end
 
@@ -96,13 +96,13 @@ class Chan::UNIXSocket
   # @return [Integer, nil]
   #  Returns the number of bytes written to the channel.
   def send_nonblock(object)
-    @lockf.lock_nonblock
+    @lock.lock_nonblock
     raise IOError, "channel closed" if closed?
-    len = @writer.write_nonblock(serialize(object))
+    len = @w.write_nonblock(serialize(object))
     @bytes.push(len)
-    len.tap { @lockf.release }
+    len.tap { @lock.release }
   rescue IOError, IO::WaitWritable => ex
-    @lockf.release
+    @lock.release
     raise Chan::WaitWritable, ex.message
   rescue Errno::EWOULDBLOCK => ex
     raise Chan::WaitLockable, ex.message
@@ -148,17 +148,17 @@ class Chan::UNIXSocket
   # @return [Object]
   #  Returns an object from the channel.
   def recv_nonblock
-    @lockf.lock_nonblock
+    @lock.lock_nonblock
     raise IOError, "closed channel" if closed?
     len = @bytes.shift
-    obj = deserialize(@reader.read_nonblock(len.zero? ? 1 : len))
-    obj.tap { @lockf.release }
+    obj = deserialize(@r.read_nonblock(len.zero? ? 1 : len))
+    obj.tap { @lock.release }
   rescue IOError => ex
-    @lockf.release
+    @lock.release
     raise(ex)
   rescue IO::WaitReadable => ex
     @bytes.unshift(len)
-    @lockf.release
+    @lock.release
     raise Chan::WaitReadable, ex.message
   rescue Errno::EAGAIN => ex
     raise Chan::WaitLockable, ex.message
@@ -231,7 +231,7 @@ class Chan::UNIXSocket
   # @return [Chan::UNIXSocket, nil]
   #  Returns self when the channel is readable, otherwise returns nil.
   def wait_readable(s = nil)
-    @reader.wait_readable(s) and self
+    @r.wait_readable(s) and self
   end
 
   ##
@@ -243,7 +243,7 @@ class Chan::UNIXSocket
   # @return [Chan::UNIXSocket, nil]
   #  Returns self when the channel is writable, otherwise returns nil.
   def wait_writable(s = nil)
-    @writer.wait_writable(s) and self
+    @w.wait_writable(s) and self
   end
 
   ##
@@ -252,10 +252,10 @@ class Chan::UNIXSocket
   private
 
   def lock
-    @lockf.lock
+    @lock.lock
     yield
   ensure
-    @lockf.release
+    @lock.release
   end
 
   def serialize(obj)
@@ -264,5 +264,9 @@ class Chan::UNIXSocket
 
   def deserialize(str)
     @serializer.load(str)
+  end
+
+  def new_temp_file
+    Tempfile.new('xchan-lock').tap(&:unlink)
   end
 end
