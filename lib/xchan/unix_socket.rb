@@ -252,6 +252,61 @@ class Chan::UNIXSocket
   ##
   # @endgroup
 
+  ##
+  # @group Socket options
+
+  ##
+  # @param [String, Symbol] target
+  #  `:reader`, or `:writer`.
+  #
+  # @param [Integer] level
+  #  The level (eg `Socket::SOL_SOCKET` for the socket level).
+  #
+  # @param [Integer] option_name
+  #  The name of an option (eg `Socket::SO_RCVBUF`).
+  #
+  # @param [Boolean, Integer] option_value
+  #  The option value (eg 12345)
+  #
+  # @return [Integer]
+  #  Returns 0 on success.
+  def setsockopt(target, level, option_name, option_value)
+    @lock.lock
+    if ! %q(reader writer).include?(target.to_s)
+      raise ArgumentError, "target can be ':reader', or ':writer'"
+    end
+    target = (target == :reader) ? @r : @w
+    target.setsockopt(level, option_name, option_value)
+  ensure
+    @lock.release
+  end
+
+  ##
+  # @param [String, Symbol] target
+  #  `:reader`, or `:writer`.
+  #
+  # @param [Integer] level
+  #  The level (eg `Socket::SOL_SOCKET` for the socket level).
+  #
+  # @param [Integer] option_name
+  #  The name of an option (eg `Socket::SO_RCVBUF`).
+  #
+  # @return [Socket::Option]
+  #  Returns an instance of `Socket::Option`.
+  def getsockopt(target, level, option_name)
+    @lock.lock
+    if ! %q(reader writer).include?(target.to_s)
+      raise ArgumentError, "target can be ':reader', or ':writer'"
+    end
+    target = (target == :reader) ? @r : @w
+    target.getsockopt(level, option_name)
+  ensure
+    @lock.release
+  end
+
+  ##
+  # @endgroup
+
   private
 
   def lock

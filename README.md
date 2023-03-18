@@ -66,6 +66,34 @@ require "xchan"
 ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
 ```
 
+#### Options
+
+A channel is composed of two sockets, one for reading and the other for writing.
+Socket options can be read and set on either of the two sockets with the
+`Chan::UNIXSocket#getsockopt`, and `Chan::UNIXSocket#setsockopt` methods.
+Apart from the first argument (`:reader`, or `:writer`) the rest of the arguments
+are identical to `Socket#{getsockopt,setsockopt}`. The following example has been
+run on OpenBSD, the results might be different on other operating systems:
+
+```ruby
+require "xchan"
+ch = xchan(:marshal)
+
+##
+# Print the value of SO_RCVBUF
+rcvbuf = ch.getsockopt(:reader, Socket::SOL_SOCKET, Socket::SO_RCVBUF)
+print "The read buffer can contain a maximum of: ", rcvbuf.int, " bytes.\n"
+
+##
+# Print the value of SO_SNDBUF
+sndbuf = ch.getsockopt(:writer, Socket::SOL_SOCKET, Socket::SO_SNDBUF)
+print "The maximum size of a single message is: ", sndbuf.int, " bytes.\n"
+
+##
+# The read buffer can contain a maximum of: 16384 bytes.
+# The maximum size of a single message is: 2048 bytes.
+```
+
 ### Read operations
 
 #### `#recv`
