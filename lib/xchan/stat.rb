@@ -7,10 +7,11 @@ class Chan::Stat
   require "json"
 
   ##
+  # @param tmp_dir (see Chan::UNIXSocket#initialize)
   # @return [Chan::Stat]
-  def initialize
+  def initialize(tmp_dir)
     @serializer = JSON
-    @io = Tempfile.new("xchan-stat").tap(&:unlink)
+    @io = Tempfile.new("xchan-stat", tmp_dir).tap(&:unlink)
     write(@io, {"bytes_read" => 0, "bytes_written" => 0})
   end
 
