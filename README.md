@@ -217,7 +217,7 @@ The parent directory for the temporary files can be changed with the
 ```ruby
 require "xchan"
 require "fileutils"
-tmpdir = File.mkdir_p File.join(Dir.home, ".xchan", "tmp"), mode: 0700
+tmpdir = FileUtils.mkdir_p File.join(Dir.home, ".xchan", "tmp"), mode: 0700
 ch = xchan(:marshal, tmpdir:)
 ```
 
