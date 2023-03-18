@@ -35,7 +35,7 @@ class Chan::ReadmeTest < Test::Unit::TestCase
   private
 
   def readme_example(path)
-    examples_dir = File.join(Dir.getwd, "share", "xchan.rb")
+    examples_dir = File.join(Dir.getwd, "share", "xchan.rb", "examples")
     example = File.join(examples_dir, path)
     cmd "bundle exec ruby #{example}"
   end

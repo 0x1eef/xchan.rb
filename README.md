@@ -189,7 +189,7 @@ rescue Chan::WaitLockable
   retry
 end
 
-ch = xchan
+ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
 170.times { send_nonblock(ch, "a" * 500) }
 
 ##
