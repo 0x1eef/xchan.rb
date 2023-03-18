@@ -104,7 +104,7 @@ class Chan::UNIXSocket
     len = @w.write_nonblock(serialize(object))
     @bytes.push(len)
     len.tap { @lock.release }
-  rescue IOError, IO::WaitWritable => ex
+  rescue IOError, IO::WaitWritable, Errno::ENOBUFS => ex
     @lock.release
     raise Chan::WaitWritable, ex.message
   rescue Errno::EWOULDBLOCK => ex
