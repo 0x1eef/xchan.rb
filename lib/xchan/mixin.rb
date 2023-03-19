@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # A module that is included into Ruby's {Object} class.
 module Chan::Mixin

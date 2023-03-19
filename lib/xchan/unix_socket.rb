@@ -57,7 +57,7 @@ class Chan::UNIXSocket
   def close
     @lock.lock
     raise IOError, "channel is closed" if closed?
-    [ @r, @w, @bytes, @lock.file ].each(&:close)
+    [@r, @w, @bytes, @lock.file].each(&:close)
   rescue IOError => ex
     @lock.release
     raise(ex)
@@ -275,7 +275,7 @@ class Chan::UNIXSocket
   #  Returns 0 on success.
   def setsockopt(target, level, option_name, option_value)
     @lock.lock
-    if ! %q(reader writer).include?(target.to_s)
+    if !%w[reader writer].include?(target.to_s)
       raise ArgumentError, "target can be ':reader', or ':writer'"
     end
     target = (target == :reader) ? @r : @w
@@ -298,7 +298,7 @@ class Chan::UNIXSocket
   #  Returns an instance of `Socket::Option`.
   def getsockopt(target, level, option_name)
     @lock.lock
-    if ! %q(reader writer).include?(target.to_s)
+    if !%w[reader writer].include?(target.to_s)
       raise ArgumentError, "target can be ':reader', or ':writer'"
     end
     target = (target == :reader) ? @r : @w
@@ -328,6 +328,6 @@ class Chan::UNIXSocket
   end
 
   def new_temp_file(tmp_dir)
-    Tempfile.new('xchan-lock', tmp_dir).tap(&:unlink)
+    Tempfile.new("xchan-lock", tmp_dir).tap(&:unlink)
   end
 end

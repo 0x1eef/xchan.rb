@@ -9,12 +9,22 @@ inherit_gem:
   standard: config/base.yml
 
 ##
+# All cops
+AllCops:
+  Include:
+    - lib/*.rb
+    - lib/**/*.rb
+    - test/*_test.rb
+
+##
 # Extra cops
 Style/FrozenStringLiteralComment:
   Enabled: true
 
 ##
-# Disabled cops (lib-specific)
+# Disabled cops
+Layout/ArgumentAlignment:
+  Enabled: false
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 Style/TrivialAccessors:

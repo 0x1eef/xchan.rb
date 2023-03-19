@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "setup"
 require "test/cmd"
 
@@ -5,7 +7,7 @@ class Chan::ReadmeTest < Test::Unit::TestCase
   include Test::Cmd
 
   def test_serialization_1_serializers
-    assert_equal "Received message: serialized by Marshal\n"*2,
+    assert_equal "Received message: serialized by Marshal\n" * 2,
                  readme_example("serialization/1_serializers.rb").stdout
   end
 
@@ -14,7 +16,7 @@ class Chan::ReadmeTest < Test::Unit::TestCase
         'Received random number \(child process\): \d+'
     assert_match Regexp.new(r),
                  readme_example("read_operations/1_blocking_read.rb").stdout
-                                                                     .gsub("\n"," ")
+                                                                     .tr("\n", " ")
   end
 
   def test_write_operations_2_non_blocking_write
@@ -29,7 +31,7 @@ class Chan::ReadmeTest < Test::Unit::TestCase
         'The maximum size of a single message is: \d{1,6} bytes.\s*'
     assert_match Regexp.new(r),
                  readme_example("socket/2_options.rb").stdout
-                                                      .gsub("\n", " ")
+                                                      .tr("\n", " ")
   end
 
   private

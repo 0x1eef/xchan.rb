@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ##
 # The {Chan::Stat Chan::Stat} class provides statistics
 # (eg number of bytes read, number of bytes written) for
