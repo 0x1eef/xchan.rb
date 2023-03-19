@@ -211,7 +211,7 @@ from the filesystem as soon as they are created:
 
 By default the files are stored (for a very short time) in `Dir.tmpdir`
 with read / write permissions reserved for the user who creates them.
-The parent directory for the temporary files can be changed with the
+The parent directory of the temporary files can be changed with the
 `tmpdir:` keyword argument:
 
 ```ruby
