@@ -15,4 +15,10 @@ rescue Chan::WaitLockable
 end
 
 ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
-170.times { send_nonblock(ch, "a" * 500) }
+sndbuf = ch.getsockopt(:writer, Socket::SOL_SOCKET, Socket::SO_SNDBUF)
+while ch.bytes_written <= sndbuf.int
+  send_nonblock(ch, 1)
+end
+
+##
+# Blocked - free send buffer

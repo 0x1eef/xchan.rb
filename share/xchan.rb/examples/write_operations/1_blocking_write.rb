@@ -3,5 +3,8 @@
 require_relative "../setup"
 require "xchan"
 
-ch = xchan
-500.times { ch.send("a" * 500) }
+ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
+sndbuf = ch.getsockopt(:reader, Socket::SOL_SOCKET, Socket::SO_SNDBUF)
+while ch.bytes_written <= sndbuf.int
+  ch.send(1)
+end

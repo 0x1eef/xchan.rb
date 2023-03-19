@@ -164,7 +164,10 @@ example performs a write that will block when the send buffer becomes full:
 require "xchan"
 
 ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
-500.times { ch.send("a" * 500) }
+sndbuf = ch.getsockopt(:reader, Socket::SOL_SOCKET, Socket::SO_SNDBUF)
+while ch.bytes_written <= sndbuf.int
+  ch.send(1)
+end
 ```
 
 #### `#send_nonblock`
@@ -190,11 +193,12 @@ rescue Chan::WaitLockable
 end
 
 ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
-170.times { send_nonblock(ch, "a" * 500) }
+sndbuf = ch.getsockopt(:writer, Socket::SOL_SOCKET, Socket::SO_SNDBUF)
+while ch.bytes_written <= sndbuf.int
+  send_nonblock(ch, 1)
+end
 
 ##
-# Blocked - free send buffer
-# Blocked - free send buffer
 # Blocked - free send buffer
 ```
 
