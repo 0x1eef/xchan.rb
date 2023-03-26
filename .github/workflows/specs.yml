@@ -20,6 +20,7 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
     - run: bundle install
-    - run: SERIALIZER=marshal bundle exec ruby test/*_test.rb
-    - run: SERIALIZER=json bundle exec ruby test/*_test.rb
-    - run: SERIALIZER=yaml bundle exec ruby test/*_test.rb
+    - run: SERIALIZER=marshal ./bin/run-tests
+    - run: SERIALIZER=json ./bin/run-tests
+    - run: SERIALIZER=yaml ./bin/run-tests
+    - run: SERIALIZER=plain ./bin/run-tests

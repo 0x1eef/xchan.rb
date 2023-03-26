@@ -18,7 +18,10 @@ class Chan::Test < Test::Unit::TestCase
   end
 
   def object
-    %w[xchan]
+    case ENV["SERIALIZER"]
+    when "plain" then "xchan"
+    else %w[xchan]
+    end
   end
 
   def object_size
@@ -34,15 +37,19 @@ class Chan::SendTest < Chan::Test
   end
 
   def test_send_with_multiple_objects
-    3.times { |i| Process.wait fork { ch.send([i]) } }
-    assert_equal [[0], [1], [2]], 3.times.map { ch.recv }
+    3.times { |i| Process.wait fork { ch.send(object) } }
+    assert_equal [object, object, object], 3.times.map { ch.recv }
   end
 
   def test_send_race_condition
-    pids = 4.times.map { fork { exit(ch.recv[0]) } }
+    pids = 4.times.map { fork { exit(ch.recv.to_i) } }
     sleep(0.1 * 4)
-    pids.each.with_index(1) { ch.send([42]) }
+    pids.each.with_index(1) { ch.send(object) }
     assert_equal pids.map { 42 }, pids.map { Process.wait2(_1).last.exitstatus }
+  end
+
+  def object
+    42
   end
 end
 
@@ -52,8 +59,8 @@ class Chan::RecvTest < Chan::Test
   include Timeout
 
   def test_recv_with_null_byte
-    ch.send(["xchan\x00"])
-    assert_equal ["xchan\x00"], ch.recv
+    ch.send(object.dup << "\x00")
+    assert_equal object.dup << "\x00", ch.recv
   end
 
   def test_that_recv_blocks
@@ -139,8 +146,8 @@ class Chan::ToArrayTest < Chan::Test
   end
 
   def test_to_a_with_last
-    3.times { ch.send([_1]) }
-    assert_equal [2], ch.to_a.last
+    3.times { ch.send(object) }
+    assert_equal object, ch.to_a.last
   end
 
   def test_to_a_with_empty_channel

@@ -8,20 +8,25 @@ module Chan
   WaitReadable = Class.new(IO::EAGAINWaitReadable)
   WaitWritable = Class.new(IO::EAGAINWaitWritable)
   WaitLockable = Class.new(Errno::EWOULDBLOCK)
+  Plain = Class.new do
+    def self.dump(str) = str.to_s
+    def self.load(str) = str.to_s
+  end
 
-  SERIALIZERS = {
-    marshal: lambda {
-      Marshal
-    },
-    json: lambda {
-      require "json" unless defined?(JSON)
-      JSON
-    },
-    yaml: lambda {
-      require "yaml" unless defined?(YAML)
-      YAML
+  def self.serializers
+    {
+      plain: lambda { Plain },
+      marshal: lambda { Marshal },
+      json: lambda {
+        require "json" unless defined?(JSON)
+        JSON
+      },
+      yaml: lambda {
+        require "yaml" unless defined?(YAML)
+        YAML
+      }
     }
-  }
+  end
 end
 
 class Object

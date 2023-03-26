@@ -1,20 +1,12 @@
 stages:
   - test
 
-test-ruby31:
-  stage: test
-  image: ruby:3.1.2
-  script:
-    - bundle install
-    - SERIALIZER=marshal bundle exec ruby test/*_test.rb
-    - SERIALIZER=json bundle exec ruby test/*_test.rb
-    - SERIALIZER=yaml bundle exec ruby test/*_test.rb
-
 test-ruby32:
   stage: test
   image: ruby:3.2.0
   script:
     - bundle install
-    - SERIALIZER=marshal bundle exec ruby test/*_test.rb
-    - SERIALIZER=json bundle exec ruby test/*_test.rb
-    - SERIALIZER=yaml bundle exec ruby test/*_test.rb
+    - SERIALIZER=marshal ./bin/run-tests
+    - SERIALIZER=json ./bin/run-tests
+    - SERIALIZER=yaml ./bin/run-tests
+    - SERIALIZER=plain ./bin/run-tests
