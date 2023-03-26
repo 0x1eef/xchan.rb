@@ -23,10 +23,9 @@ When a channel is written to or read from, a Ruby object is serialized
 In cases where you don't want to serialize the data and prefer to transmit it
 as plain text, you can use the "plain" serializer by calling `xchan(:plain)`.
 The plain serializer is intended for raw-string communication and does not
-perform serialization.
-
-Looking past the default serializers, a serializer that implements the "dump",
-and "load" methods can be used in their place. The following example uses
+perform serialization. Looking past the default serializers, a serializer
+that implements the "dump", and "load" methods can be used in their place.
+The following example uses
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
 ```ruby
