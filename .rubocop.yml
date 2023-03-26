@@ -11,21 +11,24 @@ inherit_gem:
 ##
 # All cops
 AllCops:
+  TargetRubyVersion: 3.2
   Include:
     - lib/*.rb
     - lib/**/*.rb
     - test/*_test.rb
 
 ##
-# Extra cops
+# Enabled
 Style/FrozenStringLiteralComment:
   Enabled: true
 
 ##
-# Disabled cops
+# Disabled
 Layout/ArgumentAlignment:
   Enabled: false
 Layout/MultilineMethodCallIndentation:
+  Enabled: false
+Layout/EmptyLineBetweenDefs:
   Enabled: false
 Style/TrivialAccessors:
   Enabled: false
