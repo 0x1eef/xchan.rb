@@ -26,11 +26,11 @@ class Chan::UNIXSocket
   #
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}.
-  def initialize(serializer, tmp_dir: Dir.tmpdir, socket_type: Socket::SOCK_DGRAM)
+  def initialize(serializer, tmpdir: Dir.tmpdir, socket_type: Socket::SOCK_DGRAM)
     @serializer = Chan.serializers[serializer]&.call || serializer
     @r, @w = ::UNIXSocket.pair(socket_type)
-    @bytes = Chan::ByteArray.new(tmp_dir)
-    @lock = LockFile.new(new_temp_file(tmp_dir))
+    @bytes = Chan::ByteArray.new(tmpdir)
+    @lock = LockFile.new(new_temp_file(tmpdir))
   end
 
   ##
@@ -327,7 +327,7 @@ class Chan::UNIXSocket
     @serializer.load(str)
   end
 
-  def new_temp_file(tmp_dir)
-    Tempfile.new("xchan-lock", tmp_dir).tap(&:unlink)
+  def new_temp_file(tmpdir)
+    Tempfile.new("xchan-lock", tmpdir).tap(&:unlink)
   end
 end
