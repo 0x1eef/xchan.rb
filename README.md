@@ -18,14 +18,9 @@ that allows only one process to read from, or write to a channel at a given time
 
 When a channel is written to or read from, a Ruby object is serialized
 (on write) or deserialized (on read). The default serializers are available as
-`xchan(:marshal)`, `xchan(:json)`,  or `xchan(:yaml)`.
-
-In cases where you don't want to serialize the data and prefer to transmit it
-as plain text, you can use the "plain" serializer by calling `xchan(:plain)`.
-The plain serializer is intended for raw-string communication and does not
-perform serialization. Looking past the default serializers, a serializer
-that implements the "dump", and "load" methods can be used in their place.
-The following example uses
+`xchan(:marshal)`, `xchan(:json)`, and `xchan(:yaml)`. For scenarios where it
+is preferred to send and receive plain strings, the "plain" serializer is
+available as `xchan(:plain)`. The following example uses
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
 ```ruby
@@ -171,12 +166,12 @@ A channel can be created with one of three sockets types:
 * `Socket::SOCK_SEQPACKET`
 
 The default is `Socket::SOCK_DGRAM` because its default settings
-provide the most buffer space. The socket type can be specified with
-the `socket_type` keyword argument:
+provide the most buffer space. The socket type can be specified as
+a keyword argument:
 
 ```ruby
 require "xchan"
-ch = xchan(:marshal, socket_type: Socket::SOCK_STREAM)
+ch = xchan(:marshal, socket: Socket::SOCK_STREAM)
 ```
 
 #### Options

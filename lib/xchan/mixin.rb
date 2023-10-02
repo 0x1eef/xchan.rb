@@ -11,7 +11,7 @@ module Chan::Mixin
   #   ch.close
   #
   # @param serializer (see Chan::UNIXSocket#initialize)
-  # @param socket_type (see Chan::UNIXSocket#initialize)
+  # @param socket (see Chan::UNIXSocket#initialize)
   # @param tmpdir (see Chan::UNIXSocket#initialize)
   # @return (see Chan::UNIXSocket#initialize)
   def xchan(serializer = :marshal, **kw_args)
