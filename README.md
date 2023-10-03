@@ -206,23 +206,18 @@ print "The maximum size of a single message is: ", sndbuf.int, " bytes.\n"
 
 ### Temporary files
 
-A single channel will create three temporary files that are unlinked
-from the filesystem as soon as they are created:
+A single channel creates three temporary files that are removed
+from the filesystem as soon as they are created. By default the
+files are stored - for a very short time - in `Dir.tmpdir`. Read
+and write permissions are reserved for the process that created
+them, inclusive of its child processes.
 
-* A file for locking a channel.
-* A file that tracks the size (in bytes) of each message on a channel.
-* A file that tracks channel statistics.
-
-By default the files are stored (for a very short time) in `Dir.tmpdir`
-with read / write permissions reserved for the user who creates them.
 The parent directory of the temporary files can be changed with the
-`tmpdir:` keyword argument:
+`tmpdir` keyword argument:
 
 ```ruby
 require "xchan"
-require "fileutils"
-tmpdir = FileUtils.mkdir_p File.join(Dir.home, ".xchan", "tmp"), mode: 0700
-ch = xchan(:marshal, tmpdir:)
+ch = xchan(:marshal, tmpdir: Dir.home)
 ```
 
 ## Sources

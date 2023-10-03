@@ -22,7 +22,7 @@ class Chan::UNIXSocket
   #  A socket type (eg Socket::SOCK_STREAM).
   #
   # @param [String] tmpdir
-  #  A path to the directory where temporary files will be stored.
+  #  Path to a directory where temporary files will be stored.
   #
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}.
@@ -30,7 +30,7 @@ class Chan::UNIXSocket
     @serializer = Chan.serializers[serializer]&.call || serializer
     @r, @w = ::UNIXSocket.pair(socket)
     @bytes = Chan::ByteArray.new(tmpdir)
-    @lock = LockFile.new(new_temp_file(tmpdir))
+    @lock = LockFile.new Chan.temporary_file("xchan.lock", tmpdir:)
   end
 
   ##
@@ -325,9 +325,5 @@ class Chan::UNIXSocket
 
   def deserialize(str)
     @serializer.load(str)
-  end
-
-  def new_temp_file(tmpdir)
-    Tempfile.new("xchan-lock", tmpdir).tap(&:unlink)
   end
 end

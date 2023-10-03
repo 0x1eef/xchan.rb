@@ -4,7 +4,6 @@
 # The {Chan::ByteArray Chan::ByteArray} class provides a
 # byte count for each object stored on a channel.
 class Chan::ByteArray
-  require "tempfile"
   require "json"
   require_relative "stat"
 
@@ -13,13 +12,15 @@ class Chan::ByteArray
   attr_reader :stat
 
   ##
-  # @param tmp_dir (see Chan::UNIXSocket#initialize)
+  # @param [String] tmpdir
+  #  Path to a directory where temporary files will be stored.
+  #
   # @return [Chan::ByteArray]
-  def initialize(tmp_dir)
+  def initialize(tmpdir)
     @serializer = JSON
-    @io = Tempfile.new("xchan-byte_array", tmp_dir).tap(&:unlink)
+    @io = Chan.temporary_file("xchan.bytes", tmpdir:)
     @io.sync = true
-    @stat = Chan::Stat.new(tmp_dir)
+    @stat = Chan::Stat.new(tmpdir)
     write(@io, [])
   end
 
