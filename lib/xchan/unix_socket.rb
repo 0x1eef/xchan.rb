@@ -6,7 +6,7 @@
 class Chan::UNIXSocket
   require "socket"
   require "lockf"
-  require_relative "byte_array"
+  require_relative "bytes"
 
   ##
   # @example
@@ -29,7 +29,7 @@ class Chan::UNIXSocket
   def initialize(serializer, tmpdir: Dir.tmpdir, socket: Socket::SOCK_DGRAM)
     @serializer = Chan.serializers[serializer]&.call || serializer
     @r, @w = ::UNIXSocket.pair(socket)
-    @bytes = Chan::ByteArray.new(tmpdir)
+    @bytes = Chan::Bytes.new(tmpdir)
     @lock = LockFile.new Chan.temporary_file("xchan.lock", tmpdir:)
   end
 
