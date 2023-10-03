@@ -1,7 +1,8 @@
 *.gem
-.gems
+.localgems/
 .bundle
 Gemfile.lock
 .yardoc/
+.dev/
 doc/
 pkg/
