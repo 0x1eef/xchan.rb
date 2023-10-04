@@ -1,8 +1,8 @@
 ##
-# {Chan::Tempfile} is a fork of Tempfile from Ruby's standard library.
-# The primary difference between {Chan::Tempfile Chan::Tempfile}, and
-# the standard library is
-# [ruby/tempfile#22](https://github.com/ruby/tempfile/pull/22)
+# {Chan::Tempfile Chan::Tempfile} is a fork of Tempfile from
+# Ruby's standard library. The primary difference between
+# {Chan::Tempfile Chan::Tempfile}, and the standard library is
+# that [ruby/tempfile#22](https://github.com/ruby/tempfile/pull/22)
 # is applied in this fork.
 class Chan::Tempfile < DelegateClass(File)
   require 'delegate'
