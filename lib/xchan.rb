@@ -17,8 +17,8 @@ module Chan
   ##
   # Returns an unlinked {Chan::Tempfile Chan::Tempfile} object
   # that can be read from, and written to by the process that
-  # created it, inclusive of its child processes, but not by
-  # other processes.
+  # created it, inclusive of its child processes, but not of
+  # processes other than that.
   #
   # @param [String] basename
   #  Basename of the temporary file.
