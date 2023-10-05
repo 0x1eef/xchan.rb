@@ -5,15 +5,16 @@
 # (eg number of bytes read, number of bytes written) for
 # a given channel.
 class Chan::Stat
-  require "tempfile"
   require "json"
 
   ##
-  # @param tmp_dir (see Chan::UNIXSocket#initialize)
+  # @param [String] tmpdir
+  #  Path to a directory where temporary files will be stored.
+  #
   # @return [Chan::Stat]
-  def initialize(tmp_dir)
+  def initialize(tmpdir)
     @serializer = JSON
-    @io = Tempfile.new("xchan-stat", tmp_dir).tap(&:unlink)
+    @io = Chan.temporary_file("xchan.stat", tmpdir:)
     write(@io, {"bytes_read" => 0, "bytes_written" => 0})
   end
 
