@@ -202,9 +202,9 @@ print "The maximum size of a single message is: ", sndbuf.int, " bytes.\n"
 # The maximum size of a single message is: 2048 bytes.
 ```
 
-## Notes
-
 ### Temporary files
+
+#### tmpdir
 
 A single channel creates three temporary files that are removed
 from the filesystem as soon as they are created. By default the
