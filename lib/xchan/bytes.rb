@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 ##
-# The {Chan::ByteArray Chan::ByteArray} class provides a
-# byte count for each object stored on a channel.
-class Chan::ByteArray
+# The {Chan::Bytes Chan::Bytes} class is similar
+# to an array, where each element represents the
+# number of bytes used to store an object on a
+# channel. When an object is written to a channel,
+# the array increases in size, and when an object
+# is read from a channel, the array decreases in
+# size.
+class Chan::Bytes
   require "json"
   require_relative "stat"
 
@@ -15,7 +20,7 @@ class Chan::ByteArray
   # @param [String] tmpdir
   #  Path to a directory where temporary files will be stored.
   #
-  # @return [Chan::ByteArray]
+  # @return [Chan::Bytes]
   def initialize(tmpdir)
     @serializer = JSON
     @io = Chan.temporary_file("xchan.bytes", tmpdir:)
