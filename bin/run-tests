@@ -1,8 +1,0 @@
-#!/bin/sh
-
-for file in test/*_test.rb; do
-    bundle exec ruby $file $@
-    if [ "$?" != "0" ]; then
-        exit $?
-    fi
-done

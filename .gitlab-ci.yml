@@ -6,7 +6,7 @@ test-ruby32:
   image: ruby:3.2.0
   script:
     - bundle install
-    - SERIALIZER=marshal ./bin/run-tests
-    - SERIALIZER=json ./bin/run-tests
-    - SERIALIZER=yaml ./bin/run-tests
-    - SERIALIZER=plain ./bin/run-tests
+    - SERIALIZER=marshal bundle exec rake
+    - SERIALIZER=json bundle exec rake
+    - SERIALIZER=yaml bundle exec rake
+    - SERIALIZER=plain bundle exec rake
