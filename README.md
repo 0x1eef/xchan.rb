@@ -236,8 +236,8 @@ are available as sources.
 **Gemfile**
 
 ```ruby
-gem "xchan.rb", github: "0x1eef/xchan.rb", tag: "v0.16.0"
-gem "lockf.rb", github: "0x1eef/lockf.rb", tag: "v0.7.0"
+gem "xchan.rb", github: "0x1eef/xchan.rb", tag: "v0.16.2"
+gem "lockf.rb", github: "0x1eef/lockf.rb", tag: "v0.10.3"
 ```
 
 ## <a id="license"> License </a>
