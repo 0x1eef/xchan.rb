@@ -237,7 +237,7 @@ are available as sources.
 
 ```ruby
 gem "xchan.rb", github: "0x1eef/xchan.rb", tag: "v0.16.3"
-gem "lockf.rb", github: "0x1eef/lockf.rb", tag: "v0.10.3"
+gem "lockf.rb", github: "0x1eef/lockf.rb", tag: "v0.10.6"
 ```
 
 ## <a id="license"> License </a>
