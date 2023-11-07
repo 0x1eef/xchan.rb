@@ -49,7 +49,7 @@ class Chan::SendTest < Chan::Test
   end
 
   def object
-    42
+    42.to_s
   end
 end
 
