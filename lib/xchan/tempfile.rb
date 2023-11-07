@@ -1,3 +1,6 @@
+require 'delegate'
+require 'tmpdir'
+
 ##
 # {Chan::Tempfile Chan::Tempfile} is a fork of Tempfile from
 # Ruby's standard library. The primary difference between
@@ -5,8 +8,6 @@
 # that [ruby/tempfile#22](https://github.com/ruby/tempfile/pull/22)
 # is applied in this fork.
 class Chan::Tempfile < DelegateClass(File)
-  require 'delegate'
-  require 'tmpdir'
   VERSION = "0.1.3"
 
   # Creates a file in the underlying file system;
@@ -207,7 +208,6 @@ class Chan::Tempfile < DelegateClass(File)
 
   class << self
     # :startdoc:
-
     # Creates a new Tempfile.
     #
     # This method is not recommended and exists mostly for backward compatibility.
@@ -244,7 +244,7 @@ class Chan::Tempfile < DelegateClass(File)
     #   ensure
     #      f.close
     #   end
-    def open(*args, **kw)
+    def self.open(*args, **kw)
       tempfile = new(*args, **kw)
 
       if block_given?
@@ -316,30 +316,32 @@ end
 #
 # Related: Tempfile.new.
 #
-def Tempfile.create(basename="", tmpdir=nil, mode: 0, perm: 0600, **options)
-  tmpfile = nil
-  Dir::Tmpname.create(basename, tmpdir, **options) do |tmpname, n, opts|
-    mode |= File::RDWR|File::CREAT|File::EXCL
-    tmpfile = File.open(tmpname, mode, perm, **opts)
-  end
-  if block_given?
-    begin
-      yield tmpfile
-    ensure
-      unless tmpfile.closed?
-        if File.identical?(tmpfile, tmpfile.path)
-          unlinked = File.unlink tmpfile.path rescue nil
-        end
-        tmpfile.close
-      end
-      unless unlinked
-        begin
-          File.unlink tmpfile.path
-        rescue Errno::ENOENT
-        end
-      end
+module Chan
+  def Tempfile.create(basename="", tmpdir=nil, mode: 0, perm: 0600, **options)
+    tmpfile = nil
+    Dir::Tmpname.create(basename, tmpdir, **options) do |tmpname, n, opts|
+      mode |= File::RDWR|File::CREAT|File::EXCL
+      tmpfile = File.open(tmpname, mode, perm, **opts)
     end
-  else
-    tmpfile
+    if block_given?
+      begin
+        yield tmpfile
+      ensure
+        unless tmpfile.closed?
+          if File.identical?(tmpfile, tmpfile.path)
+            unlinked = File.unlink tmpfile.path rescue nil
+          end
+          tmpfile.close
+        end
+        unless unlinked
+          begin
+            File.unlink tmpfile.path
+          rescue Errno::ENOENT
+          end
+        end
+      end
+    else
+      tmpfile
+    end
   end
 end

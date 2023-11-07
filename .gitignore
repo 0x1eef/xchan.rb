@@ -6,3 +6,4 @@ Gemfile.lock
 .dev/
 doc/
 pkg/
+.gems/
