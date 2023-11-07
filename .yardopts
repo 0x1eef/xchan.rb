@@ -1,4 +1,4 @@
--m markdown -M redcarpet --no-private -t default -p .yardoc-template
+-m markdown -M redcarpet --no-private
 -
 README.md
 LICENSE
