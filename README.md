@@ -1,14 +1,9 @@
 ## About
 
-xchan.rb is an easy to use library for InterProcess Communication (IPC). The
-library provides a channel that can transfer Ruby objects between Ruby processes
-who have a parent &lt;=&gt; child relationship. The channel is implemented with
-an unnamed
-<code><a href=https://rubydoc.info/stdlib/socket/UNIXSocket.pair>UNIXSocket</a></code>,
-and serialization - with multiple serializers to choose from
-([`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal)
-is the default). Safety from race conditions is provided by an advisory-mode lock
-that allows only one process to read from, or write to a channel at a given time.
+xchan.rb is an easy to use library that provides a channel for
+InterProcess Communication (IPC) between a parent Ruby process,
+and its child processes. The channel is implemented through both
+serialization, and an unbound unix socket.
 
 ## Examples
 
