@@ -15,7 +15,7 @@ When a channel is written to or read from, a Ruby object is serialized
 (on write) or deserialized (on read). The default serializers are available as
 `xchan(:marshal)`, `xchan(:json)`, and `xchan(:yaml)`. For scenarios where it
 is preferred to send and receive plain strings, the "plain" serializer is
-available as `xchan(:plain)`. The following example uses
+available as `xchan(:plain)`. This example uses
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
 ```ruby
