@@ -222,18 +222,24 @@ ch = xchan(:marshal, tmpdir: Dir.home)
 
 ## Install
 
+**Git**
+
 xchan.rb is distributed as a RubyGem through its git repositories. <br>
 [GitHub](https://github.com/0x1eef/xchan.rb),
 and
 [GitLab](https://gitlab.com/0x1eef/xchan.rb)
 are available as sources.
 
-**Gemfile**
-
-```ruby
-gem "xchan.rb", github: "0x1eef/xchan.rb", tag: "v0.16.3"
-gem "lockf.rb", github: "0x1eef/lockf.rb", tag: "v0.10.6"
+``` ruby
+# Gemfile
+gem "xchan.rb", github: "0x1eef/xchan.rb", tag: "v0.16.4"
 ```
+
+**Rubygems.org**
+
+xchan.rb can also be installed via rubygems.org.
+
+    gem install xchan.rb
 
 ## <a id="license"> License </a>
 
