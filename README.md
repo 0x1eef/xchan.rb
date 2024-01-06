@@ -232,7 +232,7 @@ are available as sources.
 
 ``` ruby
 # Gemfile
-gem "xchan.rb", github: "0x1eef/xchan.rb", tag: "v0.16.4"
+gem "xchan.rb", github: "0x1eef/xchan.rb", tag: "v0.16.5"
 ```
 
 **Rubygems.org**
