@@ -46,10 +46,10 @@ Process.wait(pid)
 
 #### `#recv`
 
-The `ch.recv` method performs a blocking read. A read might block because
-of a lock held by another process, or because a read from the underlying IO blocks.
-The example performs a read that blocks in a child process until the parent process
-writes to the channel:
+The `ch.recv` method performs a blocking read. A read can block when
+a lock is held by another process, or when a read from the underlying
+socket blocks. This example performs a read that blocks in a child
+process until the parent process writes to the channel:
 
 ```ruby
 require "xchan"
@@ -75,7 +75,7 @@ ch.close
 The non-blocking counterpart to `#recv` is `#recv_nonblock`. The `#recv_nonblock`
 method raises `Chan::WaitLockable` when a read blocks because of a lock held by
 another process, and the method raises `Chan::WaitReadable` when a read on the
-underlying socket blocks. The example performs a read that will
+underlying socket blocks. This example performs a read that will
 raise `Chan::WaitReadable`:
 
 ```ruby
@@ -104,10 +104,9 @@ read(xchan)
 
 #### `#send`
 
-The `#send` method performs a blocking write. The `#send` method might block when a
-channel's send buffer is full, or when a lock is held by another process. The
-example performs a write that will block when the send buffer becomes full:
-
+The `ch.send` method performs a blocking write. A write can block when a lock
+is held by another process, or when a write to the underlying socket blocks.
+This example performs a write that will block when the send buffer becomes full:
 
 ```ruby
 require "xchan"
@@ -124,7 +123,7 @@ end
 The non-blocking counterpart to `#send` is `#send_nonblock`. The `#send_nonblock`
 method raises `Chan::WaitLockable` when a write blocks because of a lock held
 by another process, and the method raises `Chan::WaitReadable` when a write to
-the underlying socket blocks. The example builds on the previous example by
+the underlying socket blocks. This example builds on the previous example by
 freeing space on the send buffer when a write is found to block:
 
 ```ruby
