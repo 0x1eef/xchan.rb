@@ -72,10 +72,11 @@ ch.close
 
 #### `#recv_nonblock`
 
-The non-blocking counterpart to `#recv` is `#recv_nonblock`. The `#recv_nonblock` method
-raises `Chan::WaitReadable` when a read from the underlying IO would block, and
-it raises `Chan::WaitLockable` when a read would block because of a lock held by another
-process. The example performs a read that will raise `Chan::WaitReadable`:
+The non-blocking counterpart to `#recv` is `#recv_nonblock`. The `#recv_nonblock`
+method raises `Chan::WaitLockable` when a read blocks because of a lock held by
+another process, and the method raises `Chan::WaitReadable` when a read on the
+underlying socket blocks. The example performs a read that will
+raise `Chan::WaitReadable`:
 
 ```ruby
 require "xchan"
@@ -121,10 +122,10 @@ end
 #### `#send_nonblock`
 
 The non-blocking counterpart to `#send` is `#send_nonblock`. The `#send_nonblock`
-method raises `Chan::WaitWritable` when a write to the underlying IO would block,
-and it raises `Chan::WaitLockable` when a lock held by another process. The example
-builds on the last example by freeing space on the send buffer when a write is found
-to block:
+method raises `Chan::WaitLockable` when a write blocks because of a lock held
+by another process, and the method raises `Chan::WaitReadable` when a write to
+the underlying socket blocks. The example builds on the previous example by
+freeing space on the send buffer when a write is found to block:
 
 ```ruby
 require "xchan"
