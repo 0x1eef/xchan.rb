@@ -111,7 +111,7 @@ This example performs a write that will block when the send buffer becomes full:
 ```ruby
 require "xchan"
 
-ch = xchan(:marshal, socket: Socket::SOCK_STREAM)
+ch = xchan(:marshal, sock_type: Socket::SOCK_STREAM)
 sndbuf = ch.getsockopt(:reader, Socket::SOL_SOCKET, Socket::SO_SNDBUF)
 while ch.bytes_sent <= sndbuf.int
   ch.send(1)
@@ -140,7 +140,7 @@ rescue Chan::WaitLockable
   retry
 end
 
-ch = xchan(:marshal, socket: Socket::SOCK_STREAM)
+ch = xchan(:marshal, sock_type: Socket::SOCK_STREAM)
 sndbuf = ch.getsockopt(:writer, Socket::SOL_SOCKET, Socket::SO_SNDBUF)
 while ch.bytes_sent <= sndbuf.int
   send_nonblock(ch, 1)
@@ -166,7 +166,7 @@ a keyword argument:
 
 ```ruby
 require "xchan"
-ch = xchan(:marshal, socket: Socket::SOCK_STREAM)
+ch = xchan(:marshal, sock_type: Socket::SOCK_STREAM)
 ```
 
 #### Options
