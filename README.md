@@ -174,9 +174,9 @@ ch = xchan(:marshal, socket: Socket::SOCK_STREAM)
 A channel is composed of two sockets, one for reading and the other for writing.
 Socket options can be read and set on either of the two sockets with the
 `Chan::UNIXSocket#getsockopt`, and `Chan::UNIXSocket#setsockopt` methods.
-Apart from the first argument (`:reader`, or `:writer`) the rest of the arguments
-are identical to `Socket#{getsockopt,setsockopt}`. The following example has been
-run on OpenBSD, the results might be different on other operating systems:
+Besides the first argument (`:reader`, or `:writer`), the rest of the arguments
+are identical to `Socket#{getsockopt,setsockopt}`. This example's results can
+vary depending on the operating system it is run on:
 
 ```ruby
 require "xchan"
@@ -203,12 +203,12 @@ print "The maximum size of a single message is: ", sndbuf.int, " bytes.\n"
 
 A single channel creates three temporary files that are removed
 from the filesystem as soon as they are created. By default the
-files are stored - for a very short time - in `Dir.tmpdir`. Read
-and write permissions are reserved for the process that created
+files are stored - for a short time - in `Dir.tmpdir`. Read and
+write permissions are reserved for the process that created
 them, inclusive of its child processes.
 
 The parent directory of the temporary files can be changed with the
-`tmpdir` keyword argument:
+`tmpdir` option:
 
 ```ruby
 require "xchan"
