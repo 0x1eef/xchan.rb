@@ -4,7 +4,7 @@ require_relative "setup"
 
 class Chan::Test < Test::Unit::TestCase
   def setup
-    @ch = xchan ENV.fetch("SERIALIZER", "marshal").to_sym
+    @ch = xchan(serializer)
   end
 
   def teardown
@@ -17,9 +17,13 @@ class Chan::Test < Test::Unit::TestCase
     @ch
   end
 
+  def serializer
+    ENV.fetch("SERIALIZER", "pure").to_sym
+  end
+
   def object
-    case ENV["SERIALIZER"]
-    when "plain" then "xchan"
+    case serializer
+    when :pure then "xchan"
     else %w[xchan]
     end
   end
