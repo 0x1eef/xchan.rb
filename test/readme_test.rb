@@ -4,8 +4,6 @@ require_relative "setup"
 require "test/cmd"
 
 class Chan::ReadmeTest < Test::Unit::TestCase
-  include Test::Cmd
-
   def test_serialization_1_serializers
     assert_equal "Received message: serialized by Marshal\n" * 2,
                  readme_example("serialization/1_serializers.rb").stdout
