@@ -39,25 +39,26 @@ class Chan::UNIXSocket
     @serializer = Chan.serializers[serializer]&.call || serializer
     @r, @w = ::UNIXSocket.pair(sock_type)
     @bytes = Chan::Bytes.new(tmpdir)
+    @counter = Chan::Counter.new(tmpdir)
     @lock = LockFile.new Chan.temporary_file("xchan.lock", tmpdir:)
   end
 
   ##
   # @return [<#dump, #load>]
-  #  Returns the serializer used by the channel.
+  #  Returns the serializer used by the channel
   def serializer
     @serializer
   end
 
   ##
   # @return [Boolean]
-  #  Returns true when the channel is closed.
+  #  Returns true when the channel is closed
   def closed?
     @r.closed? and @w.closed?
   end
 
   ##
-  # Closes the channel.
+  # Closes the channel
   #
   # @raise [IOError]
   #  When the channel is closed.
@@ -79,13 +80,13 @@ class Chan::UNIXSocket
   # Performs a blocking write
   #
   # @param [Object] object
-  #  An object to write to the channel.
+  #  An object
   #
   # @raise [IOError]
-  #  When the channel is closed.
+  #  When the channel is closed
   #
   # @return [Object]
-  #  Returns the number of bytes written to the channel.
+  #  Returns the number of bytes written to the channel
   def send(object)
     send_nonblock(object)
   rescue Chan::WaitWritable, Chan::WaitLockable
@@ -97,24 +98,25 @@ class Chan::UNIXSocket
   # Performs a non-blocking write
   #
   # @param [Object] object
-  #  An object to write to the channel.
+  #  An object
   #
   # @raise [IOError]
-  #  When the channel is closed.
+  #  When the channel is closed
   #
   # @raise [Chan::WaitWritable]
-  #  When a write to the underlying IO blocks.
+  #  When a write to {#w} blocks
   #
   # @raise [Chan::WaitLockable]
-  #  When a write blocks because of a lock held by another process.
+  #  When a write blocks because of a lock held by another process
   #
   # @return [Integer, nil]
-  #  Returns the number of bytes written to the channel.
+  #  Returns the number of bytes written to the channel
   def send_nonblock(object)
     @lock.lock_nonblock
     raise IOError, "channel closed" if closed?
     len = @w.write_nonblock(serialize(object))
     @bytes.push(len)
+    @counter.increment!(bytes_written: len)
     len.tap { @lock.release }
   rescue IOError, IO::WaitWritable, Errno::ENOBUFS => ex
     @lock.release
@@ -134,10 +136,10 @@ class Chan::UNIXSocket
   # Performs a blocking read
   #
   # @raise [IOError]
-  #  When the channel is closed.
+  #  When the channel is closed
   #
   # @return [Object]
-  #  Returns an object from the channel.
+  #  Returns an object from the channel
   def recv
     recv_nonblock
   rescue Chan::WaitReadable
@@ -152,21 +154,22 @@ class Chan::UNIXSocket
   # Performs a non-blocking read
   #
   # @raise [IOError]
-  #  When the channel is closed.
+  #  When the channel is closed
   #
   # @raise [Chan::WaitReadable]
-  #  When a read from the underlying IO blocks.
+  #  When a read from {#r} blocks
   #
   # @raise [Chan::WaitLockable]
-  #  When a read blocks because of a lock held by another process.
+  #  When a read blocks because of a lock held by another process
   #
   # @return [Object]
-  #  Returns an object from the channel.
+  #  Returns an object from the channel
   def recv_nonblock
     @lock.lock_nonblock
     raise IOError, "closed channel" if closed?
     len = @bytes.shift
     obj = deserialize(@r.read_nonblock(len.zero? ? 1 : len))
+    @counter.increment!(bytes_read: len)
     obj.tap { @lock.release }
   rescue IOError => ex
     @lock.release
@@ -190,7 +193,7 @@ class Chan::UNIXSocket
   #   ch.to_a.last # => 4
   #
   # @return [Array<Object>]
-  #  Returns the consumed contents of the channel.
+  #  Returns the contents of the channel
   def to_a
     lock do
       [].tap { _1.push(recv) until empty? }
@@ -199,7 +202,7 @@ class Chan::UNIXSocket
 
   ##
   # @return [Boolean]
-  #  Returns true when the channel is empty.
+  #  Returns true when the channel is empty
   def empty?
     return true if closed?
     lock { size.zero? }
@@ -210,17 +213,17 @@ class Chan::UNIXSocket
 
   ##
   # @return [Integer]
-  #  Returns the total number of bytes written to the channel.
+  #  Returns the total number of bytes written to the channel
   def bytes_sent
-    lock { @bytes.counter.bytes_written }
+    lock { @counter.bytes_written }
   end
   alias_method :bytes_written, :bytes_sent
 
   ##
   # @return [Integer]
-  #  Returns the total number of bytes read from the channel.
+  #  Returns the total number of bytes read from the channel
   def bytes_received
-    lock { @bytes.counter.bytes_read }
+    lock { @counter.bytes_read }
   end
   alias_method :bytes_read, :bytes_received
 

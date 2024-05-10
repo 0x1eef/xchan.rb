@@ -35,7 +35,7 @@ class Chan::Counter
   # @param [Hash] new_stat
   # @return [void]
   # @private
-  def store(new_stat)
+  def increment!(new_stat)
     stat = read(@io)
     new_stat.each { stat[_1.to_s] += _2 }
     write(@io, stat)

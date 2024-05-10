@@ -11,10 +11,6 @@ class Chan::Bytes
   require_relative "counter"
 
   ##
-  # @return [Chan::Counter]
-  attr_reader :counter
-
-  ##
   # @param [String] tmpdir
   #  Directory where temporary files are stored
   #
@@ -22,7 +18,6 @@ class Chan::Bytes
   def initialize(tmpdir)
     @io = Chan.temporary_file("xchan.bytes", tmpdir:)
     @io.sync = true
-    @counter = Chan::Counter.new(tmpdir)
     write(@io, [])
   end
 
@@ -38,7 +33,6 @@ class Chan::Bytes
     bytes = read(@io)
     bytes.unshift(len)
     write(@io, bytes)
-    @counter.store(bytes_written: len)
     len
   end
 
@@ -54,7 +48,6 @@ class Chan::Bytes
     bytes = read(@io)
     bytes.push(len)
     write(@io, bytes)
-    @counter.store(bytes_written: len)
     len
   end
 
@@ -68,7 +61,6 @@ class Chan::Bytes
     return 0 if bytes.size.zero?
     len = bytes.shift
     write(@io, bytes)
-    @counter.store(bytes_read: len)
     len
   end
 
