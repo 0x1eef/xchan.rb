@@ -118,7 +118,7 @@ blocks. The example fills the send buffer:
 require "xchan"
 
 ch = xchan(:marshal, sock_type: Socket::SOCK_STREAM)
-sndbuf = ch.getsockopt(:reader, Socket::SOL_SOCKET, Socket::SO_SNDBUF)
+sndbuf = ch.w.getsockopt(Socket::SOL_SOCKET, Socket::SO_SNDBUF)
 while ch.bytes_sent <= sndbuf.int
   ch.send(1)
 end
