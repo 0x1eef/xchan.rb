@@ -5,7 +5,7 @@ require "test/cmd"
 
 class Chan::ReadmeTest < Test::Unit::TestCase
   def test_serialization_1_serializers
-    assert_equal "Received message: serialized by Marshal\n" * 2,
+    assert_equal "There are 12 disciples and the same number of tribes\n",
                  readme_example("serialization/1_serializers.rb").stdout
   end
 

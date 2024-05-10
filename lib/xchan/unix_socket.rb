@@ -35,7 +35,7 @@ class Chan::UNIXSocket
   #
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}
-  def initialize(serializer, tmpdir: Dir.tmpdir, sock_type: Socket::SOCK_DGRAM)
+  def initialize(serializer, sock_type: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir)
     @serializer = Chan.serializers[serializer]&.call || serializer
     @r, @w = ::UNIXSocket.pair(sock_type)
     @bytes = Chan::Bytes.new(tmpdir)

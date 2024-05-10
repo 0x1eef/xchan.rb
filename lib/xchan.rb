@@ -10,19 +10,19 @@ module Chan
   WaitLockable = Class.new(Errno::EWOULDBLOCK)
 
   ##
-  # The Plain serializer won't perform
+  # The Pure serializer won't perform
   # serialization that goes beyond calling
   # `.to_s` on the object it is given. It
   # can be useful when you want to communicate
   # purely in strings.
   #
   # @example
-  #   ch = xchan(:plain)
+  #   ch = xchan(:pure)
   #   Process.wait fork {
   #     ch.send "Hello world"
   #   }
   #   puts ch.recv
-  Plain = Class.new do
+  Pure = Class.new do
     def self.dump(str) = str.to_s
     def self.load(str) = str.to_s
   end
@@ -50,7 +50,7 @@ module Chan
   #  A mapping of serializers
   def self.serializers
     {
-      plain: lambda { Plain },
+      pure: lambda { Pure },
       marshal: lambda { Marshal },
       json: lambda {
         require "json" unless defined?(JSON)
@@ -76,7 +76,7 @@ module Kernel
   # @param sock_type (see Chan::UNIXSocket#initialize)
   # @param tmpdir (see Chan::UNIXSocket#initialize)
   # @return (see Chan::UNIXSocket#initialize)
-  def xchan(serializer = :marshal, **kw_args)
+  def xchan(serializer, **kw_args)
     Chan::UNIXSocket.new(serializer, **kw_args)
   end
 end

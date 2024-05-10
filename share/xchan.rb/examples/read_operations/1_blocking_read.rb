@@ -4,7 +4,7 @@ require_relative "../setup"
 require "xchan"
 
 $stdout.sync = true
-ch = xchan
+ch = xchan(:marshal)
 Process.detach fork {
   print "Received random number (child process): ", ch.recv, "\n"
 }

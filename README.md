@@ -11,38 +11,30 @@ with a parent <-> child relationship.
 
 #### Options
 
-When a channel is written to or read from, a Ruby object
-is serialized (on write) or deserialized (on read). The
-default serializers are available as `xchan(:marshal)`,
-`xchan(:json)`, and `xchan(:yaml)`.
+The first argument given to xchan is the serializer
+that it should use. A channel that will communicate
+in pure strings (ie with no serialization) is
+available as `xchan(:pure)`.
 
-For situations where it is preferred to send and receive
-plain strings, the "plain" serializer is available as
-`xchan(:plain)`. The example uses
+Otherwise, when a channel is written to or read from,
+a Ruby object is serialized (on write) or deserialized
+(on read). The serializers available to choose from
+are `xchan(:marshal)`, `xchan(:json)`, and `xchan(:yaml)`.
+The example uses
 [`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
 
 ```ruby
 require "xchan"
 
 ##
-# This channel uses Marshal to serialize objects.
-ch = xchan
-pid = fork { print "Received message: ", ch.recv[:msg], "\n" }
-ch.send(msg: "serialized by Marshal")
-ch.close
-Process.wait(pid)
-
-##
-# This channel also uses Marshal to serialize objects.
+# This channel uses Marshal to serialize objects
 ch = xchan(:marshal)
-pid = fork { print "Received message: ", ch.recv[:msg], "\n"
-ch.send(msg: "serialized by Marshal")
+Process.wait fork { ch.send(5) }
+print "There are ", ch.recv + 7, " disciples and the same number of tribes", "\n"
 ch.close
-Process.wait(pid)
 
 ##
-# Received message: serialized by Marshal
-# Received message: serialized by Marshal
+# There are 12 disciples and the same number of tribes
 ```
 
 ### Read operations
