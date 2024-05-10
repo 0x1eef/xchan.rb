@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 ##
-# The {Chan::Bytes Chan::Bytes} class is similar
-# to an array, where each element represents the
-# number of bytes used to store an object on a
-# channel. When an object is written to a channel,
-# the array increases in size, and when an object
-# is read from a channel, the array decreases in
-# size.
+# {Chan::Bytes Chan::Bytes} represents a collection
+# of byte counts for each object stored on a channel.
+# When an object is written to a channel, the collection
+# increases in size, and when an object is read from
+# a channel, the collection decreases in size.
 class Chan::Bytes
   require "json"
   require_relative "counter"
@@ -18,7 +16,7 @@ class Chan::Bytes
 
   ##
   # @param [String] tmpdir
-  #  Path to a directory where temporary files will be stored.
+  #  Directory where temporary files are stored
   #
   # @return [Chan::Bytes]
   def initialize(tmpdir)
@@ -29,10 +27,10 @@ class Chan::Bytes
   end
 
   ##
-  # Insert a byte count at the head of the array
+  # Adds a count to the start of the collection
   #
   # @param [Integer] len
-  #  Number of bytes
+  #  The bytesize of an object
   #
   # @return [void]
   def unshift(len)
@@ -45,10 +43,10 @@ class Chan::Bytes
   end
 
   ##
-  # Insert a byte count at the tail of the array
+  # Adds a count to the end of the collection
   #
   # @param [Integer] len
-  #  Number of bytes
+  #  The bytesize of an object
   #
   # @return [void]
   def push(len)
@@ -61,8 +59,10 @@ class Chan::Bytes
   end
 
   ##
+  # Removes a count from the start of the collection
+  #
   # @return [Integer]
-  #  Returns (and removes) a byte count from the head of the array
+  #  Returns the removed byte count
   def shift
     bytes = read(@io)
     return 0 if bytes.size.zero?
@@ -74,7 +74,7 @@ class Chan::Bytes
 
   ##
   # @return [Integer]
-  #  Returns the size of the array
+  #  Returns the number of objects in the collection
   def size
     read(@io).size
   end
