@@ -10,11 +10,11 @@
 # size.
 class Chan::Bytes
   require "json"
-  require_relative "stat"
+  require_relative "counter"
 
   ##
-  # @return [Chan::Stat]
-  attr_reader :stat
+  # @return [Chan::Counter]
+  attr_reader :counter
 
   ##
   # @param [String] tmpdir
@@ -22,10 +22,9 @@ class Chan::Bytes
   #
   # @return [Chan::Bytes]
   def initialize(tmpdir)
-    @serializer = JSON
     @io = Chan.temporary_file("xchan.bytes", tmpdir:)
     @io.sync = true
-    @stat = Chan::Stat.new(tmpdir)
+    @counter = Chan::Counter.new(tmpdir)
     write(@io, [])
   end
 
@@ -41,7 +40,7 @@ class Chan::Bytes
     bytes = read(@io)
     bytes.unshift(len)
     write(@io, bytes)
-    @stat.store(bytes_written: len)
+    @counter.store(bytes_written: len)
     len
   end
 
@@ -57,7 +56,7 @@ class Chan::Bytes
     bytes = read(@io)
     bytes.push(len)
     write(@io, bytes)
-    @stat.store(bytes_written: len)
+    @counter.store(bytes_written: len)
     len
   end
 
@@ -69,7 +68,7 @@ class Chan::Bytes
     return 0 if bytes.size.zero?
     len = bytes.shift
     write(@io, bytes)
-    @stat.store(bytes_read: len)
+    @counter.store(bytes_read: len)
     len
   end
 
@@ -100,10 +99,10 @@ class Chan::Bytes
   end
 
   def serialize(bytes)
-    @serializer.dump(bytes)
+    JSON.dump(bytes)
   end
 
   def deserialize(bytes)
-    @serializer.load(bytes)
+    JSON.load(bytes)
   end
 end

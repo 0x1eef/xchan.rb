@@ -1,33 +1,32 @@
 # frozen_string_literal: true
 
 ##
-# The {Chan::Stat Chan::Stat} class provides statistics
-# (eg number of bytes read, number of bytes written) for
-# a given channel.
-class Chan::Stat
+# {Chan::Counter Chan::Counter} provides a counter
+# for the number of written and received bytes on a
+# given channel.
+class Chan::Counter
   require "json"
 
   ##
   # @param [String] tmpdir
-  #  Path to a directory where temporary files will be stored.
+  #  Directory where temporary files are stored
   #
-  # @return [Chan::Stat]
+  # @return [Chan::Counter]
   def initialize(tmpdir)
-    @serializer = JSON
-    @io = Chan.temporary_file("xchan.stat", tmpdir:)
+    @io = Chan.temporary_file("xchan.counter", tmpdir:)
     write(@io, {"bytes_read" => 0, "bytes_written" => 0})
   end
 
   ##
   # @return [Integer]
-  #  Returns the number of bytes written to a channel.
+  #  Returns the number of bytes written to a channel
   def bytes_written
     read(@io).fetch("bytes_written")
   end
 
   ##
   # @return [Integer]
-  #  Returns the number of bytes read from a channel.
+  #  Returns the number of bytes read from a channel
   def bytes_read
     read(@io).fetch("bytes_read")
   end
@@ -54,10 +53,10 @@ class Chan::Stat
   end
 
   def serialize(bytes)
-    @serializer.dump(bytes)
+    JSON.dump(bytes)
   end
 
   def deserialize(bytes)
-    @serializer.load(bytes)
+    JSON.load(bytes)
   end
 end

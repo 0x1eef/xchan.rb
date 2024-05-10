@@ -212,7 +212,7 @@ class Chan::UNIXSocket
   # @return [Integer]
   #  Returns the total number of bytes written to the channel.
   def bytes_sent
-    lock { @bytes.stat.bytes_written }
+    lock { @bytes.counter.bytes_written }
   end
   alias_method :bytes_written, :bytes_sent
 
@@ -220,7 +220,7 @@ class Chan::UNIXSocket
   # @return [Integer]
   #  Returns the total number of bytes read from the channel.
   def bytes_received
-    lock { @bytes.stat.bytes_read }
+    lock { @bytes.counter.bytes_read }
   end
   alias_method :bytes_read, :bytes_received
 
