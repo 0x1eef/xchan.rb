@@ -47,8 +47,8 @@ module Chan
 
   ##
   # @return [Hash<Symbol, Proc>]
-  #  A mapping of serializers
-  def self.serializers
+  #  Maps a short name to a serializer
+  def self.shortcuts
     {
       pure: lambda { Pure },
       marshal: lambda { Marshal },

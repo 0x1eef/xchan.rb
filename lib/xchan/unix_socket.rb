@@ -42,7 +42,7 @@ class Chan::UNIXSocket
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}
   def initialize(s, sock_type: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir)
-    @s = Chan.serializers[s]&.call || s
+    @s = Chan.shortcuts[s]&.call || s
     @r, @w = ::UNIXSocket.pair(sock_type)
     @bytes = Chan::Bytes.new(tmpdir)
     @counter = Chan::Counter.new(tmpdir)
