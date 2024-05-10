@@ -149,7 +149,7 @@ rescue Chan::WaitLockable
 end
 
 ch = xchan(:marshal, sock_type: Socket::SOCK_STREAM)
-sndbuf = ch.w.getsockopt(:writer, Socket::SOL_SOCKET, Socket::SO_SNDBUF)
+sndbuf = ch.w.getsockopt(Socket::SOL_SOCKET, Socket::SO_SNDBUF)
 while ch.bytes_sent <= sndbuf.int
   send_nonblock(ch, 1)
 end
