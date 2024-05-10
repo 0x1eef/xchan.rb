@@ -16,7 +16,7 @@ class Chan::Bytes
   #
   # @return [Chan::Bytes]
   def initialize(tmpdir)
-    @io = Chan.temporary_file("xchan.bytes", tmpdir:)
+    @io = Chan.temporary_file(%w[bytes .json], tmpdir:)
     @io.sync = true
     write(@io, [])
   end

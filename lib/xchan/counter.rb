@@ -13,7 +13,7 @@ class Chan::Counter
   #
   # @return [Chan::Counter]
   def initialize(tmpdir)
-    @io = Chan.temporary_file("xchan.counter", tmpdir:)
+    @io = Chan.temporary_file(%w[counter .json], tmpdir:)
     write(@io, {"bytes_read" => 0, "bytes_written" => 0})
   end
 

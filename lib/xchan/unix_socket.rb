@@ -46,7 +46,7 @@ class Chan::UNIXSocket
     @r, @w = ::UNIXSocket.pair(sock_type)
     @bytes = Chan::Bytes.new(tmpdir)
     @counter = Chan::Counter.new(tmpdir)
-    @lock = LockFile.new Chan.temporary_file("xchan.lock", tmpdir:)
+    @lock = LockFile.new Chan.temporary_file(%w[xchan .lock], tmpdir:)
   end
 
   ##
