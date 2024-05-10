@@ -18,13 +18,19 @@ class Chan::UNIXSocket
   attr_reader :w
 
   ##
+  # @return [<#dump, #load>]
+  #  Returns the serializer used by the channel
+  attr_reader :s
+  alias_method :serializer, :s
+
+  ##
   # @example
   #   ch = Chan::UNIXSocket.new(:marshal)
   #   ch.send([1,2,3])
   #   ch.recv.pop # => 3
   #   ch.close
   #
-  # @param [Symbol, <#dump, #load>] serializer
+  # @param [Symbol, <#dump, #load>] s
   #  The name of a serializer
   #
   # @param [Integer] sock_type
@@ -35,19 +41,12 @@ class Chan::UNIXSocket
   #
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}
-  def initialize(serializer, sock_type: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir)
-    @serializer = Chan.serializers[serializer]&.call || serializer
+  def initialize(s, sock_type: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir)
+    @s = Chan.serializers[s]&.call || s
     @r, @w = ::UNIXSocket.pair(sock_type)
     @bytes = Chan::Bytes.new(tmpdir)
     @counter = Chan::Counter.new(tmpdir)
     @lock = LockFile.new Chan.temporary_file("xchan.lock", tmpdir:)
-  end
-
-  ##
-  # @return [<#dump, #load>]
-  #  Returns the serializer used by the channel
-  def serializer
-    @serializer
   end
 
   ##
@@ -277,10 +276,10 @@ class Chan::UNIXSocket
   end
 
   def serialize(obj)
-    @serializer.dump(obj)
+    @s.dump(obj)
   end
 
   def deserialize(str)
-    @serializer.load(str)
+    @s.load(str)
   end
 end

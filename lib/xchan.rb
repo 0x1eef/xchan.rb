@@ -72,11 +72,11 @@ module Kernel
   #   ch.recv.pop # => 3
   #   ch.close
   #
-  # @param serializer (see Chan::UNIXSocket#initialize)
+  # @param s (see Chan::UNIXSocket#initialize)
   # @param sock_type (see Chan::UNIXSocket#initialize)
   # @param tmpdir (see Chan::UNIXSocket#initialize)
   # @return (see Chan::UNIXSocket#initialize)
-  def xchan(serializer, **kw_args)
-    Chan::UNIXSocket.new(serializer, **kw_args)
+  def xchan(s, **kw_args)
+    Chan::UNIXSocket.new(s, **kw_args)
   end
 end
