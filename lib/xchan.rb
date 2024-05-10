@@ -4,7 +4,6 @@ module Chan
   require_relative "xchan/version"
   require_relative "xchan/unix_socket"
   require_relative "xchan/tempfile"
-  require_relative "xchan/mixin"
 
   WaitReadable = Class.new(IO::EAGAINWaitReadable)
   WaitWritable = Class.new(IO::EAGAINWaitWritable)
@@ -21,17 +20,20 @@ module Chan
   # processes other than that.
   #
   # @param [String] basename
-  #  Basename of the temporary file.
+  #  Basename of the temporary file
   #
   # @param [String] tmpdir
-  #  Parent directory of the temporary file.
+  #  Parent directory of the temporary file
   #
   # @return [Chan::Tempfile]
-  #  Returns an instance of {Chan::Tempfile Chan::Tempfile}.
+  #  Returns an instance of {Chan::Tempfile Chan::Tempfile}
   def self.temporary_file(basename, tmpdir: Dir.tmpdir)
     Chan::Tempfile.new(basename, tmpdir, perm: 0).tap(&:unlink)
   end
 
+  ##
+  # @return [Hash<Symbol, Proc>]
+  #  A mapping of serializers
   def self.serializers
     {
       plain: lambda { Plain },
@@ -48,6 +50,19 @@ module Chan
   end
 end
 
-class Object
-  include Chan::Mixin
+module Kernel
+  ##
+  # @example
+  #   ch = xchan
+  #   ch.send([1,2,3])
+  #   ch.recv.pop # => 3
+  #   ch.close
+  #
+  # @param serializer (see Chan::UNIXSocket#initialize)
+  # @param sock_type (see Chan::UNIXSocket#initialize)
+  # @param tmpdir (see Chan::UNIXSocket#initialize)
+  # @return (see Chan::UNIXSocket#initialize)
+  def xchan(serializer = :marshal, **kw_args)
+    Chan::UNIXSocket.new(serializer, **kw_args)
+  end
 end
