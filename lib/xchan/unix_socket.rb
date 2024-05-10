@@ -60,7 +60,7 @@ class Chan::UNIXSocket
   # Closes the channel
   #
   # @raise [IOError]
-  #  When the channel is closed.
+  #  When the channel is closed
   #
   # @return [void]
   def close
@@ -228,7 +228,7 @@ class Chan::UNIXSocket
 
   ##
   # @return [Integer]
-  #  Returns the number of objects waiting to be read.
+  #  Returns the number of objects waiting to be read
   def size
     lock { @bytes.size }
   end
@@ -240,25 +240,25 @@ class Chan::UNIXSocket
   # @group Wait methods
 
   ##
-  # Waits for the channel to become readable.
+  # Waits for the channel to become readable
   #
   # @param [Float, Integer, nil] s
-  #  The number of seconds to wait. Waits indefinitely when "nil".
+  #  The number of seconds to wait. Waits indefinitely with no arguments.
   #
   # @return [Chan::UNIXSocket, nil]
-  #  Returns self when the channel is readable, otherwise returns nil.
+  #  Returns self when the channel is readable, otherwise returns nil
   def wait_readable(s = nil)
     @r.wait_readable(s) and self
   end
 
   ##
-  # Waits for the channel to become writable.
+  # Waits for the channel to become writable
   #
   # @param [Float, Integer, nil] s
-  #  The number of seconds to wait. Waits indefinitely when "nil".
+  #  The number of seconds to wait. Waits indefinitely with no arguments.
   #
   # @return [Chan::UNIXSocket, nil]
-  #  Returns self when the channel is writable, otherwise returns nil.
+  #  Returns self when the channel is writable, otherwise returns nil
   def wait_writable(s = nil)
     @w.wait_writable(s) and self
   end
