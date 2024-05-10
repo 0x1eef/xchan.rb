@@ -2,8 +2,8 @@
 
 xchan.rb is an easy to use library for InterProcess
 Communication (IPC). The library provides a channel
-that can transfer Ruby objects between a parent Ruby
-process and its child processes.
+that can transfer Ruby objects between Ruby processes
+with a parent <-> child relationship.
 
 ## Examples
 
