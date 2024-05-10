@@ -51,7 +51,7 @@ the parent process writes to the channel:
 ```ruby
 require "xchan"
 
-ch = xchan
+ch = xchan(:marshal)
 Process.detach fork {
   print "Received a random number (child process): ", ch.recv, "\n"
 }
@@ -88,7 +88,7 @@ rescue Chan::WaitLockable
   retry
 end
 trap("SIGINT") { exit(1) }
-read(xchan)
+read(xchan(:marshal))
 
 ##
 # Wait 1 second for channel to be readable

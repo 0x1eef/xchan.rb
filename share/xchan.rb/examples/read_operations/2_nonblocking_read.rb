@@ -14,4 +14,4 @@ rescue Chan::WaitLockable
   retry
 end
 trap("SIGINT") { exit(1) }
-read(xchan)
+read(xchan(:marshal))
