@@ -8,6 +8,20 @@ module Chan
   WaitReadable = Class.new(IO::EAGAINWaitReadable)
   WaitWritable = Class.new(IO::EAGAINWaitWritable)
   WaitLockable = Class.new(Errno::EWOULDBLOCK)
+
+  ##
+  # The Plain serializer won't perform
+  # serialization that goes beyond calling
+  # `.to_s` on the object it is given. It
+  # can be useful when you want to communicate
+  # purely in strings.
+  #
+  # @example
+  #   ch = xchan(:plain)
+  #   Process.wait fork {
+  #     ch.send "Hello world"
+  #   }
+  #   puts ch.recv
   Plain = Class.new do
     def self.dump(str) = str.to_s
     def self.load(str) = str.to_s
