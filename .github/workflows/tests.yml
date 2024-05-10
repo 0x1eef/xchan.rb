@@ -23,4 +23,4 @@ jobs:
     - run: SERIALIZER=marshal bundle exec rake
     - run: SERIALIZER=json bundle exec rake
     - run: SERIALIZER=yaml bundle exec rake
-    - run: SERIALIZER=plain bundle exec rake
+    - run: SERIALIZER=pure bundle exec rake

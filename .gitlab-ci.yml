@@ -9,4 +9,4 @@ test-ruby32:
     - SERIALIZER=marshal bundle exec rake
     - SERIALIZER=json bundle exec rake
     - SERIALIZER=yaml bundle exec rake
-    - SERIALIZER=plain bundle exec rake
+    - SERIALIZER=pure bundle exec rake
