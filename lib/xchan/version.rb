@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Chan
-  VERSION = "0.16.5"
+  VERSION = "0.17.0"
 end
