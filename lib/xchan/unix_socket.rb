@@ -9,6 +9,16 @@ class Chan::UNIXSocket
   require_relative "bytes"
 
   ##
+  # @return [UNIXSocket]
+  #  Returns a socket used for read operations
+  attr_reader :r
+
+  ##
+  # @return [UNIXSocket]
+  #  Returns a socket used for write operations
+  attr_reader :w
+
+  ##
   # @example
   #   ch = Chan::UNIXSocket.new(:marshal)
   #   ch.send([1,2,3])
@@ -250,61 +260,6 @@ class Chan::UNIXSocket
   #  Returns self when the channel is writable, otherwise returns nil.
   def wait_writable(s = nil)
     @w.wait_writable(s) and self
-  end
-
-  ##
-  # @endgroup
-
-  ##
-  # @group Socket options
-
-  ##
-  # @param [String, Symbol] target
-  #  `:reader`, or `:writer`.
-  #
-  # @param [Integer] level
-  #  The level (eg `Socket::SOL_SOCKET` for the socket level).
-  #
-  # @param [Integer] option_name
-  #  The name of an option (eg `Socket::SO_RCVBUF`).
-  #
-  # @param [Boolean, Integer] option_value
-  #  The option value (eg 12345)
-  #
-  # @return [Integer]
-  #  Returns 0 on success.
-  def setsockopt(target, level, option_name, option_value)
-    @lock.lock
-    if !%w[reader writer].include?(target.to_s)
-      raise ArgumentError, "target can be ':reader', or ':writer'"
-    end
-    target = (target == :reader) ? @r : @w
-    target.setsockopt(level, option_name, option_value)
-  ensure
-    @lock.release
-  end
-
-  ##
-  # @param [String, Symbol] target
-  #  `:reader`, or `:writer`.
-  #
-  # @param [Integer] level
-  #  The level (eg `Socket::SOL_SOCKET` for the socket level).
-  #
-  # @param [Integer] option_name
-  #  The name of an option (eg `Socket::SO_RCVBUF`).
-  #
-  # @return [Socket::Option]
-  #  Returns an instance of `Socket::Option`.
-  def getsockopt(target, level, option_name)
-    @lock.lock
-    if !%w[reader writer].include?(target.to_s)
-      raise ArgumentError, "target can be ':reader', or ':writer'"
-    end
-    target = (target == :reader) ? @r : @w
-    target.getsockopt(level, option_name)
-  ensure
-    @lock.release
   end
 
   ##
