@@ -256,63 +256,63 @@ class Chan::Tempfile < DelegateClass(File)
   end
 end
 
-# Creates a file in the underlying file system;
-# returns a new \File object based on that file.
-#
-# With no block given and no arguments, creates and returns file whose:
-#
-# - Class is {File}[https://docs.ruby-lang.org/en/master/File.html] (not \Tempfile).
-# - Directory is the system temporary directory (system-dependent).
-# - Generated filename is unique in that directory.
-# - Permissions are <tt>0600</tt>;
-#   see {File Permissions}[https://docs.ruby-lang.org/en/master/File.html#label-File+Permissions].
-# - Mode is <tt>'w+'</tt> (read/write mode, positioned at the end).
-#
-# With no block, the file is not removed automatically,
-# and so should be explicitly removed.
-#
-# Example:
-#
-#   f = Tempfile.create     # => #<File:/tmp/20220505-9795-17ky6f6>
-#   f.class                 # => File
-#   f.path                  # => "/tmp/20220505-9795-17ky6f6"
-#   f.stat.mode.to_s(8)     # => "100600"
-#   File.exist?(f.path)     # => true
-#   File.unlink(f.path)
-#   File.exist?(f.path)     # => false
-#
-# Argument +basename+, if given, may be one of:
-#
-# - A string: the generated filename begins with +basename+:
-#
-#     Tempfile.create('foo') # => #<File:/tmp/foo20220505-9795-1gok8l9>
-#
-# - An array of two strings <tt>[prefix, suffix]</tt>:
-#   the generated filename begins with +prefix+ and ends with +suffix+:
-#
-#     Tempfile.create(%w/foo .jpg/) # => #<File:/tmp/foo20220505-17839-tnjchh.jpg>
-#
-# With arguments +basename+ and +tmpdir+, the file is created in directory +tmpdir+:
-#
-#   Tempfile.create('foo', '.') # => #<File:./foo20220505-9795-1emu6g8>
-#
-# Keyword arguments +mode+ and +options+ are passed directly to method
-# {File.open}[https://docs.ruby-lang.org/en/master/File.html#method-c-open]:
-#
-# - The value given with +mode+ must be an integer,
-#   and may be expressed as the logical OR of constants defined in
-#   {File::Constants}[https://docs.ruby-lang.org/en/master/File/Constants.html].
-# - For +options+, see {Open Options}[https://docs.ruby-lang.org/en/master/IO.html#class-IO-label-Open+Options].
-#
-# With a block given, creates the file as above, passes it to the block,
-# and returns the block's value;
-# before the return, the file object is closed and the underlying file is removed:
-#
-#   Tempfile.create {|file| file.path } # => "/tmp/20220505-9795-rkists"
-#
-# Related: Tempfile.new.
-#
 module Chan
+  # Creates a file in the underlying file system;
+  # returns a new \File object based on that file.
+  #
+  # With no block given and no arguments, creates and returns file whose:
+  #
+  # - Class is {File}[https://docs.ruby-lang.org/en/master/File.html] (not \Tempfile).
+  # - Directory is the system temporary directory (system-dependent).
+  # - Generated filename is unique in that directory.
+  # - Permissions are <tt>0600</tt>;
+  #   see {File Permissions}[https://docs.ruby-lang.org/en/master/File.html#label-File+Permissions].
+  # - Mode is <tt>'w+'</tt> (read/write mode, positioned at the end).
+  #
+  # With no block, the file is not removed automatically,
+  # and so should be explicitly removed.
+  #
+  # Example:
+  #
+  #   f = Tempfile.create     # => #<File:/tmp/20220505-9795-17ky6f6>
+  #   f.class                 # => File
+  #   f.path                  # => "/tmp/20220505-9795-17ky6f6"
+  #   f.stat.mode.to_s(8)     # => "100600"
+  #   File.exist?(f.path)     # => true
+  #   File.unlink(f.path)
+  #   File.exist?(f.path)     # => false
+  #
+  # Argument +basename+, if given, may be one of:
+  #
+  # - A string: the generated filename begins with +basename+:
+  #
+  #     Tempfile.create('foo') # => #<File:/tmp/foo20220505-9795-1gok8l9>
+  #
+  # - An array of two strings <tt>[prefix, suffix]</tt>:
+  #   the generated filename begins with +prefix+ and ends with +suffix+:
+  #
+  #     Tempfile.create(%w/foo .jpg/) # => #<File:/tmp/foo20220505-17839-tnjchh.jpg>
+  #
+  # With arguments +basename+ and +tmpdir+, the file is created in directory +tmpdir+:
+  #
+  #   Tempfile.create('foo', '.') # => #<File:./foo20220505-9795-1emu6g8>
+  #
+  # Keyword arguments +mode+ and +options+ are passed directly to method
+  # {File.open}[https://docs.ruby-lang.org/en/master/File.html#method-c-open]:
+  #
+  # - The value given with +mode+ must be an integer,
+  #   and may be expressed as the logical OR of constants defined in
+  #   {File::Constants}[https://docs.ruby-lang.org/en/master/File/Constants.html].
+  # - For +options+, see {Open Options}[https://docs.ruby-lang.org/en/master/IO.html#class-IO-label-Open+Options].
+  #
+  # With a block given, creates the file as above, passes it to the block,
+  # and returns the block's value;
+  # before the return, the file object is closed and the underlying file is removed:
+  #
+  #   Tempfile.create {|file| file.path } # => "/tmp/20220505-9795-rkists"
+  #
+  # Related: Tempfile.new.
+  #
   def Tempfile.create(basename="", tmpdir=nil, mode: 0, perm: 0600, **options)
     tmpfile = nil
     Dir::Tmpname.create(basename, tmpdir, **options) do |tmpname, n, opts|

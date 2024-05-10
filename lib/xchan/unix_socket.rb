@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 ##
-# The {Chan::UNIXSocket Chan::UNIXSocket} class implements a channel
-# for interprocess communication (IPC) using an unnamed UNIXSocket.
+# An easy-to-use InterProcess Communication (IPC) library.
 class Chan::UNIXSocket
   require "socket"
   require "lockf"
@@ -207,7 +206,7 @@ class Chan::UNIXSocket
   end
 
   ##
-  # @group Size methods
+  # @group Stat methods
 
   ##
   # @return [Integer]
