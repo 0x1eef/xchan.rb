@@ -52,13 +52,14 @@ the parent process writes to the channel:
 require "xchan"
 
 ch = xchan(:marshal)
-Process.detach fork {
+fork do
   print "Received a random number (child process): ", ch.recv, "\n"
-}
+end
 sleep(1)
 print "Send a random number (from parent process)", "\n"
 ch.send(rand(21))
 ch.close
+Process.wait
 
 ##
 # Send a random number (from parent process)

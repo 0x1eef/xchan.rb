@@ -5,13 +5,14 @@ require "xchan"
 
 $stdout.sync = true
 ch = xchan(:marshal)
-Process.detach fork {
+fork do
   print "Received random number (child process): ", ch.recv, "\n"
-}
+end
 sleep(1)
 print "Send a random number (from parent process)", "\n"
 ch.send(rand(21))
 ch.close
+Process.wait
 
 ##
 # Send a random number (from parent process)
