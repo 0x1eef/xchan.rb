@@ -187,9 +187,9 @@ class Chan::UNIXSocket
 
   ##
   # @example
-  #   ch = xchan
+  #   ch = xchan(:pure)
   #   1.upto(4) { ch.send(_1) }
-  #   ch.to_a.last # => 4
+  #   ch.to_a.last # => "4"
   #
   # @return [Array<Object>]
   #  Returns the contents of the channel
