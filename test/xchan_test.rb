@@ -194,3 +194,32 @@ class Chan::BytesReadTest < Chan::Test
     assert_equal object_size * 2, ch.bytes_read
   end
 end
+
+##
+# Chan.temporary_file
+class Chan::TemporaryFileTest < Chan::Test
+  def test_temporary_file_mode
+    assert_equal 0, file.stat.mode & 0o777
+  ensure
+    file.close
+  end
+
+  def test_temporary_file_path
+    assert_match %r|#{Regexp.escape(Dir.tmpdir)}/foobar[a-zA-Z0-9-]+\.txt|,
+                 file.to_path
+  ensure
+    file.close
+  end
+
+  def test_temporary_file_unlinked
+    refute File.exist?(file.to_path)
+  ensure
+    file.close
+  end
+
+  private
+
+  def file
+    @file ||= Chan.temporary_file %w[foobar .txt]
+  end
+end
