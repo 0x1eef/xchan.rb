@@ -184,7 +184,7 @@ print "The maximum size of a single message is: ", sndbuf.int, " bytes.\n"
 ## Documentation
 
 A complete API reference is available at
-[0x1eef.github.io/x/xchan.rb](https://0x1eef.github.io/x/xchan.rb/).
+[0x1eef.github.io/x/xchan.rb](https://0x1eef.github.io/x/xchan.rb/)
 
 ## Install
 
@@ -194,11 +194,11 @@ xchan.rb can be installed via rubygems.org:
 
 ## Sources
 
-* [Source code (GitHub)](https://github.com/0x1eef/xchan.rb#readme)
-* [Source code (GitLab)](https://gitlab.com/0x1eef/xchan.rb#about)
+* [GitHub](https://github.com/0x1eef/xchan.rb#readme)
+* [GitLab](https://gitlab.com/0x1eef/xchan.rb#about)
 
 ## <a id="license"> License </a>
 
-[BSD Zero Clause](https://choosealicense.com/licenses/0bsd/).
+[BSD Zero Clause](https://choosealicense.com/licenses/0bsd/)
 <br>
-See [LICENSE](./LICENSE).
+See [LICENSE](./LICENSE)
