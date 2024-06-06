@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "setup"
-require "test/cmd"
+require "test-cmd"
 
 class Chan::ReadmeTest < Test::Unit::TestCase
   def test_serialization_1_serializers
