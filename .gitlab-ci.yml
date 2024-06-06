@@ -6,7 +6,7 @@ test-ruby32:
   image: ruby:3.2.0
   script:
     - bundle install
-    - SERIALIZER=marshal for t in *_test.rb; do ruby test/${t}; done
-    - SERIALIZER=json for t in *_test.rb; do ruby test/${t}; done
-    - SERIALIZER=yaml for t in *_test.rb; do ruby test/${t}; done
-    - SERIALIZER=pure for t in *_test.rb; do ruby test/${t}; done
+    - SERIALIZER=marshal; for t in *_test.rb; do ruby test/${t}; done
+    - SERIALIZER=json; for t in *_test.rb; do ruby test/${t}; done
+    - SERIALIZER=yaml; for t in *_test.rb; do ruby test/${t}; done
+    - SERIALIZER=pure; for t in *_test.rb; do ruby test/${t}; done
