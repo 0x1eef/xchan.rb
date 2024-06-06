@@ -76,7 +76,7 @@ module Kernel
   # @param sock_type (see Chan::UNIXSocket#initialize)
   # @param tmpdir (see Chan::UNIXSocket#initialize)
   # @return (see Chan::UNIXSocket#initialize)
-  def xchan(s, **)
-    Chan::UNIXSocket.new(s, **)
+  def xchan(s, ...)
+    Chan::UNIXSocket.new(s, ...)
   end
 end
