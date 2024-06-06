@@ -65,12 +65,12 @@ class Chan::Tempfile < DelegateClass(File)
   #
   # Related: Tempfile.create.
   #
-  def initialize(basename = "", tmpdir = nil, mode: 0, perm: 0o600, **)
+  def initialize(basename = "", tmpdir = nil, mode: 0, perm: 0o600, **kwargs)
     warn "Tempfile.new doesn't call the given block.", uplevel: 1 if block_given?
 
     @unlinked = false
     @mode = mode | File::RDWR | File::CREAT | File::EXCL
-    ::Dir::Tmpname.create(basename, tmpdir, **) do |tmpname, n, opts|
+    ::Dir::Tmpname.create(basename, tmpdir, **kwargs) do |tmpname, n, opts|
       @tmpfile = File.open(tmpname, @mode, perm, **opts)
       @perm = perm
       @opts = opts.freeze
@@ -315,9 +315,9 @@ module Chan
   #
   # Related: Tempfile.new.
   #
-  def Tempfile.create(basename = "", tmpdir = nil, mode: 0, perm: 0o600, **)
+  def Tempfile.create(basename = "", tmpdir = nil, mode: 0, perm: 0o600, **kwargs)
     tmpfile = nil
-    Dir::Tmpname.create(basename, tmpdir, **) do |tmpname, n, opts|
+    Dir::Tmpname.create(basename, tmpdir, **kwargs) do |tmpname, n, opts|
       mode |= File::RDWR | File::CREAT | File::EXCL
       tmpfile = File.open(tmpname, mode, perm, **opts)
     end
