@@ -1,5 +1,7 @@
-require 'delegate'
-require 'tmpdir'
+# frozen_string_literal: true
+
+require "delegate"
+require "tmpdir"
 
 ##
 # @private
@@ -63,12 +65,12 @@ class Chan::Tempfile < DelegateClass(File)
   #
   # Related: Tempfile.create.
   #
-  def initialize(basename="", tmpdir=nil, mode: 0, perm: 0600, **options)
+  def initialize(basename = "", tmpdir = nil, mode: 0, perm: 0o600, **)
     warn "Tempfile.new doesn't call the given block.", uplevel: 1 if block_given?
 
     @unlinked = false
-    @mode = mode|File::RDWR|File::CREAT|File::EXCL
-    ::Dir::Tmpname.create(basename, tmpdir, **options) do |tmpname, n, opts|
+    @mode = mode | File::RDWR | File::CREAT | File::EXCL
+    ::Dir::Tmpname.create(basename, tmpdir, **) do |tmpname, n, opts|
       @tmpfile = File.open(tmpname, @mode, perm, **opts)
       @perm = perm
       @opts = opts.freeze
@@ -81,7 +83,7 @@ class Chan::Tempfile < DelegateClass(File)
   # Opens or reopens the file with mode "r+".
   def open
     _close
-    mode = @mode & ~(File::CREAT|File::EXCL)
+    mode = @mode & ~(File::CREAT | File::EXCL)
     @tmpfile = File.open(@tmpfile.path, mode, **@opts)
     __setobj__(@tmpfile)
   end
@@ -97,7 +99,7 @@ class Chan::Tempfile < DelegateClass(File)
   #
   # If you don't explicitly unlink the temporary file, the removal
   # will be delayed until the object is finalized.
-  def close(unlink_now=false)
+  def close(unlink_now = false)
     _close
     unlink if unlink_now
   end
@@ -153,7 +155,7 @@ class Chan::Tempfile < DelegateClass(File)
     ObjectSpace.undefine_finalizer(self)
     @unlinked = true
   end
-  alias delete unlink
+  alias_method :delete, :unlink
 
   # Returns the full path name of the temporary file.
   # This will be nil if #unlink has been called.
@@ -170,7 +172,7 @@ class Chan::Tempfile < DelegateClass(File)
       File.size(@tmpfile.path)
     end
   end
-  alias length size
+  alias_method :length, :size
 
   # :stopdoc:
   def inspect
@@ -190,7 +192,7 @@ class Chan::Tempfile < DelegateClass(File)
     def call(*args)
       return if @pid != Process.pid
 
-      $stderr.puts "removing #{@tmpfile.path}..." if $DEBUG
+      warn "removing #{@tmpfile.path}..." if $DEBUG
 
       @tmpfile.close
       begin
@@ -198,7 +200,7 @@ class Chan::Tempfile < DelegateClass(File)
       rescue Errno::ENOENT
       end
 
-      $stderr.puts "done" if $DEBUG
+      warn "done" if $DEBUG
     end
   end
 
@@ -240,8 +242,8 @@ class Chan::Tempfile < DelegateClass(File)
     #   ensure
     #      f.close
     #   end
-    def self.open(*args, **kw)
-      tempfile = new(*args, **kw)
+    def self.open(*, **)
+      tempfile = new(*, **)
 
       if block_given?
         begin
@@ -313,10 +315,10 @@ module Chan
   #
   # Related: Tempfile.new.
   #
-  def Tempfile.create(basename="", tmpdir=nil, mode: 0, perm: 0600, **options)
+  def Tempfile.create(basename = "", tmpdir = nil, mode: 0, perm: 0o600, **)
     tmpfile = nil
-    Dir::Tmpname.create(basename, tmpdir, **options) do |tmpname, n, opts|
-      mode |= File::RDWR|File::CREAT|File::EXCL
+    Dir::Tmpname.create(basename, tmpdir, **) do |tmpname, n, opts|
+      mode |= File::RDWR | File::CREAT | File::EXCL
       tmpfile = File.open(tmpname, mode, perm, **opts)
     end
     if block_given?
@@ -325,7 +327,11 @@ module Chan
       ensure
         unless tmpfile.closed?
           if File.identical?(tmpfile, tmpfile.path)
-            unlinked = File.unlink tmpfile.path rescue nil
+            unlinked = begin
+              File.unlink tmpfile.path
+            rescue
+              nil
+            end
           end
           tmpfile.close
         end

@@ -95,6 +95,6 @@ class Chan::Bytes
   end
 
   def deserialize(bytes)
-    JSON.load(bytes)
+    JSON.parse(bytes)
   end
 end

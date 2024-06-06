@@ -57,6 +57,6 @@ class Chan::Counter
   end
 
   def deserialize(bytes)
-    JSON.load(bytes)
+    JSON.parse(bytes)
   end
 end
