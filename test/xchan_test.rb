@@ -205,7 +205,7 @@ class Chan::TemporaryFileTest < Chan::Test
   end
 
   def test_temporary_file_path
-    assert_match %r|#{Regexp.escape(Dir.tmpdir)}/foobar[a-zA-Z0-9-]+\.txt|,
+    assert_match %r{#{Regexp.escape(Dir.tmpdir)}/foobar[a-zA-Z0-9-]+\.txt},
                  file.to_path
   ensure
     file.close
