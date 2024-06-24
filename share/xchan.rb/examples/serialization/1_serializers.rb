@@ -2,13 +2,14 @@
 
 require_relative "../setup"
 require "xchan"
+require "xchan"
 
 ##
-# This channel uses Marshal to serialize objects
+# Marshal as the serializer
 ch = xchan(:marshal)
 Process.wait fork { ch.send(5) }
-print "There are ", ch.recv + 7, " disciples and the same number of tribes", "\n"
+print "#{ch.recv} + 7 = 12", "\n"
 ch.close
 
 ##
-# There are 12 disciples and the same number of tribes
+# 5 + 7 = 12
