@@ -10,17 +10,14 @@ module Chan
   WaitLockable = Class.new(Errno::EWOULDBLOCK)
 
   ##
-  # The Pure serializer won't perform
-  # serialization that goes beyond calling
-  # `.to_s` on the object it is given. It
-  # can be useful when you want to communicate
-  # purely in strings.
+  # Coerces an object to a string for a
+  # channel communicating in raw strings
+  # (in other words: without serialization)
   #
   # @example
   #   ch = xchan(:pure)
-  #   Process.wait fork {
-  #     ch.send "Hello world"
-  #   }
+  #   fork { ch.send "Hello world" }
+  #   Process.wait
   #   puts ch.recv
   Pure = Class.new do
     def self.dump(str) = str.to_s
@@ -47,8 +44,8 @@ module Chan
 
   ##
   # @return [Hash<Symbol, Proc>]
-  #  Maps a short name to a serializer
-  def self.shortcuts
+  #  Returns the default serializers
+  def self.serializers
     {
       pure: lambda { Pure },
       marshal: lambda { Marshal },
