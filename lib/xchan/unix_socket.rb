@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ##
-# An easy-to-use InterProcess Communication (IPC) library.
+# An easy-to-use InterProcess Communication (IPC) library
 class Chan::UNIXSocket
   require "socket"
   require "lockf"
