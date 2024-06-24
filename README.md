@@ -11,17 +11,12 @@ with a parent &lt;=&gt; child relationship.
 
 #### Options
 
-The first argument given to xchan is the serializer
-that it should use. A channel that will communicate
-in pure strings (ie with no serialization) is
-available as `xchan(:pure)`.
-
-Otherwise, when a channel is written to or read from,
-a Ruby object is serialized (on write) or deserialized
-(on read). The serializers available to choose from
-are `xchan(:marshal)`, `xchan(:json)`, and `xchan(:yaml)`.
-The example uses
-[`Marshal`](https://www.rubydoc.info/stdlib/core/Marshal):
+The first argument provided to xchan is the serializer
+that should be used. A channel that will communicate
+purely in strings (in other words: without serialization)
+is available as `xchan(:pure)` - otherwise a wide range of
+serializers are available by default: `xchan(:marshal)`,
+`xchan(:json)`, and `xchan(:yaml)`.
 
 ```ruby
 require "xchan"
@@ -197,7 +192,7 @@ xchan.rb can be installed via rubygems.org:
 * [GitHub](https://github.com/0x1eef/xchan.rb#readme)
 * [GitLab](https://gitlab.com/0x1eef/xchan.rb#about)
 
-## <a id="license"> License </a>
+## License
 
 [BSD Zero Clause](https://choosealicense.com/licenses/0bsd/)
 <br>
