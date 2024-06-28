@@ -46,7 +46,7 @@ class Chan::UNIXSocket
     @r, @w = ::UNIXSocket.pair(sock_type)
     @bytes = Chan::Bytes.new(tmpdir)
     @counter = Chan::Counter.new(tmpdir)
-    @lock = LockFile.new Chan.temporary_file(%w[xchan .lock], tmpdir:)
+    @lockf = Lock::File.new Chan.temporary_file(%w[xchan .lock], tmpdir:)
   end
 
   ##
@@ -64,11 +64,11 @@ class Chan::UNIXSocket
   #
   # @return [void]
   def close
-    @lock.lock
+    @lockf.lock
     raise IOError, "channel is closed" if closed?
-    [@r, @w, @bytes, @lock.file].each(&:close)
+    [@r, @w, @bytes, @lockf].each(&:close)
   rescue IOError => ex
-    @lock.release
+    @lockf.release
     raise(ex)
   end
 
@@ -111,14 +111,14 @@ class Chan::UNIXSocket
   # @return [Integer, nil]
   #  Returns the number of bytes written to the channel
   def send_nonblock(object)
-    @lock.lock_nonblock
+    @lockf.lock_nonblock
     raise IOError, "channel closed" if closed?
     len = @w.write_nonblock(serialize(object))
     @bytes.push(len)
     @counter.increment!(bytes_written: len)
-    len.tap { @lock.release }
+    len.tap { @lockf.release }
   rescue IOError, IO::WaitWritable, Errno::ENOBUFS => ex
-    @lock.release
+    @lockf.release
     raise Chan::WaitWritable, ex.message
   rescue Errno::EWOULDBLOCK => ex
     raise Chan::WaitLockable, ex.message
@@ -164,18 +164,18 @@ class Chan::UNIXSocket
   # @return [Object]
   #  Returns an object from the channel
   def recv_nonblock
-    @lock.lock_nonblock
+    @lockf.lock_nonblock
     raise IOError, "closed channel" if closed?
     len = @bytes.shift
     obj = deserialize(@r.read_nonblock(len.zero? ? 1 : len))
     @counter.increment!(bytes_read: len)
-    obj.tap { @lock.release }
+    obj.tap { @lockf.release }
   rescue IOError => ex
-    @lock.release
+    @lockf.release
     raise(ex)
   rescue IO::WaitReadable => ex
     @bytes.unshift(len)
-    @lock.release
+    @lockf.release
     raise Chan::WaitReadable, ex.message
   rescue Errno::EAGAIN => ex
     raise Chan::WaitLockable, ex.message
@@ -269,10 +269,10 @@ class Chan::UNIXSocket
   private
 
   def lock
-    @lock.lock
+    @lockf.lock
     yield
   ensure
-    @lock.release
+    @lockf.release
   end
 
   def serialize(obj)

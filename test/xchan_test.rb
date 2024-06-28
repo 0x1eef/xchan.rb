@@ -84,7 +84,7 @@ class Chan::RecvNonBlockTest < Chan::Test
   end
 
   def test_recv_nonblock_with_a_lock
-    ch.instance_variable_get(:@lock).lock
+    ch.instance_variable_get(:@lockf).lock
     pid = fork do
       ch.recv_nonblock
       exit(1)

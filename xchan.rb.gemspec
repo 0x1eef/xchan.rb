@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.summary = "An easy to use InterProcess Communication (IPC) library"
   gem.description = gem.summary
-  gem.add_runtime_dependency "lockf.rb", "~> 1.0"
+  gem.add_runtime_dependency "lockf.rb", "~> 2.1"
   gem.add_development_dependency "test-unit", "~> 3.5.7"
   gem.add_development_dependency "yard", "~> 0.9"
   gem.add_development_dependency "redcarpet", "~> 3.5"
