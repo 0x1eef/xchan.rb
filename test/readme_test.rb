@@ -30,7 +30,7 @@ class Chan::ReadmeTest < Test::Unit::TestCase
     r = 'The read buffer can contain a maximum of: \d{1,6} bytes.\s*' \
         'The maximum size of a single message is: \d{1,6} bytes.\s*'
     assert_match Regexp.new(r),
-                 cmd("ruby", readme_example("socket/2_options.rb"))
+                 cmd("ruby", readme_example("socket/1_options.rb"))
                    .stdout
                    .tr("\n", " ")
   end

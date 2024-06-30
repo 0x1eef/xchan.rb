@@ -242,8 +242,8 @@ class Chan::Tempfile < DelegateClass(File)
     #   ensure
     #      f.close
     #   end
-    def self.open(*args, **kwargs)
-      tempfile = new(*args, **kwargs)
+    def self.open(*, **)
+      tempfile = new(*, **)
 
       if block_given?
         begin

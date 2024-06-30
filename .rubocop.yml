@@ -16,6 +16,7 @@ AllCops:
     - lib/*.rb
     - lib/**/*.rb
     - test/*_test.rb
+    - share/xchan.rb/**/*.rb
 
 ##
 # Enabled

@@ -19,6 +19,7 @@ serializers are available by default: `xchan(:marshal)`,
 `xchan(:json)`, and `xchan(:yaml)`.
 
 ```ruby
+#!/usr/bin/env ruby
 require "xchan"
 
 ##
@@ -44,6 +45,7 @@ blocks. The example performs a read that blocks until
 the parent process writes to the channel:
 
 ```ruby
+#!/usr/bin/env ruby
 require "xchan"
 
 ch = xchan(:marshal)
@@ -71,6 +73,7 @@ the method raises `Chan::WaitReadable` when a read from
 blocks:
 
 ```ruby
+#!/usr/bin/env ruby
 require "xchan"
 
 def read(ch)
@@ -103,6 +106,7 @@ process, or when a write to
 blocks. The example fills the send buffer:
 
 ```ruby
+#!/usr/bin/env ruby
 require "xchan"
 
 ch = xchan(:marshal, sock_type: Socket::SOCK_STREAM)
@@ -123,6 +127,7 @@ a lock held by another process, and the method raises
 blocks. The example frees space on the send buffer:
 
 ```ruby
+#!/usr/bin/env ruby
 require "xchan"
 
 def send_nonblock(ch, buf)
@@ -158,6 +163,7 @@ returns the socket used for read operations, and
 returns the socket used for write operations:
 
 ```ruby
+#!/usr/bin/env ruby
 require "xchan"
 ch = xchan(:marshal)
 
