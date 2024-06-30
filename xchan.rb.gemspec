@@ -8,7 +8,13 @@ Gem::Specification.new do |gem|
   gem.homepage = "https://github.com/0x1eef/xchan.rb#readme"
   gem.version = Chan::VERSION
   gem.licenses = ["0BSD"]
-  gem.files = `git ls-files`.split($/)
+  gem.files = Dir[
+    "README.md", "LICENSE",
+    "share/xchan.rb/**/*.rb",
+    "lib/*.rb", "lib/**/*.rb",
+    "test/*.rb", "test/**/*.rb",
+    "xchan.rb.gemspec"
+  ]
   gem.require_paths = ["lib"]
   gem.summary = "An easy to use InterProcess Communication (IPC) library"
   gem.description = gem.summary
