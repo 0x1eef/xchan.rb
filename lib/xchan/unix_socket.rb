@@ -29,16 +29,12 @@ class Chan::UNIXSocket
   #   ch.send([1,2,3])
   #   ch.recv.pop # => 3
   #   ch.close
-  #
   # @param [Symbol, <#dump, #load>] s
   #  The name of a serializer
-  #
   # @param [Integer] sock_type
   #  Type of socket (eg `Socket::SOCK_STREAM`)
-  #
   # @param [String] tmpdir
   #  Directory where temporary files can be stored
-  #
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}
   def initialize(s, sock_type: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir)
@@ -58,10 +54,8 @@ class Chan::UNIXSocket
 
   ##
   # Closes the channel
-  #
   # @raise [IOError]
   #  When the channel is closed
-  #
   # @return [void]
   def close
     @lockf.lock
@@ -77,13 +71,10 @@ class Chan::UNIXSocket
 
   ##
   # Performs a blocking write
-  #
   # @param [Object] object
   #  An object
-  #
   # @raise [IOError]
   #  When the channel is closed
-  #
   # @return [Object]
   #  Returns the number of bytes written to the channel
   def send(object)
@@ -95,19 +86,14 @@ class Chan::UNIXSocket
 
   ##
   # Performs a non-blocking write
-  #
   # @param [Object] object
   #  An object
-  #
   # @raise [IOError]
   #  When the channel is closed
-  #
   # @raise [Chan::WaitWritable]
   #  When a write to {#w} blocks
-  #
   # @raise [Chan::WaitLockable]
   #  When a write blocks because of a lock held by another process
-  #
   # @return [Integer, nil]
   #  Returns the number of bytes written to the channel
   def send_nonblock(object)
@@ -133,10 +119,8 @@ class Chan::UNIXSocket
 
   ##
   # Performs a blocking read
-  #
   # @raise [IOError]
   #  When the channel is closed
-  #
   # @return [Object]
   #  Returns an object from the channel
   def recv
@@ -151,16 +135,12 @@ class Chan::UNIXSocket
 
   ##
   # Performs a non-blocking read
-  #
   # @raise [IOError]
   #  When the channel is closed
-  #
   # @raise [Chan::WaitReadable]
   #  When a read from {#r} blocks
-  #
   # @raise [Chan::WaitLockable]
   #  When a read blocks because of a lock held by another process
-  #
   # @return [Object]
   #  Returns an object from the channel
   def recv_nonblock
@@ -190,7 +170,6 @@ class Chan::UNIXSocket
   #   ch = xchan(:pure)
   #   1.upto(4) { ch.send(_1) }
   #   ch.to_a.last # => "4"
-  #
   # @return [Array<Object>]
   #  Returns the contents of the channel
   def to_a
@@ -241,10 +220,8 @@ class Chan::UNIXSocket
 
   ##
   # Waits for the channel to become readable
-  #
   # @param [Float, Integer, nil] s
   #  The number of seconds to wait. Waits indefinitely with no arguments.
-  #
   # @return [Chan::UNIXSocket, nil]
   #  Returns self when the channel is readable, otherwise returns nil
   def wait_readable(s = nil)
@@ -253,10 +230,8 @@ class Chan::UNIXSocket
 
   ##
   # Waits for the channel to become writable
-  #
   # @param [Float, Integer, nil] s
   #  The number of seconds to wait. Waits indefinitely with no arguments.
-  #
   # @return [Chan::UNIXSocket, nil]
   #  Returns self when the channel is writable, otherwise returns nil
   def wait_writable(s = nil)

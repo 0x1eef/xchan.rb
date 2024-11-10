@@ -10,7 +10,6 @@ class Chan::Counter
   ##
   # @param [String] tmpdir
   #  Directory where temporary files are stored
-  #
   # @return [Chan::Counter]
   def initialize(tmpdir)
     @io = Chan.temporary_file(%w[counter .json], tmpdir:)

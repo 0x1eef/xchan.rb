@@ -13,7 +13,6 @@ class Chan::Bytes
   ##
   # @param [String] tmpdir
   #  Directory where temporary files are stored
-  #
   # @return [Chan::Bytes]
   def initialize(tmpdir)
     @io = Chan.temporary_file(%w[bytes .json], tmpdir:)
@@ -23,10 +22,8 @@ class Chan::Bytes
 
   ##
   # Adds a count to the start of the collection
-  #
   # @param [Integer] len
   #  The bytesize of an object
-  #
   # @return [void]
   def unshift(len)
     return 0 if len.nil? || len.zero?
@@ -38,10 +35,8 @@ class Chan::Bytes
 
   ##
   # Adds a count to the end of the collection
-  #
   # @param [Integer] len
   #  The bytesize of an object
-  #
   # @return [void]
   def push(len)
     return 0 if len.nil? || len.zero?
@@ -53,7 +48,6 @@ class Chan::Bytes
 
   ##
   # Removes a count from the start of the collection
-  #
   # @return [Integer]
   #  Returns the removed byte count
   def shift
@@ -73,7 +67,6 @@ class Chan::Bytes
 
   ##
   # Close the underlying IO
-  #
   # @return [void]
   def close
     @io.close

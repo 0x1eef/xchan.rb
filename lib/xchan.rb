@@ -32,10 +32,8 @@ module Chan
   #
   # @param [String] basename
   #  Basename of the temporary file
-  #
   # @param [String] tmpdir
   #  Parent directory of the temporary file
-  #
   # @return [Chan::Tempfile]
   #  Returns an instance of {Chan::Tempfile Chan::Tempfile}
   def self.temporary_file(basename, tmpdir: Dir.tmpdir)
@@ -68,7 +66,6 @@ module Kernel
   #   ch.send([1,2,3])
   #   ch.recv.pop # => 3
   #   ch.close
-  #
   # @param s (see Chan::UNIXSocket#initialize)
   # @param sock_type (see Chan::UNIXSocket#initialize)
   # @param tmpdir (see Chan::UNIXSocket#initialize)
