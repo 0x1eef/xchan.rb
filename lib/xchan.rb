@@ -67,7 +67,7 @@ module Kernel
   #   ch.send([1,2,3])
   #   ch.recv.pop # => 3
   #   ch.close
-  # @param s (see Chan::UNIXSocket#initialize)
+  # @param serializer (see Chan::UNIXSocket#initialize)
   # @param sock (see Chan::UNIXSocket#initialize)
   # @param tmpdir (see Chan::UNIXSocket#initialize)
   # @param lock (see Chan::UNIXSocket#initialize)

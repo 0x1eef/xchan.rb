@@ -29,7 +29,7 @@ class Chan::UNIXSocket
   #   ch.send([1,2,3])
   #   ch.recv.pop # => 3
   #   ch.close
-  # @param [Symbol, <#dump, #load>] s
+  # @param [Symbol, <#dump, #load>] serializer
   #  The name of a serializer
   # @param [Integer] sock
   #  Type of socket (eg `Socket::SOCK_STREAM`)
@@ -39,8 +39,8 @@ class Chan::UNIXSocket
   #  An instance of `Lock::File`, or {Chan::NullLock Chan::NullLock}
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}
-  def initialize(s, sock: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir, lock: lock_file(tmpdir:))
-    @s = Chan.serializers[s]&.call || s
+  def initialize(serializer, sock: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir, lock: lock_file(tmpdir:))
+    @s = Chan.serializers[serializer]&.call || serializer
     @r, @w = ::UNIXSocket.pair(sock)
     @bytes = Chan::Bytes.new(tmpdir)
     @counter = Chan::Counter.new(tmpdir)
