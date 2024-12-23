@@ -7,6 +7,6 @@ The ~Chan::NullLock~ object is a lock that implements all of its methods as no-o
 The ~lock~ option can be given to ~Chan::UNIXSocket~, and it allows a channel have
 a custom lock object
 
-* Rename ~sock_type~ as ~sock~
+* Rename ~sock_type~ option as ~sock~ option
 The ~sock_type~ option given to ~Chan::UNIXSocket~ has been renamed as the shorter
 ~sock~ option

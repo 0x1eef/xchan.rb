@@ -202,4 +202,4 @@ xchan.rb can be installed via rubygems.org:
 
 [BSD Zero Clause](https://choosealicense.com/licenses/0bsd/)
 <br>
-See [LICENSE](./LICENSE)
+See [share/xchan.rb/LICENSE](./share/xchan.rb/LICENSE)
