@@ -35,8 +35,8 @@ class Chan::UNIXSocket
   #  Type of socket (eg `Socket::SOCK_STREAM`)
   # @param [String] tmpdir
   #  Directory where temporary files can be stored
-  # @param [Lock::File] lock
-  #  An instance of {Lock::File Lock::File}, or {Chan::NullLock Chan::NullLock}
+  # @param [Lock::File, Chan::NullLock] lock
+  #  An instance of `Lock::File`, or {Chan::NullLock Chan::NullLock}
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}
   def initialize(s, sock: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir, lock: lock_file(tmpdir:))

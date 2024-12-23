@@ -1,4 +1,4 @@
 -m markdown -M redcarpet --no-private
 -
 README.md
-LICENSE
+share/xchan.rb/LICENSE
