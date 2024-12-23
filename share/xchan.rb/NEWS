@@ -3,12 +3,13 @@
 * vNEXT
 
 ** Add ~Chan::NullLock~
-The ~Chan::NullLock~ object is a lock that implements all of its methods as no-ops
+The ~Chan::NullLock~ object is a lock that implements all of
+its methods as no-ops
 
 ** Add ~lock~ option
-The ~lock~ option can be given to ~Chan::UNIXSocket~, and it allows a channel have
-a custom lock object
+The ~lock~ option can be given to ~Chan::UNIXSocket~, and it
+allows a channel have an alternative lock object
 
 ** Rename ~sock_type~ option as ~sock~ option
-The ~sock_type~ option given to ~Chan::UNIXSocket~ has been renamed as the shorter
-~sock~ option
+The ~sock_type~ option given to ~Chan::UNIXSocket~ has been
+renamed as the shorter ~sock~ option
