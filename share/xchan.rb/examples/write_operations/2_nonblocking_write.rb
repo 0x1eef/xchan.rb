@@ -15,7 +15,7 @@ rescue Chan::WaitLockable
   retry
 end
 
-ch = xchan(:marshal, sock_type: Socket::SOCK_STREAM)
+ch = xchan(:marshal, sock: Socket::SOCK_STREAM)
 sndbuf = ch.w.getsockopt(Socket::SOL_SOCKET, Socket::SO_SNDBUF)
 while ch.bytes_sent <= sndbuf.int
   send_nonblock(ch, 1)
