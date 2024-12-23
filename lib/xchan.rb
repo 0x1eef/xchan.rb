@@ -3,6 +3,7 @@
 module Chan
   require_relative "xchan/version"
   require_relative "xchan/unix_socket"
+  require_relative "xchan/null_lock"
   require_relative "xchan/tempfile"
 
   WaitReadable = Class.new(IO::EAGAINWaitReadable)
