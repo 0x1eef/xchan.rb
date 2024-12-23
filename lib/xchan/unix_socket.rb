@@ -35,14 +35,16 @@ class Chan::UNIXSocket
   #  Type of socket (eg `Socket::SOCK_STREAM`)
   # @param [String] tmpdir
   #  Directory where temporary files can be stored
+  # @param [Lock::File] lock
+  #  An instance of {Lock::File Lock::File}, or {Chan::NullLock Chan::NullLock}
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}
-  def initialize(s, sock_type: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir)
+  def initialize(s, sock_type: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir, lock: lock_file(tmpdir:))
     @s = Chan.serializers[s]&.call || s
     @r, @w = ::UNIXSocket.pair(sock_type)
     @bytes = Chan::Bytes.new(tmpdir)
     @counter = Chan::Counter.new(tmpdir)
-    @lockf = Lock::File.new Chan.temporary_file(%w[xchan .lock], tmpdir:)
+    @lockf = lock
   end
 
   ##
@@ -242,6 +244,10 @@ class Chan::UNIXSocket
   # @endgroup
 
   private
+
+  def lock_file(tmpdir:)
+    Lock::File.new Chan.temporary_file(%w[xchan .lock], tmpdir:)
+  end
 
   def lock
     @lockf.lock
