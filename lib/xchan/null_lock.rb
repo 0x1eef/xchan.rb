@@ -7,7 +7,9 @@
 # @example
 #   ch = xchan(:marshal, lock: Chan::NullLock)
 #   ch.send([1,2,3])
-#   # ..
+#   # ditto
+#   ch = xchan(:marshal, lock: :null)
+#   ch.send([1,2,3])
 class Chan::NullLock
   ##
   # @return [void]

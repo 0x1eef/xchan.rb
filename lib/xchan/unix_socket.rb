@@ -35,16 +35,16 @@ class Chan::UNIXSocket
   #  Type of socket (eg `Socket::SOCK_STREAM`)
   # @param [String] tmpdir
   #  Directory where temporary files can be stored
-  # @param [Lock::File, Chan::NullLock] lock
-  #  An instance of `Lock::File`, or {Chan::NullLock Chan::NullLock}
+  # @param [Symbol, <Lock::File, Chan::NullLock>] lock
+  #  The name of a lock, or an instance of `Lock::File`, or {Chan::NullLock Chan::NullLock}
   # @return [Chan::UNIXSocket]
   #  Returns an instance of {Chan::UNIXSocket Chan::UNIXSocket}
-  def initialize(serializer, sock: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir, lock: lock_file(tmpdir:))
+  def initialize(serializer, sock: Socket::SOCK_DGRAM, tmpdir: Dir.tmpdir, lock: :file)
     @s = Chan.serializers[serializer]&.call || serializer
     @r, @w = ::UNIXSocket.pair(sock)
     @bytes = Chan::Bytes.new(tmpdir)
     @counter = Chan::Counter.new(tmpdir)
-    @lockf = lock
+    @lock = Chan.locks[lock]&.call(tmpdir) || lock
   end
 
   ##
@@ -60,11 +60,11 @@ class Chan::UNIXSocket
   #  When the channel is closed
   # @return [void]
   def close
-    @lockf.lock
+    @lock.lock
     raise IOError, "channel is closed" if closed?
-    [@r, @w, @bytes, @lockf].each(&:close)
+    [@r, @w, @bytes, @lock].each(&:close)
   rescue IOError => ex
-    @lockf.release
+    @lock.release
     raise(ex)
   end
 
@@ -99,14 +99,14 @@ class Chan::UNIXSocket
   # @return [Integer, nil]
   #  Returns the number of bytes written to the channel
   def send_nonblock(object)
-    @lockf.lock_nonblock
+    @lock.lock_nonblock
     raise IOError, "channel closed" if closed?
     len = @w.write_nonblock(serialize(object))
     @bytes.push(len)
     @counter.increment!(bytes_written: len)
-    len.tap { @lockf.release }
+    len.tap { @lock.release }
   rescue IOError, IO::WaitWritable, Errno::ENOBUFS => ex
-    @lockf.release
+    @lock.release
     raise Chan::WaitWritable, ex.message
   rescue Errno::EWOULDBLOCK => ex
     raise Chan::WaitLockable, ex.message
@@ -146,18 +146,18 @@ class Chan::UNIXSocket
   # @return [Object]
   #  Returns an object from the channel
   def recv_nonblock
-    @lockf.lock_nonblock
+    @lock.lock_nonblock
     raise IOError, "closed channel" if closed?
     len = @bytes.shift
     obj = deserialize(@r.read_nonblock(len.zero? ? 1 : len))
     @counter.increment!(bytes_read: len)
-    obj.tap { @lockf.release }
+    obj.tap { @lock.release }
   rescue IOError => ex
-    @lockf.release
+    @lock.release
     raise(ex)
   rescue IO::WaitReadable => ex
     @bytes.unshift(len)
-    @lockf.release
+    @lock.release
     raise Chan::WaitReadable, ex.message
   rescue Errno::EAGAIN => ex
     raise Chan::WaitLockable, ex.message
@@ -245,15 +245,11 @@ class Chan::UNIXSocket
 
   private
 
-  def lock_file(tmpdir:)
-    Lock::File.new Chan.temporary_file(%w[xchan .lock], tmpdir:)
-  end
-
   def lock
-    @lockf.lock
+    @lock.lock
     yield
   ensure
-    @lockf.release
+    @lock.release
   end
 
   def serialize(obj)

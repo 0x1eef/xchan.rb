@@ -58,6 +58,16 @@ module Chan
       }
     }
   end
+
+  ##
+  # @return [Hash<Symbol, Proc>]
+  #  Returns the default locks
+  def self.locks
+    {
+      null: lambda { |_tmpdir| Chan::NullLock },
+      file: lambda { |tmpdir| Lock::File.new Chan.temporary_file(%w[xchan lock], tmpdir:) }
+    }
+  end
 end
 
 module Kernel
