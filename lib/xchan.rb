@@ -68,8 +68,9 @@ module Kernel
   #   ch.recv.pop # => 3
   #   ch.close
   # @param s (see Chan::UNIXSocket#initialize)
-  # @param sock_type (see Chan::UNIXSocket#initialize)
+  # @param sock (see Chan::UNIXSocket#initialize)
   # @param tmpdir (see Chan::UNIXSocket#initialize)
+  # @param lock (see Chan::UNIXSocket#initialize)
   # @return (see Chan::UNIXSocket#initialize)
   def xchan(s, ...)
     Chan::UNIXSocket.new(s, ...)
