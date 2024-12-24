@@ -25,4 +25,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "standard", "~> 1.13"
   gem.add_development_dependency "test-cmd.rb", "~> 0.12.4"
   gem.add_development_dependency "rake", "~> 13.1"
+  gem.add_development_dependency "irb", "~> 1.14"
 end
