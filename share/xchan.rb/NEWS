@@ -2,6 +2,10 @@
 
 * vNEXT
 
+** Add ~Chan.locks~
+Similar to ~Chan.serializers~, ~Chan.locks~ returns a Hash
+of available locks
+
 ** Add ~Chan::NullLock~
 The ~Chan::NullLock~ object is a lock that implements all of
 its methods as no-ops
