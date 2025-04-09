@@ -195,8 +195,8 @@ xchan.rb can be installed via rubygems.org:
 
 ## Sources
 
-* [GitHub](https://github.com/0x1eef/xchan.rb#readme)
-* [GitLab](https://gitlab.com/0x1eef/xchan.rb#about)
+* [github.com/@0x1eef](https://github.com/0x1eef/xchan.rb#readme)
+* [gitlab.com/@0x1eef](https://gitlab.com/0x1eef/xchan.rb#about)
 
 ## License
 
