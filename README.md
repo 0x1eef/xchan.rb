@@ -151,6 +151,49 @@ end
 # Blocked - free send buffer
 ```
 
+### Lock
+
+#### File
+
+The default lock for a channel is a file lock. The locking mechanism is
+implemented with the
+[lockf](https://man.freebsd.org/cgi/man.cgi?query=lockf&apropos=0&sektion=3&manpath=FreeBSD+14.2-RELEASE+and+Ports&arch=default&format=html)
+function from the C standard library. Nothing special has to be done to
+use it, and it allows a channel to be safely accessed across multiple
+processes:
+
+```ruby
+#!/usr/bin/env ruby
+require "xchan"
+
+ch = xchan(:marshal, lock: :file)
+5.times.map do
+  fork do
+    ch.send(5)
+  end
+end.each { Process.wait(_1) }
+```
+
+#### Null
+
+The null lock is the same as using no lock at all. The null lock is
+implemented as a collection of no-op operations. The null lock is
+implemented in the
+[Chan::NullLock](https://0x1eef.github,io/x/xchan.rb/Chan/NullLock.html)
+class, and in certain situations, it can be useful and preferable
+to using a file lock:
+
+```ruby
+#!/usr/bin/env ruby
+require "xchan"
+
+ch = xchan(:marshal, lock: :null)
+fork do
+  ch.send(5)
+end
+Process.wait
+```
+
 ### Socket
 
 #### Options
