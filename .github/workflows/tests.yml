@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  tests:
+  main:
     strategy:
       fail-fast: false
       matrix:
@@ -25,3 +25,19 @@ jobs:
         SERIALIZER=json bundle exec rake
         SERIALIZER=yaml bundle exec rake
         SERIALIZER=pure bundle exec rake
+  hardenedbsd:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Run test
+      uses: 0x1eef/hardenedbsd-vm@v1
+      with:
+        release: '16-CURRENT'
+        run: |
+          mdo -u root pkg-static install -y ruby rubygem-bundler
+          bundle install
+          SERIALIZER=marshal bundle exec rake
+          SERIALIZER=json bundle exec rake
+          SERIALIZER=yaml bundle exec rake
+          SERIALIZER=pure bundle exec rake
