@@ -7,7 +7,6 @@
 # increases in size, and when an object is read from
 # a channel, the collection decreases in size.
 class Chan::Bytes
-  require "json"
   require_relative "counter"
 
   ##
@@ -15,7 +14,8 @@ class Chan::Bytes
   #  Directory where temporary files are stored
   # @return [Chan::Bytes]
   def initialize(tmpdir)
-    @io = Chan.temporary_file(%w[bytes .json], tmpdir:)
+    @io = Chan.temporary_file(%w[bytes .bin], tmpdir:)
+    @io.binmode
     @io.sync = true
     write(@io, [])
   end
@@ -79,15 +79,17 @@ class Chan::Bytes
   end
 
   def write(io, bytes)
+    io.rewind
     io.truncate(0)
-    io.write(serialize(bytes)).tap { io.rewind }
+    io.write(serialize(bytes))
+    io.rewind
   end
 
   def serialize(bytes)
-    JSON.dump(bytes)
+    bytes.pack("Q>*")
   end
 
   def deserialize(bytes)
-    JSON.parse(bytes)
+    bytes.unpack("Q>*")
   end
 end
