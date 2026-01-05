@@ -62,7 +62,7 @@ class Chan::UNIXSocket
   def close
     @lock.lock
     raise IOError, "channel is closed" if closed?
-    [@r, @w, @bytes, @lock].each(&:close)
+    [@r, @w, @bytes, @counter, @lock].each(&:close)
   rescue IOError => ex
     @lock.release
     raise(ex)
