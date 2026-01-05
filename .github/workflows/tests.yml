@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  specs:
+  main:
     strategy:
       fail-fast: false
       matrix:
@@ -19,8 +19,25 @@ jobs:
     - uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
-    - run: bundle install
-    - run: SERIALIZER=marshal; for t in *_test.rb; do ruby test/${t}; done
-    - run: SERIALIZER=json; for t in *_test.rb; do ruby test/${t}; done
-    - run: SERIALIZER=yaml; for t in *_test.rb; do ruby test/${t}; done
-    - run: SERIALIZER=pure; for t in *_test.rb; do ruby test/${t}; done
+    - run: |
+        bundle install
+        SERIALIZER=marshal bundle exec rake
+        SERIALIZER=json bundle exec rake
+        SERIALIZER=yaml bundle exec rake
+        SERIALIZER=pure bundle exec rake
+  hardenedbsd:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Run test
+      uses: 0x1eef/hardenedbsd-vm@v1
+      with:
+        release: '16-CURRENT'
+        run: |
+          mdo -u root pkg-static install -y ruby rubygem-bundler
+          bundle install
+          SERIALIZER=marshal bundle exec rake
+          SERIALIZER=json bundle exec rake
+          SERIALIZER=yaml bundle exec rake
+          SERIALIZER=pure bundle exec rake
