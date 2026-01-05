@@ -65,7 +65,7 @@ module Chan
   def self.locks
     {
       null: lambda { |_tmpdir| Chan::NullLock },
-      file: lambda { |tmpdir| Lock::File.new Chan.temporary_file(%w[xchan lock], tmpdir:) }
+      file: lambda { |tmpdir| Lockf.new Chan.temporary_file(%w[xchan lock], tmpdir:) }
     }
   end
 end

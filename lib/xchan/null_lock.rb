@@ -34,11 +34,4 @@ class Chan::NullLock
   #  This method is a no-op
   def self.close
   end
-
-  ##
-  # @return [void]
-  #  This method always returns false
-  def self.locked?
-    false
-  end
 end
