@@ -40,7 +40,7 @@ ch.close
 The `ch.recv` method performs a blocking read. A read
 can block when a lock is held by another process, or
 when a read from
-[Chan::UNIXSocket#r](https://0x1eef.github,io/x/xchan.rb/Chan/UNIXSocket.html#r-instance_method)
+[Chan::UNIXSocket#r](https://0x1eef.github.io/x/xchan.rb/Chan/UNIXSocket.html#r-instance_method)
 blocks. The example performs a read that blocks until
 the parent process writes to the channel:
 
@@ -69,7 +69,7 @@ The non-blocking counterpart to `#recv` is `#recv_nonblock`.
 The `#recv_nonblock` method raises `Chan::WaitLockable` when
 a read blocks because of a lock held by another process, and
 the method raises `Chan::WaitReadable` when a read from
-[Chan::UNIXSocket#r](https://0x1eef.github,io/x/xchan.rb/Chan/UNIXSocket.html#r-instance_method)
+[Chan::UNIXSocket#r](https://0x1eef.github.io/x/xchan.rb/Chan/UNIXSocket.html#r-instance_method)
 blocks:
 
 ```ruby
@@ -102,7 +102,7 @@ read(xchan(:marshal))
 The `ch.send` method performs a blocking write.
 A write can block when a lock is held by another
 process, or when a write to
-[Chan::UNIXSocket#w](https://0x1eef.github,io/x/xchan.rb/Chan/UNIXSocket.html#w-instance_method)
+[Chan::UNIXSocket#w](https://0x1eef.github.io/x/xchan.rb/Chan/UNIXSocket.html#w-instance_method)
 blocks. The example fills the send buffer:
 
 ```ruby
@@ -123,7 +123,7 @@ The non-blocking counterpart to `#send` is
 `Chan::WaitLockable` when a write blocks because of
 a lock held by another process, and the method raises
 `Chan::WaitWritable` when a write to
-[Chan::UNIXSocket#w](https://0x1eef.github,io/x/xchan.rb/Chan/UNIXSocket.html#w-instance_method)
+[Chan::UNIXSocket#w](https://0x1eef.github.io/x/xchan.rb/Chan/UNIXSocket.html#w-instance_method)
 blocks. The example frees space on the send buffer:
 
 ```ruby
@@ -179,7 +179,7 @@ end.each { Process.wait(_1) }
 The null lock is the same as using no lock at all. The null lock is
 implemented as a collection of no-op operations. The null lock is
 implemented in the
-[Chan::NullLock](https://0x1eef.github,io/x/xchan.rb/Chan/NullLock.html)
+[Chan::NullLock](https://0x1eef.github.io/x/xchan.rb/Chan/NullLock.html)
 class, and in certain situations, it can be useful and preferable
 to using a file lock:
 
@@ -200,9 +200,9 @@ Process.wait
 
 A channel has one socket for read operations and another
 socket for write operations.
-[Chan::UNIXSocket#r](https://0x1eef.github,io/x/xchan.rb/Chan/UNIXSocket.html#r-instance_method)
+[Chan::UNIXSocket#r](https://0x1eef.github.io/x/xchan.rb/Chan/UNIXSocket.html#r-instance_method)
 returns the socket used for read operations, and
-[Chan::UNIXSocket#w](https://0x1eef.github,io/x/xchan.rb/Chan/UNIXSocket.html#w-instance_method)
+[Chan::UNIXSocket#w](https://0x1eef.github.io/x/xchan.rb/Chan/UNIXSocket.html#w-instance_method)
 returns the socket used for write operations:
 
 ```ruby
