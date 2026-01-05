@@ -1,3 +1,7 @@
+> **Designed for minimalism**
+> One direct runtime dependency ([lockf.rb](https://github.com/0x1eef/lockf.rb#readme)) <br>
+> Zero indirect dependencies outside Ruby's standard library
+
 ## About
 
 xchan.rb is an easy to use, minimalist library for
