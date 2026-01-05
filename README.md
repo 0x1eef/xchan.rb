@@ -1,4 +1,4 @@
-> **Designed for minimalism**
+> **Designed for minimalism** <br>
 > One direct runtime dependency ([lockf.rb](https://github.com/0x1eef/lockf.rb#readme)) <br>
 > Zero indirect dependencies outside Ruby's standard library
 
