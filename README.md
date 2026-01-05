@@ -1,9 +1,25 @@
 ## About
 
-xchan.rb is an easy to use library for InterProcess
-Communication (IPC). The library provides a channel
+xchan.rb is an easy to use, minimalist library for
+InterProcess Communication (IPC). The library provides a channel
 that can help facilitate communication between Ruby
 processes who have a parent &lt;=&gt; child relationship.
+A channel lock is provided by
+[lockf(3)](https://man.freebsd.org/cgi/man.cgi?query=lockf&sektion=3) and a temporary, unlinked file to protect against race conditions
+that can happen when multiple processes access the same channel
+at the same time.
+
+## Features
+
+* Minimalist Inter-Process Communication (IPC) for parent &lt;=&gt; child processes.
+* Channel-based communication.
+* Support for multiple serializers (`:marshal`, `:json`, `:yaml`) and raw string communication (`:pure`).
+* Blocking (`#send`, `#recv`) and non-blocking (`#send_nonblock`, `#recv_nonblock`) operations.
+* Built-in file-based locking ([lockf(3)](https://man.freebsd.org/cgi/man.cgi?query=lockf&sektion=3)) to prevent race conditions.
+* Option to use a null lock for scenarios where locking is not needed.
+* Access to underlying UNIX sockets for fine-grained control over socket options.
+* Mac, BSD, and Linux support.
+* Good docs.
 
 ## Examples
 
