@@ -182,6 +182,9 @@ processes:
 #!/usr/bin/env ruby
 require "xchan"
 
+##
+# 'lock: :file' is added just for the example
+# It is the default behavior, and not necessary
 ch = xchan(:marshal, lock: :file)
 5.times.map do
   fork do
