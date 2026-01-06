@@ -46,7 +46,7 @@ require "xchan"
 # Marshal as the serializer
 ch = xchan(:marshal)
 Process.wait fork { ch.send(5) }
-print "#{ch.recv} + 7 = 12", "\n"
+puts "#{ch.recv} + 7 = 12"
 ch.close
 
 ##
@@ -73,7 +73,7 @@ fork do
   print "Received a random number (child process): ", ch.recv, "\n"
 end
 sleep(1)
-print "Send a random number (from parent process)", "\n"
+puts "Send a random number (from parent process)"
 ch.send(rand(21))
 ch.close
 Process.wait
@@ -99,11 +99,12 @@ require "xchan"
 def read(ch)
   ch.recv_nonblock
 rescue Chan::WaitReadable
-  print "Wait 1 second for channel to be readable", "\n"
+  puts "Wait 1 second for channel to be readable"
   ch.wait_readable(1)
   retry
 rescue Chan::WaitLockable
-  sleep 0.01
+  puts "Wait 1 second for channel to be lockable"
+  ch.wait_lockable(1)
   retry
 end
 trap("SIGINT") { exit(1) }
@@ -153,11 +154,11 @@ require "xchan"
 def send_nonblock(ch, buf)
   ch.send_nonblock(buf)
 rescue Chan::WaitWritable
-  print "Blocked - free send buffer", "\n"
+  puts "Blocked - free send buffer"
   ch.recv
   retry
 rescue Chan::WaitLockable
-  sleep 0.01
+  ch.wait_lockable
   retry
 end
 

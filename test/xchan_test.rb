@@ -223,3 +223,35 @@ class Chan::TemporaryFileTest < Chan::Test
     @file ||= Chan.temporary_file %w[foobar .txt]
   end
 end
+
+##
+# Chan::UNIXSocket#wait_lockable
+class Chan::WaitLockableTest < Chan::Test
+  def test_wait_lockable_on_lockable_channel
+    assert_instance_of Chan::UNIXSocket, ch.wait_lockable
+  end
+
+  def test_wait_lockable_on_locked_channel
+    aux = xchan(:pure)
+    lock! do
+      Process.wait fork { aux.send ch.wait_lockable(0.1).class.to_s }
+    end
+    assert_equal "NilClass", aux.recv
+  ensure
+    aux.close
+  end
+
+  private
+
+  def lock!
+    ch.instance_variable_get(:@lock).lock
+    yield
+  ensure
+    release!
+  end
+
+  def release!
+    ch.instance_variable_get(:@lock).release
+  end
+end
+

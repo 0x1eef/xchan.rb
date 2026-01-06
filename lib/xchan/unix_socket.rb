@@ -222,22 +222,36 @@ class Chan::UNIXSocket
 
   ##
   # Waits for the channel to become readable
-  # @param [Float, Integer, nil] s
+  # @param [Float, Integer, nil] timeout
   #  The number of seconds to wait. Waits indefinitely with no arguments.
   # @return [Chan::UNIXSocket, nil]
   #  Returns self when the channel is readable, otherwise returns nil
-  def wait_readable(s = nil)
-    @r.wait_readable(s) and self
+  def wait_readable(timeout = nil)
+    @r.wait_readable(timeout) and self
   end
 
   ##
   # Waits for the channel to become writable
-  # @param [Float, Integer, nil] s
+  # @param [Float, Integer, nil] timeout
   #  The number of seconds to wait. Waits indefinitely with no arguments.
   # @return [Chan::UNIXSocket, nil]
   #  Returns self when the channel is writable, otherwise returns nil
-  def wait_writable(s = nil)
-    @w.wait_writable(s) and self
+  def wait_writable(timeout = nil)
+    @w.wait_writable(timeout) and self
+  end
+
+  ##
+  # Waits for the channel to become lockable
+  # @param [Float, Integer, nil] timeout
+  #  The number of seconds to wait before timeout
+  # @return [Chan::UNIXSocket, nil]
+  def wait_lockable(timeout = nil)
+    start = (timeout ? gettime : nil)
+    loop do
+      break(nil) if start && (gettime - start) >= timeout
+      break(self) if @lock.lockable?
+      sleep 0.01
+    end
   end
 
   ##
@@ -258,5 +272,9 @@ class Chan::UNIXSocket
 
   def deserialize(str)
     @s.load(str)
+  end
+
+  def gettime
+    Process.clock_gettime(Process::CLOCK_MONOTONIC)
   end
 end
