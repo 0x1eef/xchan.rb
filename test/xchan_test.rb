@@ -241,6 +241,13 @@ class Chan::WaitLockableTest < Chan::Test
     aux.close
   end
 
+  def test_wait_lockable_on_null_lock
+    ch = xchan(:pure, lock: :null)
+    assert_instance_of Chan::UNIXSocket, ch.wait_lockable
+  ensure
+    ch.close
+  end
+
   private
 
   def lock!
