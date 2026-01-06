@@ -103,7 +103,8 @@ rescue Chan::WaitReadable
   ch.wait_readable(1)
   retry
 rescue Chan::WaitLockable
-  sleep 0.01
+  print "Wait 1 second for channel to be lockable", "\n"
+  ch.wait_lockable(1)
   retry
 end
 trap("SIGINT") { exit(1) }
@@ -157,7 +158,7 @@ rescue Chan::WaitWritable
   ch.recv
   retry
 rescue Chan::WaitLockable
-  sleep 0.01
+  ch.wait_lockable
   retry
 end
 
