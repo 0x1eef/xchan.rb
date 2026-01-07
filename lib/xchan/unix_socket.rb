@@ -223,7 +223,8 @@ class Chan::UNIXSocket
   ##
   # Waits for the channel to become readable
   # @param [Float, Integer, nil] timeout
-  #  The number of seconds to wait. Waits indefinitely with no arguments.
+  #  The number of seconds to wait before timeout.
+  #  Waits indefinitely with no arguments
   # @return [Chan::UNIXSocket, nil]
   #  Returns self when the channel is readable, otherwise returns nil
   def wait_readable(timeout = nil)
@@ -233,7 +234,8 @@ class Chan::UNIXSocket
   ##
   # Waits for the channel to become writable
   # @param [Float, Integer, nil] timeout
-  #  The number of seconds to wait. Waits indefinitely with no arguments.
+  #  The number of seconds to wait before timeout.
+  #  Waits indefinitely with no arguments
   # @return [Chan::UNIXSocket, nil]
   #  Returns self when the channel is writable, otherwise returns nil
   def wait_writable(timeout = nil)
@@ -243,8 +245,10 @@ class Chan::UNIXSocket
   ##
   # Waits for the channel to become lockable
   # @param [Float, Integer, nil] timeout
-  #  The number of seconds to wait before timeout
+  #  The number of seconds to wait before timeout.
+  #  Waits indefinitely with no arguments
   # @return [Chan::UNIXSocket, nil]
+  #  Returns self when the channel is lockable, otherwise returns nil
   def wait_lockable(timeout = nil)
     start = (timeout ? gettime : nil)
     loop do
