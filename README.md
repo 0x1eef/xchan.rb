@@ -1,12 +1,8 @@
-> **Designed for minimalism** <br>
-> One direct runtime dependency ([lockf.rb](https://github.com/0x1eef/lockf.rb#readme)) <br>
-> Zero indirect dependencies outside Ruby's standard library
-
 ## About
 
-xchan.rb is an easy to use, minimalist library for
-InterProcess Communication (IPC). The library provides a channel
-that can help facilitate communication between Ruby
+xchan.rb is an easy to use library for InterProcess Communication (IPC).
+
+The library provides a channel that can help facilitate communication between Ruby
 processes who have a parent &lt;=&gt; child relationship.
 A channel lock is provided by
 [lockf(3)](https://man.freebsd.org/cgi/man.cgi?query=lockf&sektion=3) and a temporary, unlinked file to protect against race conditions
