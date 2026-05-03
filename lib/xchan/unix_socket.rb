@@ -45,6 +45,7 @@ class Chan::UNIXSocket
     @bytes = Chan::Bytes.new(tmpdir)
     @counter = Chan::Counter.new(tmpdir)
     @lock = Chan.locks[lock]&.call(tmpdir) || lock
+    @mutex = Mutex.new
   end
 
   ##
@@ -81,7 +82,11 @@ class Chan::UNIXSocket
   #  Returns the number of bytes written to the channel
   def send(object)
     send_nonblock(object)
-  rescue Chan::WaitWritable, Chan::WaitLockable
+  rescue Chan::WaitWritable
+    wait_writable
+    retry
+  rescue Chan::WaitLockable
+    wait_lockable
     retry
   end
   alias_method :write, :send
@@ -99,17 +104,19 @@ class Chan::UNIXSocket
   # @return [Integer, nil]
   #  Returns the number of bytes written to the channel
   def send_nonblock(object)
-    @lock.lock_nonblock
-    raise IOError, "channel closed" if closed?
-    len = @w.write_nonblock(serialize(object))
-    @bytes.push(len)
-    @counter.increment!(bytes_written: len)
-    len.tap { @lock.release }
-  rescue IOError, IO::WaitWritable, Errno::ENOBUFS => ex
-    @lock.release
-    raise Chan::WaitWritable, ex.message
-  rescue Errno::EWOULDBLOCK => ex
-    raise Chan::WaitLockable, ex.message
+    @mutex.synchronize do
+      @lock.lock_nonblock
+      raise IOError, "channel closed" if closed?
+      len = @w.write_nonblock(serialize(object))
+      @bytes.push(len)
+      @counter.increment!(bytes_written: len)
+      len.tap { @lock.release }
+    rescue IOError, IO::WaitWritable, Errno::ENOBUFS => ex
+      @lock.release
+      raise Chan::WaitWritable, ex.message
+    rescue Errno::EWOULDBLOCK => ex
+      raise Chan::WaitLockable, ex.message
+    end
   end
   alias_method :write_nonblock, :send_nonblock
 
@@ -131,6 +138,7 @@ class Chan::UNIXSocket
     wait_readable
     retry
   rescue Chan::WaitLockable
+    wait_lockable
     retry
   end
   alias_method :read, :recv
@@ -146,21 +154,23 @@ class Chan::UNIXSocket
   # @return [Object]
   #  Returns an object from the channel
   def recv_nonblock
-    @lock.lock_nonblock
-    raise IOError, "closed channel" if closed?
-    len = @bytes.shift
-    obj = deserialize(@r.read_nonblock(len.zero? ? 1 : len))
-    @counter.increment!(bytes_read: len)
-    obj.tap { @lock.release }
-  rescue IOError => ex
-    @lock.release
-    raise(ex)
-  rescue IO::WaitReadable => ex
-    @bytes.unshift(len)
-    @lock.release
-    raise Chan::WaitReadable, ex.message
-  rescue Errno::EAGAIN => ex
-    raise Chan::WaitLockable, ex.message
+    @mutex.synchronize do
+      @lock.lock_nonblock
+      raise IOError, "closed channel" if closed?
+      len = @bytes.shift
+      obj = deserialize(@r.read_nonblock(len.zero? ? 1 : len))
+      @counter.increment!(bytes_read: len)
+      obj.tap { @lock.release }
+    rescue IOError => ex
+      @lock.release
+      raise(ex)
+    rescue IO::WaitReadable => ex
+      @bytes.unshift(len)
+      @lock.release
+      raise Chan::WaitReadable, ex.message
+    rescue Errno::EAGAIN => ex
+      raise Chan::WaitLockable, ex.message
+    end
   end
   alias_method :read_nonblock, :recv_nonblock
 
