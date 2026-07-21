@@ -46,6 +46,8 @@ class Chan::UNIXSocket
     @counter = Chan::Counter.new(tmpdir)
     @lock = Chan.locks[lock]&.call(tmpdir) || lock
     @mutex = Mutex.new
+    @partial = nil
+    @partial_len = 0
   end
 
   ##
@@ -107,10 +109,12 @@ class Chan::UNIXSocket
     @mutex.synchronize do
       @lock.lock_nonblock
       raise IOError, "channel closed" if closed?
-      len = @w.write_nonblock(serialize(object))
-      @bytes.push(len)
-      @counter.increment!(bytes_written: len)
-      len.tap { @lock.release }
+      data = serialize(object)
+      head = [data.bytesize].pack("Q>")
+      n = @w.write_nonblock(head << data)
+      @bytes.push(data.bytesize)
+      @counter.increment!(bytes_written: data.bytesize)
+      data.bytesize.tap { @lock.release }
     rescue IOError, IO::WaitWritable, Errno::ENOBUFS => ex
       @lock.release
       raise Chan::WaitWritable, ex.message
@@ -157,15 +161,35 @@ class Chan::UNIXSocket
     @mutex.synchronize do
       @lock.lock_nonblock
       raise IOError, "closed channel" if closed?
-      len = @bytes.shift
-      obj = deserialize(@r.read_nonblock(len.zero? ? 1 : len))
-      @counter.increment!(bytes_read: len)
+      stream = @r.local_address.socktype == Socket::SOCK_STREAM
+      unless @partial
+        if stream
+          head = String.new
+          while head.bytesize < 8
+            head << @r.read_nonblock(8 - head.bytesize)
+          end
+          @partial_len = head.unpack1("Q>")
+          @partial = String.new(capacity: @partial_len)
+        else
+          buf = @r.read_nonblock(65536)
+          @partial_len = buf[0, 8].unpack1("Q>")
+          @partial = buf[8, @partial_len]
+        end
+        @bytes.shift
+      end
+      if stream
+        while @partial.bytesize < @partial_len
+          @partial << @r.read_nonblock(@partial_len - @partial.bytesize)
+        end
+      end
+      obj = deserialize(@partial)
+      @counter.increment!(bytes_read: @partial.bytesize)
+      @partial = nil
       obj.tap { @lock.release }
     rescue IOError => ex
       @lock.release
       raise(ex)
     rescue IO::WaitReadable => ex
-      @bytes.unshift(len)
       @lock.release
       raise Chan::WaitReadable, ex.message
     rescue Errno::EAGAIN => ex
@@ -199,6 +223,13 @@ class Chan::UNIXSocket
   end
 
   ##
+  # @return [Integer]
+  #  Returns the number of elements waiting to be read
+  def size
+    @bytes.size
+  end
+
+  ##
   # @group Stat methods
 
   ##
@@ -218,14 +249,16 @@ class Chan::UNIXSocket
   alias_method :bytes_read, :bytes_received
 
   ##
-  # @return [Integer]
-  #  Returns the number of objects waiting to be read
-  def size
-    lock { @bytes.size }
-  end
+  # @endgroup
 
   ##
-  # @endgroup
+  # @return [void]
+  def flush
+    @lock.lock
+    to_a
+  ensure
+    @lock.release
+  end
 
   ##
   # @group Wait methods
