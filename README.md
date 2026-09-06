@@ -1,4 +1,16 @@
-## About
+<p align="center">
+  <a href="https://r.uby.dev">
+    <img
+      src="rubydev.svg"
+      width="400"
+      height="200"
+      border="0"
+      alt="a r.uby.dev project"
+     >
+  </a>
+</p>
+
+> [r.uby.dev](https://r.uby.dev/llm) project.
 
 xchan.rb is an easy to use library for InterProcess Communication (IPC).
 
