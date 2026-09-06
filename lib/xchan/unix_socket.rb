@@ -4,7 +4,6 @@
 # An easy-to-use InterProcess Communication (IPC) library
 class Chan::UNIXSocket
   require "socket"
-  require "lockf"
   require_relative "bytes"
 
   ##

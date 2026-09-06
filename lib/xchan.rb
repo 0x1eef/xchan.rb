@@ -5,6 +5,7 @@ module Chan
   require_relative "xchan/unix_socket"
   require_relative "xchan/null_lock"
   require_relative "xchan/tempfile"
+  require_relative "xchan/lockf"
 
   WaitReadable = Class.new(IO::EAGAINWaitReadable)
   WaitWritable = Class.new(IO::EAGAINWaitWritable)
@@ -65,7 +66,7 @@ module Chan
   def self.locks
     {
       null: lambda { |_tmpdir| Chan::NullLock },
-      file: lambda { |tmpdir| Lockf.new Chan.temporary_file(%w[xchan lock], tmpdir:) }
+      file: lambda { |tmpdir| Chan::Lockf.new Chan.temporary_file(%w[xchan lock], tmpdir:) }
     }
   end
 end
