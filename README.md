@@ -245,11 +245,6 @@ print "The maximum size of a single message is: ", sndbuf.int, " bytes.\n"
 # The maximum size of a single message is: 2048 bytes.
 ```
 
-## Documentation
-
-A complete API reference is available at
-[0x1eef.github.io/x/xchan.rb](https://0x1eef.github.io/x/xchan.rb/)
-
 ## Install
 
 xchan.rb can be installed via rubygems.org:
