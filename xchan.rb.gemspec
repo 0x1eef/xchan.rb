@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
   gem.summary = "An easy to use InterProcess Communication (IPC) library"
   gem.description = gem.summary
 
+  gem.add_runtime_dependency "fiddle", "~> 1.1"
   gem.add_development_dependency "test-unit", "~> 3.5.7"
   gem.add_development_dependency "yard", "~> 0.9"
   gem.add_development_dependency "kramdown", "~> 2.5"
